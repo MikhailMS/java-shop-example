@@ -3,7 +3,7 @@ Typical Java exercise that shows how to build simple OO project and practice ski
 
 This project will be written using Java 8 approach, rather than Java 7 and older. As Java 9 is released, maybe some of new Java features will be introduced if needed.
 
-Also I am using TDD approach to complete this project as I found this really convinient way to develop projects in Java. And as extra I'm trying to use Travis CI for building and testing project together with __ for keeping my code clean and consistent.
+Also I am using TDD approach to complete this project as I found this really convinient way to develop projects in Java. And as extra I'm trying to use Travis CI for building and testing project together with Codacy for keeping my code clean and consistent.
 ## Plan of action:
   - [ ] Erase dummy tests for **Product, Basket, Order, Inventory, Shop** classes and re-write them accordingly
       - [ ] **ProductTest** class
