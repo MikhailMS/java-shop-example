@@ -1,3 +1,5 @@
+[![Codacy Badge](https://api.codacy.com/project/badge/Grade/50ce9e1a567343ee9ac7c134071d97ba)](https://www.codacy.com/app/1488maiklm/java-shop-example?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=MikhailMS/java-shop-example&amp;utm_campaign=Badge_Grade)
+[![Build Status](https://travis-ci.org/MikhailMS/java-shop-example.svg?branch=master)](https://travis-ci.org/MikhailMS/java-shop-example)
 # Java shop example
 Typical Java exercise that shows how to build simple OO project and practice skills such as: how to choose appropriate data type for project, how to write clean and consistent code and etc.
 
