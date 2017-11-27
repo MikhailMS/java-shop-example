@@ -12,6 +12,7 @@ public class Product {
         this.name = name;
         this.weight = weight;
         this.price = price;
+        this.stringFormatter = () -> "Product: " + this.name + " has price " + this.price + ".";
     }
 
     public String getName() {
@@ -36,6 +37,6 @@ public class Product {
 
     @Override
     public String toString() {
-        return stringFormatter.formatToString(this);
+        return stringFormatter.formatToString();
     }
 }

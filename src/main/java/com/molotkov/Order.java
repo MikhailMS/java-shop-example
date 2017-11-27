@@ -10,13 +10,18 @@ public class Order {
      public Order(Basket basket, String address) {
          this.basket = basket;
          this.address = address;
+         this.stringFormatter = () -> {
+             int basketSize = basket.getProducts().size();
+             String itemString = basketSize > 1 ? basketSize + " products" : basketSize + " product";
+             return String.format("Order includes %s and would be delivered to %s", itemString, address);
+         };
      }
 
     public Basket getBasket() {
         return basket;
     }
 
-    public void addBasket(Basket basket) {
+    public void setBasket(Basket basket) {
         this.basket = basket;
     }
 
@@ -28,7 +33,7 @@ public class Order {
         return address;
     }
 
-    public void setAddress(String address) {
+    public void changeAddress(String address) {
         this.address = address;
     }
 
@@ -38,6 +43,6 @@ public class Order {
 
     @Override
     public String toString() {
-        return this.stringFormatter.formatToString(this);
+        return this.stringFormatter.formatToString();
     }
 }

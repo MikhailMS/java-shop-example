@@ -1,44 +1,45 @@
 package com.molotkov;
 
 import com.molotkov.Products.Product;
-import junit.framework.TestCase;
 import org.junit.Before;
 import org.junit.Test;
+import static org.junit.Assert.assertTrue;
 
-public class ProductTest extends TestCase {
-    private Product product;
+public class ProductTest {
+    Product product;
 
-    @Before
-    public void setup() {
+    @Before public void setup() {
         product = new Product("Apple", 150, 0.8);
     }
 
     @Test
     public void testProductConstructor() {
-        assertTrue(true);
+        assertTrue(product instanceof Product);
     }
     @Test
     public void testGetName() {
-        assertTrue(true);
+        assertTrue(product.getName().equals("Apple"));
     }
     @Test
     public void testGetWieght() {
-        assertTrue(true);
+        assertTrue(product.getWeight()==150);
     }
     @Test
     public void testGetPrice() {
-
+        assertTrue(product.getPrice()==0.8);
     }
     @Test
     public void testSetPrice() {
-        assertTrue(true);
+        product.setPrice(1.1);
+        assertTrue(product.getPrice()==1.1);
     }
     @Test
     public void testSetStringFormatter() {
-        assertTrue(true);
+        product.setStringFormatter(() -> "New formatter");
+        assertTrue(product.toString().equals("New formatter"));
     }
     @Test
     public void testToString() {
-        assertTrue(true);
+        assertTrue(product.toString().equals("Product: Apple has price 0.8."));
     }
 }

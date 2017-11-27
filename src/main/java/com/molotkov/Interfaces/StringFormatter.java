@@ -5,5 +5,5 @@ import com.molotkov.Products.Product;
 @FunctionalInterface
 public interface StringFormatter {
 
-    String formatToString(Object obj);
+    String formatToString();
 }

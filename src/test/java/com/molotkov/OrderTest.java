@@ -1,47 +1,55 @@
 package com.molotkov;
 
-import junit.framework.TestCase;
+import com.molotkov.Exceptions.BasketException;
+import com.molotkov.Products.Product;
 import org.junit.Before;
 import org.junit.Test;
+import static org.junit.Assert.assertTrue;
 
-public class OrderTest extends TestCase {
+public class OrderTest {
     private Order order;
+    private Basket basket;
 
     @Before
-    public void setup() {
-        order = new Order(new Basket(), "");
+    public void setup() throws BasketException {
+        basket = new Basket();
+        Product test1 = new Product("Apple", 0.150, 0.8);
+        basket.addProducts(test1, 1);
+        order = new Order(basket, "London");
     }
 
     @Test
     public void testOrderConstructor() {
-        assertTrue(true);
+        assertTrue(order instanceof Order);
     }
     @Test
-    public void testGetBasket() {
-        assertTrue(true);
-    }
-    @Test
-    public void testAddBasket() {
-        assertTrue(true);
+    public void testSetBasket() {
+        Basket testBasket = new Basket();
+        order.setBasket(testBasket);
+        assertTrue(order.getBasket().equals(testBasket));
     }
     @Test
     public void testRemoveBasket() {
-
+        order.removeBasket();
+        assertTrue(null == order.getBasket());
     }
     @Test
-    public void testGetAddress() {
-        assertTrue(true);
-    }
-    @Test
-    public void testSetAddress() {
-        assertTrue(true);
+    public void testChangeAddress() {
+        order.changeAddress("Manchester");
+        assertTrue(order.getAddress().equals("Manchester"));
     }
     @Test
     public void testSetStringFormatter() {
-        assertTrue(true);
+        order.setStringFormatter(() -> "New formatter");
+        assertTrue(order.toString().equals("New formatter"));
     }
     @Test
-    public void testToString() {
-        assertTrue(true);
+    public void testToStringWithOneProduct() {
+        assertTrue(order.toString().equals("Order includes 1 product and would be delivered to London"));
+    }
+    @Test
+    public void testToStringWithMultipleProducts() throws BasketException {
+        order.getBasket().addProducts(new Product("Chicken", 1, 2.3), 2);
+        assertTrue(order.toString().equals("Order includes 2 products and would be delivered to London"));
     }
 }

@@ -1,5 +1,6 @@
 package com.molotkov;
 
+import com.molotkov.Exceptions.InventoryException;
 import com.molotkov.Interfaces.StringFormatter;
 import com.molotkov.Products.Product;
 
@@ -11,8 +12,12 @@ public class Shop {
         this.inventory = new Inventory();
     }
 
-    public void addToInventory(Product product) {
-        this.inventory.addProduct(product);
+    public void addToInventory(Product product, int amount) {
+        try {
+            this.inventory.addProducts(product, amount);
+        } catch (InventoryException ex) {
+            ex.printStackTrace();
+        }
     }
 
     public Inventory getInventory() {
@@ -25,6 +30,6 @@ public class Shop {
 
     @Override
     public String toString() {
-        return this.stringFormatter.formatToString(this);
+        return this.stringFormatter.formatToString();
     }
 }

@@ -1,10 +1,15 @@
 package com.molotkov;
 
-import junit.framework.TestCase;
+import com.molotkov.Exceptions.InventoryException;
+import com.molotkov.Products.Product;
 import org.junit.Before;
 import org.junit.Test;
 
-public class InventoryTest extends TestCase {
+import java.text.DecimalFormat;
+
+import static org.junit.Assert.assertTrue;
+
+public class InventoryTest {
     private Inventory inventory;
 
     @Before
@@ -14,30 +19,88 @@ public class InventoryTest extends TestCase {
 
     @Test
     public void testInventoryConstructor() {
-        assertTrue(true);
+        assertTrue(inventory instanceof Inventory);
     }
     @Test
-    public void testAddProduct() {
-        assertTrue(true);
+    public void testAddOneProduct() throws InventoryException {
+        Product test = new Product("Apple",0.150, 0.8);
+        inventory.addProducts(test, 1);
+        assertTrue(inventory.getInventory().containsKey(test));
+        assertTrue(inventory.getInventory().get(test)==1);
     }
     @Test
-    public void testRemoveProduct() {
-        assertTrue(true);
+    public void testAddSameProducts() throws InventoryException {
+        Product test = new Product("Apple",0.150, 0.8);
+        inventory.addProducts(test, 1);
+        inventory.addProducts(test, 1);
+        assertTrue(inventory.getInventory().containsKey(test));
+        assertTrue(inventory.getInventory().get(test)==2);
     }
     @Test
-    public void testGetStock() {
-
+    public void testAddMultipleProducts() throws InventoryException {
+        Product test = new Product("Apple", 0.150, 0.8);
+        inventory.addProducts(test,2);
+        Product test1 = new Product("Chicken", 1, 2.3);
+        inventory.addProducts(test1,3);
+        Product test2 = new Product("Beef", 0.5, 3.25);
+        inventory.addProducts(test2,4);
+        assertTrue(inventory.getInventory().containsKey(test));
+        assertTrue(inventory.getInventory().containsKey(test1));
+        assertTrue(inventory.getInventory().containsKey(test2));
+        assertTrue(inventory.getInventory().get(test)==2);
+        assertTrue(inventory.getInventory().get(test1)==3);
+        assertTrue(inventory.getInventory().get(test2)==4);
+    }
+    @Test(expected = InventoryException.class)
+    public void testAddNullProduct() throws InventoryException {
+        inventory.addProducts(null, 1);
     }
     @Test
-    public void testGetStockPrice() {
-        assertTrue(true);
+    public void testRemoveOneProduct() throws InventoryException {
+        Product test = new Product("Apple", 0.150, 0.8);
+        inventory.addProducts(test,2);
+        inventory.removeProducts(test, 1);
+        assertTrue(inventory.getInventory().get(test)==1);
+    }
+    @Test
+    public void testRemoveProductCompletely() throws InventoryException {
+        Product test = new Product("Apple", 0.150, 0.8);
+        inventory.addProducts(test,2);
+        inventory.removeProducts(test, 2);
+        assertTrue(!inventory.getInventory().containsKey(test));
+    }
+    @Test(expected = InventoryException.class)
+    public void testRemoveProductMoreThanExistsInBasket() throws InventoryException {
+        Product test = new Product("Apple", 0.150, 0.8);
+        inventory.addProducts(test,2);
+        inventory.removeProducts(test, 3);
+    }
+    @Test
+    public void testCalculateInventoryPrice() throws InventoryException {
+        Product test = new Product("Apple", 0.150, 0.8);
+        Product test1 = new Product("Chicken", 1, 2.3);
+        inventory.addProducts(test,2);
+        inventory.addProducts(test1, 2);
+        DecimalFormat total = new DecimalFormat("####0.0");
+        assertTrue(total.format(inventory.calculateInventoryPrice()).equals("6.2"));
     }
     @Test
     public void testSetStringFormatter() {
-        assertTrue(true);
+        inventory.setStringFormatter(() -> "New formatter");
+        assertTrue(inventory.toString().equals("New formatter"));
     }
     @Test
-    public void testToString() {
-        assertTrue(true);
+    public void testToStringOneProduct() throws InventoryException {
+        Product test = new Product("Apple", 0.150, 0.8);
+        inventory.addProducts(test,2);
+        assertTrue(inventory.toString().equals("Inventory has 1 product, total price of the stock: 1.6"));
+    }
+    @Test
+    public void testToStringMultipleProducts() throws InventoryException {
+        Product test = new Product("Apple", 0.150, 0.8);
+        Product test1 = new Product("Chicken", 1, 2.3);
+        inventory.addProducts(test,2);
+        inventory.addProducts(test1, 2);
+        assertTrue(inventory.toString().equals("Inventory has 2 products, total price of the stock: 6.2"));
     }
 }
