@@ -1,8 +1,8 @@
 package com.molotkov;
 
-import com.molotkov.Exceptions.InventoryException;
-import com.molotkov.Interfaces.StringFormatter;
-import com.molotkov.Products.Product;
+import com.molotkov.exceptions.InventoryException;
+import com.molotkov.interfaces.StringFormatter;
+import com.molotkov.products.Product;
 
 import java.text.DecimalFormat;
 
@@ -20,11 +20,11 @@ public class Shop {
         };
     }
 
-    public void addToInventory(Product product, final int amount) throws InventoryException {
+    public void addToInventory(final Product product, final int amount) throws InventoryException {
         this.inventory.addProducts(product, amount);
     }
 
-    public void removeFromInventory(Product product, final int amount) throws InventoryException {
+    public void removeFromInventory(final Product product, final int amount) throws InventoryException {
         this.inventory.removeProducts(product, amount);
     }
 

@@ -1,4 +1,4 @@
-package com.molotkov.Users;
+package com.molotkov.users;
 
 
 public class Client extends User {

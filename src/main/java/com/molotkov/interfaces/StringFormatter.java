@@ -1,4 +1,4 @@
-package com.molotkov.Interfaces;
+package com.molotkov.interfaces;
 
 @FunctionalInterface
 public interface StringFormatter {

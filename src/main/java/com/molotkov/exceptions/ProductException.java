@@ -1,4 +1,4 @@
-package com.molotkov.Exceptions;
+package com.molotkov.exceptions;
 
 public class ProductException extends Exception {
     private static final long serialVersionUID = 1L;
@@ -7,7 +7,7 @@ public class ProductException extends Exception {
         super(message);
     }
 
-    public ProductException(String message, Throwable throwable) {
+    public ProductException(final String message, final Throwable throwable) {
         super(message, throwable);
     }
 

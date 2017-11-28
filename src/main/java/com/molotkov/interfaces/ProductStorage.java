@@ -1,6 +1,6 @@
-package com.molotkov.Interfaces;
+package com.molotkov.interfaces;
 
-import com.molotkov.Products.Product;
+import com.molotkov.products.Product;
 
 public interface ProductStorage {
 

@@ -1,7 +1,7 @@
 package com.molotkov;
 
-import com.molotkov.Exceptions.InventoryException;
-import com.molotkov.Products.Product;
+import com.molotkov.exceptions.InventoryException;
+import com.molotkov.products.Product;
 import org.junit.Before;
 import org.junit.Test;
 import java.text.DecimalFormat;

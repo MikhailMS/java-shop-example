@@ -1,6 +1,6 @@
-package com.molotkov.Products;
+package com.molotkov.products;
 
-import com.molotkov.Interfaces.StringFormatter;
+import com.molotkov.interfaces.StringFormatter;
 
 public class Product {
     private String name;
@@ -8,7 +8,7 @@ public class Product {
     private double price;
     private StringFormatter stringFormatter;
 
-    public Product(final String name, double weight, double price) {
+    public Product(final String name, final double weight, final double price) {
         this.name = name;
         this.weight = weight;
         this.price = price;

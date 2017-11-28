@@ -1,4 +1,4 @@
-package com.molotkov.DB;
+package com.molotkov.db;
 
 public class DBContract {
 }

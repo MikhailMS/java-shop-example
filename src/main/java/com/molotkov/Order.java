@@ -1,13 +1,13 @@
 package com.molotkov;
 
-import com.molotkov.Interfaces.StringFormatter;
+import com.molotkov.interfaces.StringFormatter;
 
 public class Order {
     private Basket basket;
     private String address;
     private StringFormatter stringFormatter;
 
-     public Order(Basket basket, final String address) {
+     public Order(final Basket basket, final String address) {
          this.basket = basket;
          this.address = address;
          this.stringFormatter = () -> {

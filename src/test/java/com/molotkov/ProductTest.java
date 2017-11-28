@@ -1,6 +1,6 @@
 package com.molotkov;
 
-import com.molotkov.Products.Product;
+import com.molotkov.products.Product;
 import org.junit.Before;
 import org.junit.Test;
 import static org.junit.Assert.assertTrue;

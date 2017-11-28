@@ -1,4 +1,4 @@
-package com.molotkov.GUI;
+package com.molotkov.gui;
 
 import javafx.application.Application;
 import javafx.event.ActionEvent;

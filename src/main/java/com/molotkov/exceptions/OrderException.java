@@ -1,4 +1,4 @@
-package com.molotkov.Exceptions;
+package com.molotkov.exceptions;
 
 public class OrderException  extends Exception {
     private static final long serialVersionUID = 3L;
@@ -7,7 +7,7 @@ public class OrderException  extends Exception {
         super(message);
     }
 
-    public OrderException(final String message, Throwable throwable) {
+    public OrderException(final String message, final Throwable throwable) {
         super(message, throwable);
     }
 

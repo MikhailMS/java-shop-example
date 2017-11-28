@@ -1,7 +1,7 @@
 package com.molotkov;
 
-import com.molotkov.Exceptions.BasketException;
-import com.molotkov.Products.Product;
+import com.molotkov.exceptions.BasketException;
+import com.molotkov.products.Product;
 import org.junit.Before;
 import org.junit.Test;
 import static org.junit.Assert.assertTrue;

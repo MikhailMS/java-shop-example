@@ -1,4 +1,4 @@
-package com.molotkov.Exceptions;
+package com.molotkov.exceptions;
 
 public class BasketException  extends Exception {
     private static final long serialVersionUID = 2L;
@@ -7,7 +7,7 @@ public class BasketException  extends Exception {
         super(message);
     }
 
-    public BasketException(final String message, Throwable throwable) {
+    public BasketException(final String message, final Throwable throwable) {
         super(message, throwable);
     }
 
