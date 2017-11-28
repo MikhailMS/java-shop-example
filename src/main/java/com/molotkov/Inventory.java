@@ -21,7 +21,7 @@ public class Inventory implements ProductStorage {
         };
     }
 
-    public void addProducts(Product product, int amount) throws InventoryException {
+    public void addProducts(Product product, final int amount) throws InventoryException {
         if (product != null) {
             final int currentAmount = this.products.getOrDefault(product,0);
             this.products.put(product, currentAmount + amount);
@@ -30,7 +30,7 @@ public class Inventory implements ProductStorage {
         }
     }
 
-    public void removeProducts(Product product, int amount) throws InventoryException {
+    public void removeProducts(Product product, final int amount) throws InventoryException {
         if (this.products.get(product) > amount) {
             this.products.replace(product,this.products.get(product)-amount);
         } else if (this.products.get(product) == amount) {
@@ -51,7 +51,7 @@ public class Inventory implements ProductStorage {
                 .sum();
     }
 
-    public void setStringFormatter(StringFormatter stringFormatter) {
+    public void setStringFormatter(final StringFormatter stringFormatter) {
         this.stringFormatter = stringFormatter;
     }
 

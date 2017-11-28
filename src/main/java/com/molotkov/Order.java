@@ -7,7 +7,7 @@ public class Order {
     private String address;
     private StringFormatter stringFormatter;
 
-     public Order(Basket basket, String address) {
+     public Order(Basket basket, final String address) {
          this.basket = basket;
          this.address = address;
          this.stringFormatter = () -> {
@@ -21,7 +21,7 @@ public class Order {
         return basket;
     }
 
-    public void setBasket(Basket basket) {
+    public void setBasket(final Basket basket) {
         this.basket = basket;
     }
 
@@ -33,11 +33,11 @@ public class Order {
         return address;
     }
 
-    public void changeAddress(String address) {
+    public void changeAddress(final String address) {
         this.address = address;
     }
 
-    public void setStringFormatter(StringFormatter stringFormatter) {
+    public void setStringFormatter(final StringFormatter stringFormatter) {
         this.stringFormatter = stringFormatter;
     }
 

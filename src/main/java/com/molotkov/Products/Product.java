@@ -8,7 +8,7 @@ public class Product {
     private double price;
     private StringFormatter stringFormatter;
 
-    public Product(String name, double weight, double price) {
+    public Product(final String name, double weight, double price) {
         this.name = name;
         this.weight = weight;
         this.price = price;
@@ -27,11 +27,11 @@ public class Product {
         return price;
     }
 
-    public void setPrice(double price) {
+    public void setPrice(final double price) {
         this.price = price;
     }
 
-    public void setStringFormatter(StringFormatter stringFormatter) {
+    public void setStringFormatter(final StringFormatter stringFormatter) {
         this.stringFormatter = stringFormatter;
     }
 

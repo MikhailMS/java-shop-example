@@ -20,11 +20,11 @@ public class Shop {
         };
     }
 
-    public void addToInventory(Product product, int amount) throws InventoryException {
+    public void addToInventory(Product product, final int amount) throws InventoryException {
         this.inventory.addProducts(product, amount);
     }
 
-    public void removeFromInventory(Product product, int amount) throws InventoryException {
+    public void removeFromInventory(Product product, final int amount) throws InventoryException {
         this.inventory.removeProducts(product, amount);
     }
 
@@ -32,7 +32,7 @@ public class Shop {
         return inventory;
     }
 
-    public void setStringFormatter(StringFormatter stringFormatter) {
+    public void setStringFormatter(final StringFormatter stringFormatter) {
         this.stringFormatter = stringFormatter;
     }
 

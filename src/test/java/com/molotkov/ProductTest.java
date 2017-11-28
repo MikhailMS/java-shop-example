@@ -8,7 +8,7 @@ import static org.junit.Assert.assertTrue;
 public class ProductTest {
     private Product product;
 
-    @Before public void setup() {
+    @Before public void setUp() {
         product = new Product("Apple", 150, 0.8);
     }
 
