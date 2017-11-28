@@ -13,15 +13,15 @@ public class Basket implements ProductStorage {
     Basket() {
         this.products = new HashMap<>();
         this.stringFormatter = () -> {
-            int basketSize = this.products.size();
-            String itemString = basketSize > 1 ? " products." : " product.";
-            return "Basket has " + basketSize + itemString;
+            final int basketSize = this.products.size();
+            final String itemString = basketSize > 1 ? basketSize + " products." : basketSize + " product.";
+            return String.format("Basket has %s", itemString);
         };
     }
 
     public void addProducts(Product product, int amount) throws BasketException {
         if (product != null) {
-            int currentAmount = this.products.getOrDefault(product,0);
+            final int currentAmount = this.products.getOrDefault(product,0);
             this.products.put(product, currentAmount + amount);
         } else {
             throw new BasketException("You cannot add Null objects to Basket!");
@@ -34,7 +34,7 @@ public class Basket implements ProductStorage {
         } else if (this.products.get(product) == amount) {
             this.products.remove(product);
         } else {
-            throw new BasketException("Cannot remove " + amount + " instances of product as there are only " + this.products.get(product) + " instances!");
+            throw new BasketException(String.format("Cannot remove %d instances of product as there are only %d instances!", amount, this.products.get(product)));
         }
     }
 

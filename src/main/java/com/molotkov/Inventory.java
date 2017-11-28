@@ -14,16 +14,16 @@ public class Inventory implements ProductStorage {
     Inventory() {
         this.products = new HashMap<>();
         this.stringFormatter = () -> {
-            int productsSize = this.products.size();
-            String itemString = productsSize > 1 ? productsSize + " products" : productsSize + " product";
-            DecimalFormat total = new DecimalFormat("####0.0");
+            final int productsSize = this.products.size();
+            final String itemString = productsSize > 1 ? productsSize + " products" : productsSize + " product";
+            final DecimalFormat total = new DecimalFormat("####0.0");
             return String.format("Inventory has %s, total price of the stock: %s", itemString, total.format(calculateTotal()));
         };
     }
 
     public void addProducts(Product product, int amount) throws InventoryException {
         if (product != null) {
-            int currentAmount = this.products.getOrDefault(product,0);
+            final int currentAmount = this.products.getOrDefault(product,0);
             this.products.put(product, currentAmount + amount);
         } else {
             throw new InventoryException("You cannot add Null objects to products!");
@@ -36,7 +36,7 @@ public class Inventory implements ProductStorage {
         } else if (this.products.get(product) == amount) {
             this.products.remove(product);
         } else {
-            throw new InventoryException("Cannot remove " + amount + " instances of product as there are only " + this.products.get(product) + " instances!");
+            throw new InventoryException(String.format("Cannot remove %d instances of product as there are only %d instances!", amount, this.products.get(product)));
         }
     }
 

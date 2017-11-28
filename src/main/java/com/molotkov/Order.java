@@ -11,8 +11,8 @@ public class Order {
          this.basket = basket;
          this.address = address;
          this.stringFormatter = () -> {
-             int basketSize = basket.getProducts().size();
-             String itemString = basketSize > 1 ? basketSize + " products" : basketSize + " product";
+             final int basketSize = basket.getProducts().size();
+             final String itemString = basketSize > 1 ? basketSize + " products" : basketSize + " product";
              return String.format("Order includes %s and would be delivered to %s", itemString, address);
          };
      }

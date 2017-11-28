@@ -13,9 +13,9 @@ public class Shop {
     public Shop() {
         this.inventory = new Inventory();
         this.stringFormatter = () -> {
-            int inventorySize = this.inventory.getProducts().size();
-            String itemString = inventorySize > 1 ? inventorySize + " products" : inventorySize + " product";
-            DecimalFormat total = new DecimalFormat("####0.0");
+            final int inventorySize = this.inventory.getProducts().size();
+            final String itemString = inventorySize > 1 ? inventorySize + " products" : inventorySize + " product";
+            final DecimalFormat total = new DecimalFormat("####0.0");
             return String.format("Shop has inventory with %s and total value of %s", itemString, total.format(inventory.calculateTotal()));
         };
     }

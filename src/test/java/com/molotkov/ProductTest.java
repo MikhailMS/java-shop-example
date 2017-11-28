@@ -6,7 +6,7 @@ import org.junit.Test;
 import static org.junit.Assert.assertTrue;
 
 public class ProductTest {
-    Product product;
+    private Product product;
 
     @Before public void setup() {
         product = new Product("Apple", 150, 0.8);
@@ -21,7 +21,7 @@ public class ProductTest {
         assertTrue(product.getName().equals("Apple"));
     }
     @Test
-    public void testGetWieght() {
+    public void testGetWeight() {
         assertTrue(product.getWeight()==150);
     }
     @Test
@@ -31,11 +31,13 @@ public class ProductTest {
     @Test
     public void testSetPrice() {
         product.setPrice(1.1);
+
         assertTrue(product.getPrice()==1.1);
     }
     @Test
     public void testSetStringFormatter() {
         product.setStringFormatter(() -> "New formatter");
+
         assertTrue(product.toString().equals("New formatter"));
     }
     @Test

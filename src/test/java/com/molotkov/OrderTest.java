@@ -11,9 +11,9 @@ public class OrderTest {
     private Basket basket;
 
     @Before
-    public void setup() throws BasketException {
+    public void setUp() throws BasketException {
         basket = new Basket();
-        Product test1 = new Product("Apple", 0.150, 0.8);
+        final Product test1 = new Product("Apple", 0.150, 0.8);
         basket.addProducts(test1, 1);
         order = new Order(basket, "London");
     }
@@ -24,23 +24,27 @@ public class OrderTest {
     }
     @Test
     public void testSetBasket() {
-        Basket testBasket = new Basket();
+        final Basket testBasket = new Basket();
         order.setBasket(testBasket);
+
         assertTrue(order.getBasket().equals(testBasket));
     }
     @Test
     public void testRemoveBasket() {
         order.removeBasket();
+
         assertTrue(null == order.getBasket());
     }
     @Test
     public void testChangeAddress() {
         order.changeAddress("Manchester");
+
         assertTrue(order.getAddress().equals("Manchester"));
     }
     @Test
     public void testSetStringFormatter() {
         order.setStringFormatter(() -> "New formatter");
+
         assertTrue(order.toString().equals("New formatter"));
     }
     @Test
@@ -50,6 +54,7 @@ public class OrderTest {
     @Test
     public void testToStringWithMultipleProducts() throws BasketException {
         order.getBasket().addProducts(new Product("Chicken", 1, 2.3), 2);
+
         assertTrue(order.toString().equals("Order includes 2 products and would be delivered to London"));
     }
 }
