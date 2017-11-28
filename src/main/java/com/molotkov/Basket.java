@@ -1,15 +1,16 @@
 package com.molotkov;
 
 import com.molotkov.Exceptions.BasketException;
+import com.molotkov.Interfaces.ProductStorage;
 import com.molotkov.Interfaces.StringFormatter;
 import com.molotkov.Products.Product;
 import java.util.HashMap;
 
-public class Basket {
+public class Basket implements ProductStorage {
     private HashMap<Product, Integer> products;
     private StringFormatter stringFormatter;
 
-    public Basket() {
+    Basket() {
         this.products = new HashMap<>();
         this.stringFormatter = () -> {
             int basketSize = this.products.size();
@@ -56,5 +57,4 @@ public class Basket {
     public String toString() {
         return stringFormatter.formatToString();
     }
-
 }

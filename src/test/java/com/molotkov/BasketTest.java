@@ -51,8 +51,7 @@ public class BasketTest {
     }
     @Test(expected = BasketException.class)
     public void testAddNullProduct() throws BasketException {
-        Product test = null;
-        basket.addProducts(test,1);
+        basket.addProducts(null,1);
     }
     @Test
     public void testRemoveOneProduct() throws BasketException {

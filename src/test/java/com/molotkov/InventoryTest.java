@@ -4,9 +4,7 @@ import com.molotkov.Exceptions.InventoryException;
 import com.molotkov.Products.Product;
 import org.junit.Before;
 import org.junit.Test;
-
 import java.text.DecimalFormat;
-
 import static org.junit.Assert.assertTrue;
 
 public class InventoryTest {
@@ -25,16 +23,16 @@ public class InventoryTest {
     public void testAddOneProduct() throws InventoryException {
         Product test = new Product("Apple",0.150, 0.8);
         inventory.addProducts(test, 1);
-        assertTrue(inventory.getInventory().containsKey(test));
-        assertTrue(inventory.getInventory().get(test)==1);
+        assertTrue(inventory.getProducts().containsKey(test));
+        assertTrue(inventory.getProducts().get(test)==1);
     }
     @Test
     public void testAddSameProducts() throws InventoryException {
         Product test = new Product("Apple",0.150, 0.8);
         inventory.addProducts(test, 1);
         inventory.addProducts(test, 1);
-        assertTrue(inventory.getInventory().containsKey(test));
-        assertTrue(inventory.getInventory().get(test)==2);
+        assertTrue(inventory.getProducts().containsKey(test));
+        assertTrue(inventory.getProducts().get(test)==2);
     }
     @Test
     public void testAddMultipleProducts() throws InventoryException {
@@ -44,12 +42,12 @@ public class InventoryTest {
         inventory.addProducts(test1,3);
         Product test2 = new Product("Beef", 0.5, 3.25);
         inventory.addProducts(test2,4);
-        assertTrue(inventory.getInventory().containsKey(test));
-        assertTrue(inventory.getInventory().containsKey(test1));
-        assertTrue(inventory.getInventory().containsKey(test2));
-        assertTrue(inventory.getInventory().get(test)==2);
-        assertTrue(inventory.getInventory().get(test1)==3);
-        assertTrue(inventory.getInventory().get(test2)==4);
+        assertTrue(inventory.getProducts().containsKey(test));
+        assertTrue(inventory.getProducts().containsKey(test1));
+        assertTrue(inventory.getProducts().containsKey(test2));
+        assertTrue(inventory.getProducts().get(test)==2);
+        assertTrue(inventory.getProducts().get(test1)==3);
+        assertTrue(inventory.getProducts().get(test2)==4);
     }
     @Test(expected = InventoryException.class)
     public void testAddNullProduct() throws InventoryException {
@@ -60,14 +58,14 @@ public class InventoryTest {
         Product test = new Product("Apple", 0.150, 0.8);
         inventory.addProducts(test,2);
         inventory.removeProducts(test, 1);
-        assertTrue(inventory.getInventory().get(test)==1);
+        assertTrue(inventory.getProducts().get(test)==1);
     }
     @Test
     public void testRemoveProductCompletely() throws InventoryException {
         Product test = new Product("Apple", 0.150, 0.8);
         inventory.addProducts(test,2);
         inventory.removeProducts(test, 2);
-        assertTrue(!inventory.getInventory().containsKey(test));
+        assertTrue(!inventory.getProducts().containsKey(test));
     }
     @Test(expected = InventoryException.class)
     public void testRemoveProductMoreThanExistsInBasket() throws InventoryException {
@@ -82,7 +80,7 @@ public class InventoryTest {
         inventory.addProducts(test,2);
         inventory.addProducts(test1, 2);
         DecimalFormat total = new DecimalFormat("####0.0");
-        assertTrue(total.format(inventory.calculateInventoryPrice()).equals("6.2"));
+        assertTrue(total.format(inventory.calculateTotal()).equals("6.2"));
     }
     @Test
     public void testSetStringFormatter() {

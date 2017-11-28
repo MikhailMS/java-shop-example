@@ -7,19 +7,19 @@ This project will be written using Java 8 approach, rather than Java 7 and older
 
 Also I am using TDD approach to complete this project as I found this really convinient way to develop projects in Java. And as extra I'm trying to use Travis CI for building and testing project together with Codacy for keeping my code clean and consistent.
 ## Plan of action:
-  - [ ] Erase dummy tests for **Product, Basket, Order, Inventory, Shop** classes and re-write them accordingly
+  - [x] Erase dummy tests for **Product, Basket, Order, Inventory, Shop** classes and re-write them accordingly
       - [x] **ProductTest** class
       - [x] **BasketTest** class
       - [x] **OrderTest** class
       - [x] **InventoryTest** class
-      - [ ] **ShopTest** class
+      - [x] **ShopTest** class
       
-  - [ ] Complete classes mentioned above to see, how application works
+  - [x] Complete classes mentioned above to see, how application works
       - [x] **Product** class
       - [x] **Basket** class
       - [x] **Order** class
       - [x] **Inventory** class
-      - [ ] **Shop** class
+      - [x] **Shop** class
       
   - [ ] In simple version of such exercise, to save data it is proposed to write data into files, however I'll write it into PostgreSQL DB
       - [ ] Can save basket into DB

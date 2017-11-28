@@ -1,23 +1,23 @@
 package com.molotkov;
 
 import com.molotkov.Exceptions.InventoryException;
+import com.molotkov.Interfaces.ProductStorage;
 import com.molotkov.Interfaces.StringFormatter;
 import com.molotkov.Products.Product;
-
 import java.text.DecimalFormat;
 import java.util.HashMap;
 
-public class Inventory {
+public class Inventory implements ProductStorage {
     private HashMap<Product, Integer> products;
     private StringFormatter stringFormatter;
 
-    public Inventory() {
+    Inventory() {
         this.products = new HashMap<>();
         this.stringFormatter = () -> {
             int productsSize = this.products.size();
             String itemString = productsSize > 1 ? productsSize + " products" : productsSize + " product";
             DecimalFormat total = new DecimalFormat("####0.0");
-            return String.format("Inventory has %s, total price of the stock: %s", itemString, total.format(calculateInventoryPrice()));
+            return String.format("Inventory has %s, total price of the stock: %s", itemString, total.format(calculateTotal()));
         };
     }
 
@@ -40,11 +40,11 @@ public class Inventory {
         }
     }
 
-    public HashMap<Product, Integer> getInventory() {
+    public HashMap<Product, Integer> getProducts() {
         return products;
     }
 
-    public double calculateInventoryPrice() {
+    public double calculateTotal() {
         return this.products.entrySet()
                 .parallelStream()
                 .mapToDouble((product) -> product.getKey().getPrice()*product.getValue())
