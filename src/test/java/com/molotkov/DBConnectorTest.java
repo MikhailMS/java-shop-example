@@ -21,6 +21,9 @@ public class DBConnectorTest {
     public void setUp() {
         hikariConfig = new HikariConfig();
         connector = new DBConnector(postgres.getJdbcUrl());
+        hikariConfig.setJdbcUrl(postgres.getJdbcUrl());     // irrelevant, but without this line Travis CI build fails
+        hikariConfig.setUsername(postgres.getUsername());   // irrelevant, but without this line Travis CI build fails
+        hikariConfig.setPassword(postgres.getPassword());   // irrelevant, but without this line Travis CI build fails
     }
 
     @Test
