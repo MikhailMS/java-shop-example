@@ -8,7 +8,7 @@ public class DBConnector {
     private String dbUserPasswd;
     private Connection connection;
 
-    public DBConnector(String dbUrl, String dbUserName, String dbUserPasswd) {
+    public DBConnector(final String dbUrl, final String dbUserName, final String dbUserPasswd) {
         this.dbUrl = dbUrl;
         try {
             Class.forName("org.postgresql.Driver");
@@ -24,11 +24,11 @@ public class DBConnector {
         }
     }
 
-    public void changeDBUrl(String newUrl) {
+    public void changeDBUrl(final String newUrl) {
         this.dbUrl = newUrl;
     }
 
-    public void changeUserNameAndPasswd(String userName, String userPasswd) {
+    public void changeUserNameAndPasswd(final String userName, final String userPasswd) {
         this.dbUserName = userName;
         this.dbUserPasswd = userPasswd;
     }

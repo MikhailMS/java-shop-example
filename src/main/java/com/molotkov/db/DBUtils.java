@@ -6,7 +6,6 @@ import java.util.stream.Stream;
 
 
 public class DBUtils {
-    String url = "jdbc:postgresql://localhost/test_db";
 
     public static void createTable(final Connection connection, final String tableName, final String[] columns) {
         Statement statement;
@@ -14,8 +13,7 @@ public class DBUtils {
             statement = connection.createStatement();
             final String columnsString = Stream.of(columns).collect(Collectors.joining(", "));
             final String query = String.format("CREATE TABLE IF NOT EXISTS %s ( %s )", tableName, columnsString);
-            System.out.println(query);
-            ResultSet resultSet = statement.executeQuery(query);
+            final ResultSet resultSet = statement.executeQuery(query);
             resultSet.close();
             statement.close();
         } catch (SQLException ex) {
@@ -29,8 +27,7 @@ public class DBUtils {
             statement = connection.createStatement();
             final String columnsString = Stream.of(rowValues).collect(Collectors.joining(", "));
             final String query = String.format("INSERT INTO %s VALUES ( %s )", tableName, columnsString);
-            System.out.println(query);
-            ResultSet resultSet = statement.executeQuery(query);
+            final ResultSet resultSet = statement.executeQuery(query);
             resultSet.close();
             statement.close();
         } catch (SQLException ex) {
@@ -47,7 +44,6 @@ public class DBUtils {
             selectColumnsString = Stream.of(selectColumns).collect(Collectors.joining(", "));
         }
         final String query = String.format("SELECT %s FROM %s", selectColumnsString, tableName);
-        System.out.println(query);
         ResultSet resultSet = statement.executeQuery(query);
 
         return new DBCursorHolder(resultSet, statement);
@@ -63,7 +59,6 @@ public class DBUtils {
             selectColumnsString = Stream.of(selectColumns).collect(Collectors.joining(", "));
         }
         final String query = String.format("SELECT %s FROM %s WHERE %s", selectColumnsString, tableName, filterArgumentsString);
-        System.out.println(query);
         ResultSet resultSet = statement.executeQuery(query);
 
         return new DBCursorHolder(resultSet, statement);
@@ -74,8 +69,7 @@ public class DBUtils {
         try {
             statement = connection.createStatement();
             final String query = String.format("DROP TABLE IF EXISTS %s", tableName);
-            System.out.println(query);
-            ResultSet resultSet = statement.executeQuery(query);
+            final ResultSet resultSet = statement.executeQuery(query);
             resultSet.close();
             statement.close();
         } catch (SQLException ex) {
