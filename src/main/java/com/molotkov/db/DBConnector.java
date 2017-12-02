@@ -18,6 +18,7 @@ public class DBConnector {
                 this.dbUserName = dbUserName;
                 this.dbUserPasswd = dbUserPasswd;
                 this.connection = DriverManager.getConnection(this.dbUrl, this.dbUserName, this.dbUserPasswd);
+                this.connection = DriverManager.getConnection()
             }
         } catch (ClassNotFoundException | SQLException ex) {
             ex.printStackTrace();

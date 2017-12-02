@@ -5,25 +5,19 @@ import org.junit.Before;
 import org.junit.Test;
 import static org.junit.Assert.assertTrue;
 import java.sql.Connection;
-import com.zaxxer.hikari.HikariConfig;
 
 import org.junit.ClassRule;
 import org.testcontainers.containers.PostgreSQLContainer;
 
 public class DBConnectorTest {
     private DBConnector connector;
-    private HikariConfig hikariConfig;
 
     @ClassRule
     public static PostgreSQLContainer postgres = new PostgreSQLContainer();
 
     @Before
     public void setUp() {
-        hikariConfig = new HikariConfig();
-        connector = new DBConnector(postgres.getJdbcUrl());
-        hikariConfig.setJdbcUrl(postgres.getJdbcUrl());     // irrelevant, but without this line Travis CI build fails
-        hikariConfig.setUsername(postgres.getUsername());   // irrelevant, but without this line Travis CI build fails
-        hikariConfig.setPassword(postgres.getPassword());   // irrelevant, but without this line Travis CI build fails
+        connector = new DBConnector(postgres.getJdbcUrl(), postgres.getUsername(), postgres.getPassword());
     }
 
     @Test
