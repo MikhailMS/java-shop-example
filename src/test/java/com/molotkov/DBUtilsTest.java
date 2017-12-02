@@ -30,7 +30,7 @@ public class DBUtilsTest {
 
     @Test
     public void testDBUtilsInFullButDeleteTable() throws SQLException {
-        HikariDataSource dataSource = new HikariDataSource(hikariConfig);
+        final HikariDataSource dataSource = new HikariDataSource(hikariConfig);
         final String[] params = {
                 "id integer NOT NULL",
                 "string text NOT NULL"
@@ -55,14 +55,14 @@ public class DBUtilsTest {
         DBUtils.insertIntoTable(dataSource.getConnection(), "test_table", insertRow1);
         DBCursorHolder cursor = DBUtils.selectFromTable(dataSource.getConnection(), "test_table", selectColumns);
         cursor.getResults().next();
-        String resultString1 = cursor.getResults().getString(1);
+        final String resultString1 = cursor.getResults().getString(1);
         assertEquals("Create/Insert/Select queries succeed", "1",resultString1);
         cursor.closeCursor();
 
         DBUtils.insertIntoTable(dataSource.getConnection(), "test_table", insertRow2);
         cursor = DBUtils.filterFromTable(dataSource.getConnection(), "test_table", selectColumns, filterArguments);
         cursor.getResults().next();
-        String resultString2 = cursor.getResults().getString(1);
+        final String resultString2 = cursor.getResults().getString(1);
         assertEquals("Filter query succeeds", "2",resultString2);
         cursor.closeCursor();
     }
