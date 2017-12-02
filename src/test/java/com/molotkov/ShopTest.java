@@ -88,7 +88,6 @@ public class ShopTest {
     public void testToStringOneProduct() throws InventoryException {
         final Product test = new Product("Apple", 0.150, 0.8);
         shop.addToInventory(test,2);
-        System.out.println(shop.toString());
 
         assertTrue(shop.toString().equals("Shop has inventory with 1 product and total value of 1.6"));
     }
