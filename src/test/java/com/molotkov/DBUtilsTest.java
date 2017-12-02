@@ -69,7 +69,7 @@ public class DBUtilsTest {
 
     @Test(expected = SQLException.class)
     public void testDeleteTable() throws SQLException {
-        HikariDataSource dataSource = new HikariDataSource(hikariConfig);
+        final HikariDataSource dataSource = new HikariDataSource(hikariConfig);
 
         DBUtils.createTable(dataSource.getConnection(), "test_table", new String[]{});
         DBUtils.deleteTable(dataSource.getConnection(), "test_table");
