@@ -1,6 +1,12 @@
+language: java
+jdk:
+  - oraclejdk8
+
 env:
         - CODACY_PROJECT_TOKEN=30ded88adc3944479b2de1780b26f01b
-language: java
+sudo: required
+services:
+  - docker
 
 before_install:
         - sudo apt-get install jq

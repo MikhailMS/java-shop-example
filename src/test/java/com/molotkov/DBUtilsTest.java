@@ -7,15 +7,12 @@ import com.zaxxer.hikari.HikariDataSource;
 import org.junit.Before;
 
 import org.junit.ClassRule;
-import org.junit.Rule;
 import org.junit.Test;
 import org.testcontainers.containers.PostgreSQLContainer;
 
-import java.sql.ResultSet;
 import java.sql.SQLException;
 
 import static org.rnorth.visibleassertions.VisibleAssertions.assertEquals;
-import static org.junit.Assert.assertTrue;
 
 public class DBUtilsTest {
     private HikariConfig hikariConfig;
