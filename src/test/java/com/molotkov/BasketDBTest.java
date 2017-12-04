@@ -51,6 +51,9 @@ public class BasketDBTest {
         valuesList.add("1");
         valuesList.add("testUser");
         valuesList.addAll(testBasket.toDBFormat());
+
+        valuesList.stream().forEach(System.out::println);
+
         DBUtils.insertIntoTable(dataSource.getConnection(), "baskets", valuesList.toArray(new String[0]));
 
         DBCursorHolder cursor = DBUtils.selectFromTable(dataSource.getConnection(), "baskets", new String[] {"products_name"});
