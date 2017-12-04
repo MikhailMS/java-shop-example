@@ -8,7 +8,6 @@ import com.zaxxer.hikari.HikariConfig;
 import com.zaxxer.hikari.HikariDataSource;
 import org.junit.Before;
 import org.junit.ClassRule;
-import org.junit.Ignore;
 import org.junit.Test;
 import org.testcontainers.containers.PostgreSQLContainer;
 
@@ -70,26 +69,6 @@ public class BasketDBTest {
         Basket restoredBasket = new Basket();
         restoredBasket.restoreFromDB(productsName, productsAmount);
         assertEquals("RetrieveBasketFromDB succeeded", "Basket has 1 product.",restoredBasket.toString());
-        cursor.closeCursor();
-    }
-
-    @Ignore
-    //@Test
-    public void testRetrieveBasketFromDB() throws SQLException {
-        Basket testBasket = new Basket();
-
-        Statement statement = dataSource.getConnection().createStatement();
-        statement.execute("INSERT INTO baskets ( basket_owner, products_name, products_amount ) VALUES ( 'testUser', 'apple', '1' )");
-        statement.close();
-
-        DBCursorHolder cursor = DBUtils.filterFromTable(dataSource.getConnection(),"baskets", new String[] {"products_name", "products_amount"}, new String[] {"basket_owner = 'testUser'"});
-
-        cursor.getResults().next();
-        final String productsName = cursor.getResults().getString(1);
-        final String productsAmount = cursor.getResults().getString(2);
-
-        testBasket.restoreFromDB(productsName, productsAmount);
-        assertEquals("RetrieveBasketFromDB succeeded", "Basket has 1 product.",testBasket.toString());
         cursor.closeCursor();
     }
 }

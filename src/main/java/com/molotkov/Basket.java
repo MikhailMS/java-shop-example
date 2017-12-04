@@ -59,15 +59,15 @@ public class Basket implements ProductStorage {
 
     public ArrayList<String> toDBFormat() {
         /*
-            On bigger sets this implementation would be a bottleneck. Creation of 'names' and 'amounts' strings could be
+            On bigger sets this implementation could be a bottleneck. Creation of 'names' and 'amounts' strings could be
             improved by either using threads or combine those two together
          */
         ArrayList<String> result = new ArrayList<>();
-        String names = this.products.entrySet()
+        final String names = this.products.entrySet()
                 .parallelStream()
                 .map(p -> String.format("'%s'",p.getKey().getName()))
                 .collect(Collectors.joining(","));
-        String amounts = this.products.entrySet()
+        final String amounts = this.products.entrySet()
                 .parallelStream()
                 .map(p -> p.getValue().toString())
                 .collect(Collectors.joining(","));
@@ -77,23 +77,22 @@ public class Basket implements ProductStorage {
         return result;
     }
 
-    public void restoreFromDB(String productsName, String productsAmount) {
-        List<String> names = Arrays.asList(productsName.split(","));
-        List<String> amounts = Arrays.asList(productsAmount.split(","));
-        System.out.println(names);
-        System.out.println(amounts);
+    public void restoreFromDB(final String productsName, final String productsAmount) {
+        final List<String> names = Arrays.asList(productsName.split(","));
+        final List<String> amounts = Arrays.asList(productsAmount.split(","));
+
         iterateSimultaneously(names, amounts, (String name, String amount) -> {
             try {
                 addProducts(new Product(name, 0.150, 0.8), Integer.parseInt(amount));
-            } catch (BasketException e) {
-                e.printStackTrace();
+            } catch (BasketException ex) {
+                ex.printStackTrace();
             }
         });
     }
 
-    private static <T1, T2> void iterateSimultaneously(Iterable<T1> c1, Iterable<T2> c2, BiConsumer<T1, T2> consumer) {
-        Iterator<T1> i1 = c1.iterator();
-        Iterator<T2> i2 = c2.iterator();
+    private static <T1, T2> void iterateSimultaneously(final Iterable<T1> c1, final Iterable<T2> c2, final BiConsumer<T1, T2> consumer) {
+        final Iterator<T1> i1 = c1.iterator();
+        final Iterator<T2> i2 = c2.iterator();
         while (i1.hasNext() && i2.hasNext()) {
             consumer.accept(i1.next(), i2.next());
         }
