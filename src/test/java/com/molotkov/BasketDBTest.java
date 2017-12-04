@@ -56,7 +56,7 @@ public class BasketDBTest {
         DBCursorHolder cursor = DBUtils.selectFromTable(dataSource.getConnection(), "baskets", new String[] {"products_name"});
         cursor.getResults().next();
         final String resultString1 = cursor.getResults().getString(1);
-        assertEquals("Create/Insert/Select queries succeed", "apple",resultString1);
+        assertEquals("SaveBasketToDB succeeded", "apple",resultString1);
         cursor.closeCursor();
     }
 
@@ -75,7 +75,7 @@ public class BasketDBTest {
         final String productsAmount = cursor.getResults().getString(2);
 
         testBasket.restoreFromDB(productsName, productsAmount);
-        assertEquals("Create/Insert/Select queries succeed", "Basket has 1 product.",testBasket.toString());
+        assertEquals("RetrieveBasketFromDB succeeded", "Basket has 1 product.",testBasket.toString());
         cursor.closeCursor();
     }
 }
