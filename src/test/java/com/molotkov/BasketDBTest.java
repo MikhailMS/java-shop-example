@@ -6,6 +6,7 @@ import com.molotkov.exceptions.BasketException;
 import com.molotkov.products.Product;
 import com.zaxxer.hikari.HikariConfig;
 import com.zaxxer.hikari.HikariDataSource;
+import org.junit.AfterClass;
 import org.junit.Before;
 import org.junit.ClassRule;
 import org.junit.Test;
@@ -71,5 +72,10 @@ public class BasketDBTest {
         restoredBasket.restoreFromDB(productsName, productsAmount);
         assertEquals("RetrieveBasketFromDB succeeded", "Basket has 1 product.",restoredBasket.toString());
         cursor.closeCursor();
+    }
+
+    @AfterClass
+    public static void cleanUp() {
+        postgres.close();
     }
 }

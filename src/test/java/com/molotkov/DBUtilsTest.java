@@ -4,6 +4,7 @@ import com.molotkov.db.DBCursorHolder;
 import com.molotkov.db.DBUtils;
 import com.zaxxer.hikari.HikariConfig;
 import com.zaxxer.hikari.HikariDataSource;
+import org.junit.AfterClass;
 import org.junit.Before;
 
 import org.junit.ClassRule;
@@ -77,4 +78,8 @@ public class DBUtilsTest {
         final DBCursorHolder cursor = DBUtils.selectFromTable(dataSource.getConnection(), "test_table", new String[]{});
     }
 
+    @AfterClass
+    public static void cleanUp() {
+        postgres.close();
+    }
 }
