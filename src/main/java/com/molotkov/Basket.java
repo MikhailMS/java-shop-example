@@ -84,11 +84,13 @@ public class Basket implements ProductStorage {
         System.out.println(amounts);
         iterateSimultaneously(names, amounts, (String name, String amount) -> {
             try {
+                System.out.println("product 1");
                 addProducts(new Product(name, 0.150, 0.8), Integer.parseInt(amount));
             } catch (BasketException e) {
                 e.printStackTrace();
             }
         });
+        System.out.println(toString());
     }
 
     private static <T1, T2> void iterateSimultaneously(Iterable<T1> c1, Iterable<T2> c2, BiConsumer<T1, T2> consumer) {
