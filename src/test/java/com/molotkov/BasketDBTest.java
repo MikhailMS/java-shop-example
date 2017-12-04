@@ -48,7 +48,7 @@ public class BasketDBTest {
             ex.printStackTrace();
         }
         ArrayList<String> valuesList = new ArrayList<>();
-        valuesList.add("1");
+        valuesList.add("2");
         valuesList.add("testUser");
         valuesList.addAll(testBasket.toDBFormat());
 
