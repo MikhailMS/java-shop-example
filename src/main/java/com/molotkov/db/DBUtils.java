@@ -67,7 +67,7 @@ public class DBUtils {
         try {
             statement = connection.createStatement();
             final String query = String.format("DROP TABLE IF EXISTS %s", tableName);
-            statement.executeQuery(query);
+            statement.execute(query);
             statement.close();
         } catch (SQLException ex) {
             ex.printStackTrace();
