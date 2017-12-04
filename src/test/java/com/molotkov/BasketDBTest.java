@@ -50,7 +50,7 @@ public class BasketDBTest {
         }
         ArrayList<String> valuesList = new ArrayList<>();
         valuesList.add("1");
-        valuesList.add("testUser");
+        valuesList.add("'testUser'");
         valuesList.addAll(testBasket.toDBFormat());
 
         System.out.println(valuesList);
@@ -59,8 +59,8 @@ public class BasketDBTest {
 
         DBCursorHolder cursor = DBUtils.selectFromTable(dataSource.getConnection(), "baskets", new String[] {"products_name"});
         cursor.getResults().next();
-        final String resultString1 = cursor.getResults().getString(1);
-        assertEquals("SaveBasketToDB succeeded", "apple",resultString1);
+        final String productName = cursor.getResults().getString(1);
+        assertEquals("SaveBasketToDB succeeded", "apple",productName);
         cursor.closeCursor();
     }
 
