@@ -62,9 +62,20 @@ public class BasketDBTest {
         final String productName = cursor.getResults().getString(1);
         assertEquals("SaveBasketToDB succeeded", "apple",productName);
         cursor.closeCursor();
+
+        cursor = DBUtils.filterFromTable(dataSource.getConnection(),"baskets", new String[] {"products_name", "products_amount"}, new String[] {"basket_owner = 'testUser'"});
+
+        cursor.getResults().next();
+        final String productsName = cursor.getResults().getString(1);
+        final String productsAmount = cursor.getResults().getString(2);
+
+        testBasket.restoreFromDB(productsName, productsAmount);
+        assertEquals("RetrieveBasketFromDB succeeded", "Basket has 1 product.",testBasket.toString());
+        cursor.closeCursor();
     }
 
-    @Test
+    @Ignore
+    //@Test
     public void testRetrieveBasketFromDB() throws SQLException {
         Basket testBasket = new Basket();
 
