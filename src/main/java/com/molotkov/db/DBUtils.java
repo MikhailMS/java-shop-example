@@ -13,8 +13,7 @@ public class DBUtils {
             statement = connection.createStatement();
             final String columnsString = Stream.of(columns).collect(Collectors.joining(", "));
             final String query = String.format("CREATE TABLE IF NOT EXISTS %s ( %s )", tableName, columnsString);
-            final ResultSet resultSet = statement.executeQuery(query);
-            resultSet.close();
+            statement.execute(query);
             statement.close();
         } catch (SQLException ex) {
             ex.printStackTrace();
@@ -27,8 +26,7 @@ public class DBUtils {
             statement = connection.createStatement();
             final String columnsString = Stream.of(rowValues).collect(Collectors.joining(", "));
             final String query = String.format("INSERT INTO %s VALUES ( %s )", tableName, columnsString);
-            final ResultSet resultSet = statement.executeQuery(query);
-            resultSet.close();
+            statement.execute(query);
             statement.close();
         } catch (SQLException ex) {
             ex.printStackTrace();
@@ -69,8 +67,7 @@ public class DBUtils {
         try {
             statement = connection.createStatement();
             final String query = String.format("DROP TABLE IF EXISTS %s", tableName);
-            final ResultSet resultSet = statement.executeQuery(query);
-            resultSet.close();
+            statement.executeQuery(query);
             statement.close();
         } catch (SQLException ex) {
             ex.printStackTrace();
