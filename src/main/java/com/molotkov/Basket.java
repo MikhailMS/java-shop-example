@@ -80,7 +80,8 @@ public class Basket implements ProductStorage {
     public void restoreFromDB(String productsName, String productsAmount) {
         List<String> names = Arrays.asList(productsName.split(","));
         List<String> amounts = Arrays.asList(productsAmount.split(","));
-
+        System.out.println(names);
+        System.out.println(amounts);
         iterateSimultaneously(names, amounts, (String name, String amount) -> {
             try {
                 addProducts(new Product(name, 0.150, 0.8), Integer.parseInt(amount));

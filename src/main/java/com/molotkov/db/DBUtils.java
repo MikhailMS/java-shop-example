@@ -27,7 +27,6 @@ public class DBUtils {
             statement = connection.createStatement();
             final String columnsString = Stream.of(rowValues).collect(Collectors.joining(", "));
             final String query = String.format("INSERT INTO %s VALUES ( %s )", tableName, columnsString);
-            System.out.println(query);
             final ResultSet resultSet = statement.executeQuery(query);
             resultSet.close();
             statement.close();

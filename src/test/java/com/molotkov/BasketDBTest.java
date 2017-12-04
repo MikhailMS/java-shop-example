@@ -49,11 +49,9 @@ public class BasketDBTest {
             ex.printStackTrace();
         }
         ArrayList<String> valuesList = new ArrayList<>();
-        valuesList.add("2");
+        valuesList.add("1");
         valuesList.add("'testUser'");
         valuesList.addAll(testBasket.toDBFormat());
-
-        System.out.println(valuesList);
 
         DBUtils.insertIntoTable(dataSource.getConnection(), "baskets", valuesList.toArray(new String[0]));
 
