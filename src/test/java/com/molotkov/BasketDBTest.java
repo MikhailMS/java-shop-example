@@ -8,6 +8,7 @@ import com.zaxxer.hikari.HikariConfig;
 import com.zaxxer.hikari.HikariDataSource;
 import org.junit.Before;
 import org.junit.ClassRule;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.testcontainers.containers.PostgreSQLContainer;
 
@@ -48,11 +49,11 @@ public class BasketDBTest {
             ex.printStackTrace();
         }
         ArrayList<String> valuesList = new ArrayList<>();
-        valuesList.add("2");
+        valuesList.add("1");
         valuesList.add("testUser");
         valuesList.addAll(testBasket.toDBFormat());
 
-        valuesList.stream().forEach(System.out::println);
+        System.out.println(valuesList);
 
         DBUtils.insertIntoTable(dataSource.getConnection(), "baskets", valuesList.toArray(new String[0]));
 
@@ -63,7 +64,8 @@ public class BasketDBTest {
         cursor.closeCursor();
     }
 
-    @Test
+    @Ignore
+    //@Test
     public void testRetrieveBasketFromDB() throws SQLException {
         Basket testBasket = new Basket();
 
