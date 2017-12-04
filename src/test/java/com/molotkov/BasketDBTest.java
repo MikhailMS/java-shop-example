@@ -42,16 +42,16 @@ public class BasketDBTest {
 
     @Test
     public void testSaveBasketToDB() throws SQLException {
-        Basket testBasket = new Basket();
+        Basket savedBasket = new Basket();
         try {
-            testBasket.addProducts(new Product("apple", 0.150, 0.8),2);
+            savedBasket.addProducts(new Product("apple", 0.150, 0.8),2);
         } catch (BasketException ex) {
             ex.printStackTrace();
         }
         ArrayList<String> valuesList = new ArrayList<>();
         valuesList.add("1");
         valuesList.add("'testUser'");
-        valuesList.addAll(testBasket.toDBFormat());
+        valuesList.addAll(savedBasket.toDBFormat());
 
         DBUtils.insertIntoTable(dataSource.getConnection(), "baskets", valuesList.toArray(new String[0]));
 
@@ -67,8 +67,9 @@ public class BasketDBTest {
         final String productsName = cursor.getResults().getString(1);
         final String productsAmount = cursor.getResults().getString(2);
 
-        testBasket.restoreFromDB(productsName, productsAmount);
-        assertEquals("RetrieveBasketFromDB succeeded", "Basket has 1 product.",testBasket.toString());
+        Basket restoredBasket = new Basket();
+        restoredBasket.restoreFromDB(productsName, productsAmount);
+        assertEquals("RetrieveBasketFromDB succeeded", "Basket has 1 product.",restoredBasket.toString());
         cursor.closeCursor();
     }
 
