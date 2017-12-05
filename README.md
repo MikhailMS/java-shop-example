@@ -21,11 +21,11 @@ Also I am using TDD approach to complete this project as I found this really con
       - [x] **Inventory** class
       - [x] **Shop** class
       
-  - [ ] In simple version of such exercise, to save data it is proposed to write data into files, however I'll write it into PostgreSQL DB
+  - [x] In simple version of such exercise, to save data it is proposed to write data into files, however I'll write it into PostgreSQL DB
       - [x] Can save basket into DB
-      - [ ] Can save order into DB
+      - [x] Can save order into DB
       - [x] Can restore basket from DB
-      - [ ] Can restore order from DB
+      - [x] Can restore order from DB
       
   - [ ] As an optional part, I'd like to introduce user system: administration and clients. First would be able to see all completed orders and inventory stock and its total cost, while customers can fill in baskets, make orders and see theirs basket and orders only
       - [ ] Can create administrator user
