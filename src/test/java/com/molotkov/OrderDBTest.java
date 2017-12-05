@@ -67,7 +67,7 @@ public class OrderDBTest {
         // Save order
         ArrayList<String> orderValuesList = new ArrayList<>();
         orderValuesList.add(basketId);
-        orderValuesList.add(savedOrder.getAddress());
+        orderValuesList.add(String.format("'%s'",savedOrder.getAddress()));
         DBUtils.insertSpecificIntoTable(dataSource.getConnection(), "orders", new String[]{"basket_id","address"}, orderValuesList.toArray(new String[0]));
 
         // Update basket to be processed = TRUE
