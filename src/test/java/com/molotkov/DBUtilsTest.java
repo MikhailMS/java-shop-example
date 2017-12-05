@@ -4,7 +4,6 @@ import com.molotkov.db.DBCursorHolder;
 import com.molotkov.db.DBUtils;
 import com.zaxxer.hikari.HikariConfig;
 import com.zaxxer.hikari.HikariDataSource;
-import org.junit.AfterClass;
 import org.junit.Before;
 
 import org.junit.ClassRule;
@@ -44,6 +43,10 @@ public class DBUtilsTest {
                 "2",
                 "'new text'"
         };
+        final String[] insertRow3 = {
+                "3",
+                "'once more'"
+        };
         final String[] selectColumns = {
                 "id"
         };
@@ -66,6 +69,19 @@ public class DBUtilsTest {
         final String resultString2 = cursor.getResults().getString(1);
         assertEquals("Filter query succeeds", "2",resultString2);
         cursor.closeCursor();
+
+        DBUtils.insertSpecificIntoTable(dataSource.getConnection(), "test_table", new String[] {"id", "string"}, insertRow3);
+        cursor = DBUtils.filterFromTable(dataSource.getConnection(), "test_table", selectColumns, new String[]{"string LIKE 'once%'"});
+        cursor.getResults().next();
+        final String resultString3 = cursor.getResults().getString(1);
+        assertEquals("Insert into specific columns query succeeds", "3",resultString3);
+        cursor.closeCursor();
+
+        DBUtils.updateTable(dataSource.getConnection(), "test_table", new String[]{"id"}, new String[]{"4"}, new String[]{"string LIKE 'once%'"});
+        cursor = DBUtils.filterFromTable(dataSource.getConnection(), "test_table", selectColumns, new String[]{"string LIKE 'once%'"});
+        cursor.getResults().next();
+        final String resultString4 = cursor.getResults().getString(1);
+        assertEquals("Update query succeeds", "4", resultString4);
     }
 
     @Test(expected = SQLException.class)
@@ -76,10 +92,5 @@ public class DBUtilsTest {
         DBUtils.deleteTable(dataSource.getConnection(), "test_table");
 
         final DBCursorHolder cursor = DBUtils.selectFromTable(dataSource.getConnection(), "test_table", new String[]{});
-    }
-
-    @AfterClass
-    public static void cleanUp() {
-        postgres.close();
     }
 }

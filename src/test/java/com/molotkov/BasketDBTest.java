@@ -6,7 +6,6 @@ import com.molotkov.exceptions.BasketException;
 import com.molotkov.products.Product;
 import com.zaxxer.hikari.HikariConfig;
 import com.zaxxer.hikari.HikariDataSource;
-import org.junit.AfterClass;
 import org.junit.Before;
 import org.junit.ClassRule;
 import org.junit.Test;
@@ -42,7 +41,7 @@ public class BasketDBTest {
     }
 
     @Test
-    public void testSaveBasketToDB() throws SQLException {
+    public void testBasketToFromDB() throws SQLException {
         Basket savedBasket = new Basket();
         try {
             savedBasket.addProducts(new Product("apple", 0.150, 0.8),2);
@@ -50,11 +49,10 @@ public class BasketDBTest {
             ex.printStackTrace();
         }
         ArrayList<String> valuesList = new ArrayList<>();
-        valuesList.add("1");
         valuesList.add("'testUser'");
         valuesList.addAll(savedBasket.toDBFormat());
 
-        DBUtils.insertIntoTable(dataSource.getConnection(), "baskets", valuesList.toArray(new String[0]));
+        DBUtils.insertSpecificIntoTable(dataSource.getConnection(),"baskets", new String[] {"basket_owner", "products_name", "products_amount"}, valuesList.toArray(new String[0]));
 
         DBCursorHolder cursor = DBUtils.selectFromTable(dataSource.getConnection(), "baskets", new String[] {"products_name"});
         cursor.getResults().next();
@@ -72,10 +70,5 @@ public class BasketDBTest {
         restoredBasket.restoreFromDB(productsName, productsAmount);
         assertEquals("RetrieveBasketFromDB succeeded", "Basket has 1 product.",restoredBasket.toString());
         cursor.closeCursor();
-    }
-
-    @AfterClass
-    public static void cleanUp() {
-        postgres.close();
     }
 }
