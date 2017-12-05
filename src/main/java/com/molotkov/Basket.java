@@ -4,7 +4,11 @@ import com.molotkov.exceptions.BasketException;
 import com.molotkov.interfaces.ProductStorage;
 import com.molotkov.interfaces.StringFormatter;
 import com.molotkov.products.Product;
-import java.util.HashMap;
+
+import java.util.*;
+import java.util.stream.Collectors;
+
+import static com.molotkov.Utils.iterateSimultaneously;
 
 public class Basket implements ProductStorage {
     private HashMap<Product, Integer> products;
@@ -34,7 +38,8 @@ public class Basket implements ProductStorage {
         } else if (this.products.get(product) == amount) {
             this.products.remove(product);
         } else {
-            throw new BasketException(String.format("Cannot remove %d instances of product as there are only %d instances!", amount, this.products.get(product)));
+            throw new BasketException(String.format("Cannot remove %d instances of product as there are only %d instances!",
+                    amount, this.products.get(product)));
         }
     }
 
@@ -51,6 +56,39 @@ public class Basket implements ProductStorage {
 
     public void setStringFormatter(final StringFormatter stringFormatter) {
         this.stringFormatter = stringFormatter;
+    }
+
+    public ArrayList<String> toDBFormat() {
+        /*
+            On bigger sets this implementation could be a bottleneck. Creation of 'names' and 'amounts' strings could be
+            improved by either using threads or combine those two together
+         */
+        ArrayList<String> result = new ArrayList<>();
+        final String names = this.products.entrySet()
+                .parallelStream()
+                .map(p -> String.format("'%s'",p.getKey().getName()))
+                .collect(Collectors.joining(","));
+        final String amounts = this.products.entrySet()
+                .parallelStream()
+                .map(p -> p.getValue().toString())
+                .collect(Collectors.joining(","));
+        result.add(names);
+        result.add(amounts);
+
+        return result;
+    }
+
+    public void restoreFromDB(final String productsName, final String productsAmount) {
+        final List<String> names = Arrays.asList(productsName.split(","));
+        final List<String> amounts = Arrays.asList(productsAmount.split(","));
+
+        iterateSimultaneously(names, amounts, (String name, String amount) -> {
+            try {
+                addProducts(new Product(name, 0.150, 0.8), Integer.parseInt(amount));
+            } catch (BasketException ex) {
+                ex.printStackTrace();
+            }
+        });
     }
 
     @Override

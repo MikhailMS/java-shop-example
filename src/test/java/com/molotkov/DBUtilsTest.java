@@ -31,40 +31,40 @@ public class DBUtilsTest {
     @Test
     public void testDBUtilsInFullButDeleteTable() throws SQLException {
         final HikariDataSource dataSource = new HikariDataSource(hikariConfig);
-        final String[] params = {
-                "id integer NOT NULL",
-                "string text NOT NULL"
-        };
-        final String[] insertRow1 = {
-                "1",
-                "'test text'"
-        };
-        final String[] insertRow2 = {
-                "2",
-                "'new text'"
-        };
         final String[] selectColumns = {
                 "id"
         };
-        final String[] filterArguments = {
-                "string LIKE 'new%'"
-        };
 
-        DBUtils.createTable(dataSource.getConnection(), "test_table", params);
+        DBUtils.createTable(dataSource.getConnection(), "test_table", new String[]{"id integer NOT NULL", "string text NOT NULL"});
 
-        DBUtils.insertIntoTable(dataSource.getConnection(), "test_table", insertRow1);
+        DBUtils.insertIntoTable(dataSource.getConnection(), "test_table", new String[]{"1", "'test text'"});
         DBCursorHolder cursor = DBUtils.selectFromTable(dataSource.getConnection(), "test_table", selectColumns);
         cursor.getResults().next();
         final String resultString1 = cursor.getResults().getString(1);
         assertEquals("Create/Insert/Select queries succeed", "1",resultString1);
         cursor.closeCursor();
 
-        DBUtils.insertIntoTable(dataSource.getConnection(), "test_table", insertRow2);
-        cursor = DBUtils.filterFromTable(dataSource.getConnection(), "test_table", selectColumns, filterArguments);
+        DBUtils.insertIntoTable(dataSource.getConnection(), "test_table", new String[]{"2", "'new text'"});
+        cursor = DBUtils.filterFromTable(dataSource.getConnection(), "test_table", selectColumns, new String[]{"string LIKE 'new%'"});
         cursor.getResults().next();
         final String resultString2 = cursor.getResults().getString(1);
         assertEquals("Filter query succeeds", "2",resultString2);
         cursor.closeCursor();
+
+        DBUtils.insertSpecificIntoTable(dataSource.getConnection(), "test_table", new String[] {"id", "string"}, new String[]{
+                "3", "'once more'"});
+        cursor = DBUtils.filterFromTable(dataSource.getConnection(), "test_table", selectColumns, new String[]{"string LIKE 'once%'"});
+        cursor.getResults().next();
+        final String resultString3 = cursor.getResults().getString(1);
+        assertEquals("Insert into specific columns query succeeds", "3",resultString3);
+        cursor.closeCursor();
+
+        DBUtils.updateTable(dataSource.getConnection(), "test_table", new String[]{"id"}, new String[]{"4"},
+                new String[]{"string LIKE 'once%'"});
+        cursor = DBUtils.filterFromTable(dataSource.getConnection(), "test_table", selectColumns, new String[]{"string LIKE 'once%'"});
+        cursor.getResults().next();
+        final String resultString4 = cursor.getResults().getString(1);
+        assertEquals("Update query succeeds", "4", resultString4);
     }
 
     @Test(expected = SQLException.class)
@@ -76,5 +76,4 @@ public class DBUtilsTest {
 
         final DBCursorHolder cursor = DBUtils.selectFromTable(dataSource.getConnection(), "test_table", new String[]{});
     }
-
 }
