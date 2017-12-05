@@ -34,9 +34,14 @@ public class OrderDBTest {
         dataSource = new HikariDataSource(hikariConfig);
         Statement statement = dataSource.getConnection().createStatement();
 
-        statement.execute("CREATE TABLE IF NOT EXISTS users ( user_name text PRIMARY KEY, user_passwd text NOT NULL, privileges boolean DEFAULT FALSE )");
-        statement.execute(" CREATE TABLE IF NOT EXISTS baskets ( basket_id serial PRIMARY KEY, basket_owner text REFERENCES users(user_name) ON DELETE CASCADE, products_name text NOT NULL, products_amount text NOT NULL, processed boolean DEFAULT FALSE, created_at timestamp DEFAULT CURRENT_TIMESTAMP )");
-        statement.execute("CREATE TABLE IF NOT EXISTS orders ( order_id serial, basket_id int4 REFERENCES baskets(basket_id) ON DELETE CASCADE, order_owner text REFERENCES users(user_name) ON DELETE CASCADE, address text NOT NULL, created_at timestamp DEFAULT CURRENT_TIMESTAMP )");
+        statement.execute("CREATE TABLE IF NOT EXISTS users ( user_name text PRIMARY KEY, user_passwd text NOT NULL," +
+                " privileges boolean DEFAULT FALSE )");
+        statement.execute(" CREATE TABLE IF NOT EXISTS baskets ( basket_id serial PRIMARY KEY," +
+                " basket_owner text REFERENCES users(user_name) ON DELETE CASCADE, products_name text NOT NULL," +
+                " products_amount text NOT NULL, processed boolean DEFAULT FALSE, created_at timestamp DEFAULT CURRENT_TIMESTAMP )");
+        statement.execute("CREATE TABLE IF NOT EXISTS orders ( order_id serial," +
+                " basket_id int4 REFERENCES baskets(basket_id) ON DELETE CASCADE, order_owner text REFERENCES users(user_name) ON DELETE CASCADE," +
+                " address text NOT NULL, created_at timestamp DEFAULT CURRENT_TIMESTAMP )");
         statement.execute("INSERT INTO users VALUES ( 'testUser', 'testUser', FALSE )");
         statement.close();
     }
@@ -56,10 +61,12 @@ public class OrderDBTest {
         ArrayList<String> valuesList = new ArrayList<>();
         valuesList.add("'testUser'");
         valuesList.addAll(testBasket.toDBFormat());
-        DBUtils.insertSpecificIntoTable(dataSource.getConnection(),"baskets", new String[] {"basket_owner", "products_name", "products_amount"}, valuesList.toArray(new String[0]));
+        DBUtils.insertSpecificIntoTable(dataSource.getConnection(),"baskets",
+                new String[] {"basket_owner", "products_name", "products_amount"}, valuesList.toArray(new String[0]));
 
         // Get basket_id
-        DBCursorHolder cursor = DBUtils.filterFromTable(dataSource.getConnection(), "baskets", new String[]{"basket_id"}, new String[]{"basket_owner = 'testUser'", "AND", "processed = FALSE"});
+        DBCursorHolder cursor = DBUtils.filterFromTable(dataSource.getConnection(), "baskets", new String[]{"basket_id"},
+                new String[]{"basket_owner = 'testUser'", "AND", "processed = FALSE"});
         cursor.getResults().next();
         final String basketId = cursor.getResults().getString(1);
         cursor.closeCursor();
@@ -68,13 +75,16 @@ public class OrderDBTest {
         ArrayList<String> orderValuesList = new ArrayList<>();
         orderValuesList.add(basketId);
         orderValuesList.add(String.format("'%s'",savedOrder.getAddress()));
-        DBUtils.insertSpecificIntoTable(dataSource.getConnection(), "orders", new String[]{"basket_id","address"}, orderValuesList.toArray(new String[0]));
+        DBUtils.insertSpecificIntoTable(dataSource.getConnection(), "orders", new String[]{"basket_id","address"},
+                orderValuesList.toArray(new String[0]));
 
         // Update basket to be processed = TRUE
-        DBUtils.updateTable(dataSource.getConnection(), "baskets", new String[]{"processed"}, new String[]{"TRUE"}, new String[]{"basket_owner = 'testUser'","basket_id = "+basketId});
+        DBUtils.updateTable(dataSource.getConnection(), "baskets", new String[]{"processed"}, new String[]{"TRUE"},
+                new String[]{"basket_owner = 'testUser'","basket_id = "+basketId});
 
         // Check if order been saved
-        cursor = DBUtils.filterFromTable(dataSource.getConnection(), "orders", new String[]{"order_id","address"}, new String[]{"basket_id = "+basketId});
+        cursor = DBUtils.filterFromTable(dataSource.getConnection(), "orders", new String[]{"order_id","address"},
+                new String[]{"basket_id = "+basketId});
         cursor.getResults().next();
         final String orderId = cursor.getResults().getString(1);
         final String orderAddress = cursor.getResults().getString(2);

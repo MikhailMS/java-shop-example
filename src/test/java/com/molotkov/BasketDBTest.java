@@ -34,8 +34,11 @@ public class BasketDBTest {
         dataSource = new HikariDataSource(hikariConfig);
         Statement statement = dataSource.getConnection().createStatement();
 
-        statement.executeUpdate("CREATE TABLE IF NOT EXISTS users ( user_name text PRIMARY KEY, user_passwd text NOT NULL, privileges boolean DEFAULT FALSE )");
-        statement.executeUpdate(" CREATE TABLE IF NOT EXISTS baskets ( basket_id serial PRIMARY KEY, basket_owner text REFERENCES users(user_name) ON DELETE CASCADE, products_name text NOT NULL, products_amount text NOT NULL, created_at timestamp DEFAULT CURRENT_TIMESTAMP )");
+        statement.executeUpdate("CREATE TABLE IF NOT EXISTS users ( user_name text PRIMARY KEY, user_passwd text NOT NULL," +
+                " privileges boolean DEFAULT FALSE )");
+        statement.executeUpdate(" CREATE TABLE IF NOT EXISTS baskets ( basket_id serial PRIMARY KEY," +
+                " basket_owner text REFERENCES users(user_name) ON DELETE CASCADE, products_name text NOT NULL," +
+                " products_amount text NOT NULL, created_at timestamp DEFAULT CURRENT_TIMESTAMP )");
         statement.executeUpdate("INSERT INTO users VALUES ( 'testUser', 'testUser', FALSE )");
         statement.close();
     }
@@ -52,7 +55,8 @@ public class BasketDBTest {
         valuesList.add("'testUser'");
         valuesList.addAll(savedBasket.toDBFormat());
 
-        DBUtils.insertSpecificIntoTable(dataSource.getConnection(),"baskets", new String[] {"basket_owner", "products_name", "products_amount"}, valuesList.toArray(new String[0]));
+        DBUtils.insertSpecificIntoTable(dataSource.getConnection(),"baskets",
+                new String[] {"basket_owner", "products_name", "products_amount"}, valuesList.toArray(new String[0]));
 
         DBCursorHolder cursor = DBUtils.selectFromTable(dataSource.getConnection(), "baskets", new String[] {"products_name"});
         cursor.getResults().next();
@@ -60,7 +64,8 @@ public class BasketDBTest {
         assertEquals("SaveBasketToDB succeeded", "apple",productName);
         cursor.closeCursor();
 
-        cursor = DBUtils.filterFromTable(dataSource.getConnection(),"baskets", new String[] {"products_name", "products_amount"}, new String[] {"basket_owner = 'testUser'"});
+        cursor = DBUtils.filterFromTable(dataSource.getConnection(),"baskets", new String[] {"products_name", "products_amount"},
+                new String[] {"basket_owner = 'testUser'"});
 
         cursor.getResults().next();
         final String productsName = cursor.getResults().getString(1);
