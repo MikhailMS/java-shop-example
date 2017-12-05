@@ -1,15 +1,11 @@
 package com.molotkov.db;
 
-import java.io.InputStream;
-import java.io.Reader;
-import java.math.BigDecimal;
-import java.net.URL;
 import java.sql.*;
 import java.util.*;
-import java.util.function.BiConsumer;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
+import static com.molotkov.Utils.iterateSimultaneously;
 
 public class DBUtils {
 
@@ -53,8 +49,8 @@ public class DBUtils {
     public static void updateTable(final Connection connection, final String tableName, final String[] columnsToUpdate, final String[] newValues, final String[] filterArguments) {
         try {
             final Statement statement = connection.createStatement();
-            List<String> columnsList = Arrays.asList(columnsToUpdate);
-            List<String> valuesList = Arrays.asList(newValues);
+            final List<String> columnsList = Arrays.asList(columnsToUpdate);
+            final List<String> valuesList = Arrays.asList(newValues);
             List<String> columnValueList = new ArrayList<>();
             iterateSimultaneously(columnsList, valuesList, (String column, String value) -> {
                 columnValueList.add(String.format("%s = %s",column, value));
@@ -106,14 +102,6 @@ public class DBUtils {
             statement.close();
         } catch (SQLException ex) {
             ex.printStackTrace();
-        }
-    }
-
-    private static <T1, T2> void iterateSimultaneously(final Iterable<T1> c1, final Iterable<T2> c2, final BiConsumer<T1, T2> consumer) {
-        final Iterator<T1> i1 = c1.iterator();
-        final Iterator<T2> i2 = c2.iterator();
-        while (i1.hasNext() && i2.hasNext()) {
-            consumer.accept(i1.next(), i2.next());
         }
     }
 }
