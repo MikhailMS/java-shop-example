@@ -117,11 +117,10 @@ public class UserTest {
         String inventory = "";
 
         while (cursor.getResults().next()) {
-            System.out.println(cursor.getResults().getString(3));
             inventory += String.format("%s ",cursor.getResults().getString(3));
         }
 
-        assertEquals("testUser1 can see inventory", true, orders.contains("3") && !orders.contains("4"));
+        assertEquals("testUser1 can see inventory", true, inventory.contains("3") && inventory.contains("4"));
         cursor.closeCursor();
 
         // Unsure admin can see inventory
@@ -129,11 +128,10 @@ public class UserTest {
         inventory = "";
 
         while (cursor.getResults().next()) {
-            System.out.println(cursor.getResults().getString(3));
             inventory += String.format("%s ",cursor.getResults().getString(3));
         }
 
-        assertEquals("admin can see inventory", true, orders.contains("3") && !orders.contains("4"));
+        assertEquals("admin can see inventory", true, inventory.contains("3") && inventory.contains("4"));
         cursor.closeCursor();
     }
 }
