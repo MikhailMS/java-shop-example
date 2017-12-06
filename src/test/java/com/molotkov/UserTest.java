@@ -109,6 +109,7 @@ public class UserTest {
         orders = "";
 
         while (cursor.getResults().next()) {
+            System.out.println(cursor.getResults().getString(3));
             orders += String.format("%s ",cursor.getResults().getString(3));
         }
 
