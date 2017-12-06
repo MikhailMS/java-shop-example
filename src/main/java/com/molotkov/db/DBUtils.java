@@ -81,6 +81,13 @@ public class DBUtils {
 
     public static DBCursorHolder filterFromTable(final Connection connection, final String tableName, final String[] selectColumns, final String[] filterArguments) throws SQLException {
         final Statement statement = connection.createStatement();
+        String whereKeyWord;
+        if (filterArguments.length==0) {
+            whereKeyWord = "";
+        } else {
+            whereKeyWord = "WHERE";
+        }
+
         final String filterArgumentsString = Stream.of(filterArguments).collect(Collectors.joining(" "));
         String selectColumnsString;
         if (selectColumns.length==0) {
@@ -88,7 +95,7 @@ public class DBUtils {
         } else {
             selectColumnsString = Stream.of(selectColumns).collect(Collectors.joining(", "));
         }
-        final String query = String.format("SELECT %s FROM %s WHERE %s", selectColumnsString, tableName, filterArgumentsString);
+        final String query = String.format("SELECT %s FROM %s %s %s", selectColumnsString, tableName, whereKeyWord, filterArgumentsString);
         System.out.println(query);
         final ResultSet resultSet = statement.executeQuery(query);
 
