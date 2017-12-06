@@ -22,7 +22,7 @@ public class User implements UserInterface {
     @Override
     public DBCursorHolder fetchOrders(final Connection connection, final String[] filterArguments) throws SQLException {
         // Does user have privilege?
-        DBCursorHolder cursor = DBUtils.filterFromTable(connection, "users", new String[]{"privilege"},
+        DBCursorHolder cursor = DBUtils.filterFromTable(connection, "users", new String[]{"privileges"},
                 new String[]{String.format("user_name = %s",userName)});
         cursor.getResults().next();
 
