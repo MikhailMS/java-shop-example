@@ -105,7 +105,7 @@ public class UserTest {
         cursor.closeCursor();
 
         // Ensure admin gets all orders
-        cursor = testUser1.fetchOrders(dataSource.getConnection(), new String[]{});
+        cursor = admin.fetchOrders(dataSource.getConnection(), new String[]{});
         orders = "";
 
         while (cursor.getResults().next()) {
