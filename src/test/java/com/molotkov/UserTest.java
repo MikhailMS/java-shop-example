@@ -117,6 +117,7 @@ public class UserTest {
         String inventory = "";
 
         while (cursor.getResults().next()) {
+            System.out.println(cursor.getResults().getString(3));
             orders += String.format("%s ",cursor.getResults().getString(3));
         }
 
@@ -128,6 +129,7 @@ public class UserTest {
         inventory = "";
 
         while (cursor.getResults().next()) {
+            System.out.println(cursor.getResults().getString(3));
             orders += String.format("%s ",cursor.getResults().getString(3));
         }
 
