@@ -29,16 +29,16 @@ Also I am using TDD approach to complete this project as I found this really con
       
   - [ ] As an optional part, I'd like to introduce user system: administration and clients. First would be able to see all completed orders and inventory stock and its total cost, while customers can fill in baskets, make orders and see theirs basket and orders only
       - [ ] Administrator user can
-          - [ ] See all available products
+          - [x] See all available products **TESTING**
           - [ ] See total cost of all products
           - [ ] Add products to inventory
           - [ ] Remove products from inventory
-          - [ ] See orders completed by any user **TESTING**
+          - [x] See orders completed by any user
           - [ ] See total cost of all completed orders
           - [ ] Add user to the system
           - [ ] Delete user from system
       - [ ] Client user can
-          - [ ] See all available products
+          - [x] See all available products **TESTING**
           - [ ] Add to basket
           - [ ] Remove from basket
           - [ ] Save basket
@@ -47,7 +47,7 @@ Also I am using TDD approach to complete this project as I found this really con
           - [ ] Save order
           - [ ] Complete order
           - [ ] Restore order
-          - [ ] See all completed orders (client can see only his orders) **TESTING**
+          - [x] See all completed orders (client can see only his orders)
           - [ ] Search for specific product by name
           - [ ] Filter products by price, weight
           - [ ] Filter orders by date/total price

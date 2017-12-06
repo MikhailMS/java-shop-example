@@ -60,8 +60,8 @@ public class UserTest {
 
         statement.addBatch("CREATE TABLE IF NOT EXISTS inventory ( entry_id serial, " +
                 "product_id int4 REFERENCES products(product_id) ON DELETE RESTRICT, product_amount int4 NOT NULL )");
-        statement.addBatch("INSERT INTO inventory ( product_id, product_amount ) VALUES ( 1, 2 )");
-        statement.addBatch("INSERT INTO inventory ( product_id, product_amount ) VALUES ( 2, 1 )");
+        statement.addBatch("INSERT INTO inventory ( product_id, product_amount ) VALUES ( 2, 3 )");
+        statement.addBatch("INSERT INTO inventory ( product_id, product_amount ) VALUES ( 5, 4 )");
 
         statement.executeBatch();
         statement.close();
@@ -106,11 +106,32 @@ public class UserTest {
         orders = "";
 
         while (cursor.getResults().next()) {
-            System.out.println(cursor.getResults().getString(3));
             orders += String.format("%s ",cursor.getResults().getString(3));
         }
 
         assertEquals("admin has all orders", true, orders.contains("testUser1") && orders.contains("testUser2"));
+        cursor.closeCursor();
+
+        // Ensure user can see inventory
+        cursor = testUser1.fetchInventory(dataSource.getConnection());
+        String inventory = "";
+
+        while (cursor.getResults().next()) {
+            orders += String.format("%s ",cursor.getResults().getString(2));
+        }
+
+        assertEquals("testUser1 can see inventory", true, orders.contains("2") && !orders.contains("5"));
+        cursor.closeCursor();
+
+        // Unsure admin can see inventory
+        cursor = admin.fetchInventory(dataSource.getConnection());
+        inventory = "";
+
+        while (cursor.getResults().next()) {
+            orders += String.format("%s ",cursor.getResults().getString(2));
+        }
+
+        assertEquals("admin can see inventory", true, orders.contains("2") && !orders.contains("5"));
         cursor.closeCursor();
     }
 }

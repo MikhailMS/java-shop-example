@@ -8,6 +8,6 @@ import java.sql.SQLException;
 public interface UserInterface {
 
     DBCursorHolder fetchOrders(final Connection connection, String[] filterArguments) throws SQLException;
-    DBCursorHolder fetchInventory(final Connection connection, String tableName) throws SQLException;
+    DBCursorHolder fetchInventory(final Connection connection) throws SQLException;
 
 }
