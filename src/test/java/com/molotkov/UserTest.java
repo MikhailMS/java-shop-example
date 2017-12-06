@@ -118,7 +118,7 @@ public class UserTest {
 
         while (cursor.getResults().next()) {
             System.out.println(cursor.getResults().getString(3));
-            orders += String.format("%s ",cursor.getResults().getString(3));
+            inventory += String.format("%s ",cursor.getResults().getString(3));
         }
 
         assertEquals("testUser1 can see inventory", true, orders.contains("3") && !orders.contains("4"));
@@ -130,7 +130,7 @@ public class UserTest {
 
         while (cursor.getResults().next()) {
             System.out.println(cursor.getResults().getString(3));
-            orders += String.format("%s ",cursor.getResults().getString(3));
+            inventory += String.format("%s ",cursor.getResults().getString(3));
         }
 
         assertEquals("admin can see inventory", true, orders.contains("3") && !orders.contains("4"));
