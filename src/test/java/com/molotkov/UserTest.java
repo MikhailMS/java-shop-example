@@ -68,16 +68,13 @@ public class UserTest {
     }
 
     @Test
-    public void testUserSuperClass() {
+    public void testUserSuperClassMethods() throws SQLException {
         User testUser = new User("testUser", "testUser");
         assertEquals("Constructor succeeds", true, testUser instanceof User);
 
         assertEquals("getUserName succeeds", "testUser", testUser.getUserName());
         assertEquals("getUserPasswd succeeds", "testUser", testUser.getUserPasswd());
-    }
 
-    @Test
-    public void testUserSuperClassDBMethods() throws SQLException {
         User testUser1 = new User("testUser1", "testUser1");
         User testUser2 = new User("testUser2", "testUser2");
         User admin = new User("admin", "admin");
