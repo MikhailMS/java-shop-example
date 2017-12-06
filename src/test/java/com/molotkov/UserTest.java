@@ -35,34 +35,35 @@ public class UserTest {
         dataSource = new HikariDataSource(hikariConfig);
         Statement statement = dataSource.getConnection().createStatement();
 
-        statement.execute("CREATE TABLE IF NOT EXISTS users ( user_name text PRIMARY KEY, user_passwd text NOT NULL," +
+        statement.addBatch("CREATE TABLE IF NOT EXISTS users ( user_name text PRIMARY KEY, user_passwd text NOT NULL," +
                 " privileges boolean DEFAULT FALSE )");
-        statement.execute("INSERT INTO users VALUES ( 'admin', 'admin', TRUE )");
-        statement.execute("INSERT INTO users VALUES ( 'testUser1', 'testUser1', FALSE )");
-        statement.execute("INSERT INTO users VALUES ( 'testUser2', 'testUser2', FALSE )");
+        statement.addBatch("INSERT INTO users VALUES ( 'admin', 'admin', TRUE )");
+        statement.addBatch("INSERT INTO users VALUES ( 'testUser1', 'testUser1', FALSE )");
+        statement.addBatch("INSERT INTO users VALUES ( 'testUser2', 'testUser2', FALSE )");
 
-        statement.execute(" CREATE TABLE IF NOT EXISTS baskets ( basket_id serial PRIMARY KEY," +
+        statement.addBatch(" CREATE TABLE IF NOT EXISTS baskets ( basket_id serial PRIMARY KEY," +
                 " basket_owner text REFERENCES users(user_name) ON DELETE CASCADE, products_name text NOT NULL," +
                 " products_amount text NOT NULL, processed boolean DEFAULT FALSE, created_at timestamp DEFAULT CURRENT_TIMESTAMP )");
-        statement.execute("INSERT INTO baskets ( basket_owner, products_name, products_amount ) VALUES ( 'testUser1', 'apple,chicken', '1,2' )");
-        statement.execute("INSERT INTO baskets ( basket_owner, products_name, products_amount ) VALUES ( 'testUser2', 'apple', '2' )");
+        statement.addBatch("INSERT INTO baskets ( basket_owner, products_name, products_amount ) VALUES ( 'testUser1', 'apple,chicken', '1,2' )");
+        statement.addBatch("INSERT INTO baskets ( basket_owner, products_name, products_amount ) VALUES ( 'testUser2', 'apple', '2' )");
 
-        statement.execute("CREATE TABLE IF NOT EXISTS orders ( order_id serial, basket_id int4 REFERENCES baskets(basket_id) ON DELETE CASCADE," +
+        statement.addBatch("CREATE TABLE IF NOT EXISTS orders ( order_id serial, basket_id int4 REFERENCES baskets(basket_id) ON DELETE CASCADE," +
                 " order_owner text REFERENCES users(user_name) ON DELETE CASCADE, address text NOT NULL, completed boolean DEFAULT FALSE" +
                 " created_at timestamp DEFAULT CURRENT_TIMESTAMP )");
-        statement.execute("INSERT INTO orders ( basket_id, order_owner, address ) VALUES ( 1, 'testUser1', 'Manchester' )");
-        statement.execute("INSERT INTO orders ( basket_id, order_owner, address ) VALUES ( 2, 'testUser2', 'London' )");
+        statement.addBatch("INSERT INTO orders ( basket_id, order_owner, address ) VALUES ( 1, 'testUser1', 'Manchester' )");
+        statement.addBatch("INSERT INTO orders ( basket_id, order_owner, address ) VALUES ( 2, 'testUser2', 'London' )");
 
-        statement.execute("CREATE TABLE IF NOT EXISTS products ( product_id serial PRIMARY KEY, product_name text NOT NULL," +
+        statement.addBatch("CREATE TABLE IF NOT EXISTS products ( product_id serial PRIMARY KEY, product_name text NOT NULL," +
                 " product_weight numeric (3,3) NOT NULL, product_price numeric (6,2) NOT NULL )");
-        statement.execute("INSERT INTO products ( product_name, product_weight, product_price ) VALUES ( 'apple', 0.150, 0.8 )");
-        statement.execute("INSERT INTO products ( product_name, product_weight, product_price ) VALUES ( 'chicken', 1, 2.3 )");
+        statement.addBatch("INSERT INTO products ( product_name, product_weight, product_price ) VALUES ( 'apple', 0.150, 0.8 )");
+        statement.addBatch("INSERT INTO products ( product_name, product_weight, product_price ) VALUES ( 'chicken', 1, 2.3 )");
 
-        statement.execute("CREATE TABLE IF NOT EXISTS inventory ( entry_id serial, " +
+        statement.addBatch("CREATE TABLE IF NOT EXISTS inventory ( entry_id serial, " +
                 "product_id int4 REFERENCES products(product_id) ON DELETE RESTRICT, product_amount int4 NOT NULL )");
-        statement.execute("INSERT INTO inventory ( product_id, product_amount ) VALUES ( 1, 2 )");
-        statement.execute("INSERT INTO inventory ( product_id, product_amount ) VALUES ( 2, 1 )");
+        statement.addBatch("INSERT INTO inventory ( product_id, product_amount ) VALUES ( 1, 2 )");
+        statement.addBatch("INSERT INTO inventory ( product_id, product_amount ) VALUES ( 2, 1 )");
 
+        statement.executeBatch();
         statement.close();
     }
 
