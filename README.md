@@ -28,13 +28,34 @@ Also I am using TDD approach to complete this project as I found this really con
       - [x] Can restore order from DB
       
   - [ ] As an optional part, I'd like to introduce user system: administration and clients. First would be able to see all completed orders and inventory stock and its total cost, while customers can fill in baskets, make orders and see theirs basket and orders only
-      - [ ] Can create administrator user
-      - [ ] Can create client user
+      - [ ] Administrator user can
+          - [ ] See all available products
+          - [ ] See total cost of all products
+          - [ ] Add products to inventory
+          - [ ] Remove products from inventory
+          - [ ] See orders completed by any user **TESTING**
+          - [ ] See total cost of all completed orders
+          - [ ] Add user to the system
+          - [ ] Delete user from system
+      - [ ] Client user can
+          - [ ] See all available products
+          - [ ] Add to basket
+          - [ ] Remove from basket
+          - [ ] Save basket
+          - [ ] Restore basket
+          - [ ] Make order
+          - [ ] Save order
+          - [ ] Complete order
+          - [ ] Restore order
+          - [ ] See all completed orders (client can see only his orders) **TESTING**
+          - [ ] Search for specific product by name
+          - [ ] Filter products by price, weight
+          - [ ] Filter orders by date/total price
       - [ ] Can login into system and gain appropriate rights
       
   - [ ] As an optional part, I'd like to introduce GUI, which will make it easier to fill basket, see orders and etc
       - [ ] Login screen
-      - [ ] Client 
+      - [ ] Client GUI
           - [ ] See all available products
           - [ ] Add to basket
           - [ ] Remove from basket
@@ -48,7 +69,7 @@ Also I am using TDD approach to complete this project as I found this really con
           - [ ] Search for specific product by name
           - [ ] Filter products by price, weight
           - [ ] Filter orders by date/total price
-      - [ ] Administrator
+      - [ ] Administrator GUI
           - [ ] See all available products
           - [ ] See total cost of all products
           - [ ] Add products to inventory

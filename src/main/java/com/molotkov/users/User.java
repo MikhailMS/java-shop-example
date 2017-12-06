@@ -34,7 +34,7 @@ public class User implements UserInterface {
             return cursor;
         } else {
             List<String> nameAndFilterArguments = new ArrayList<>();
-            nameAndFilterArguments.add(userName);
+            nameAndFilterArguments.add(String.format("order_owner = '%s'",userName));
             nameAndFilterArguments.addAll(Arrays.asList(filterArguments));
             cursor = DBUtils.filterFromTable(connection, "orders", new String[]{}, nameAndFilterArguments.toArray(new String[0]));
             return  cursor;
