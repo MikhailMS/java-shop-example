@@ -80,6 +80,7 @@ public class DBUtils {
         final String query = String.format("SELECT %s FROM %s", selectColumnsString, tableName);
         final ResultSet resultSet = statement.executeQuery(query);
 
+        connection.close();
         return new DBCursorHolder(resultSet, statement);
     }
 
@@ -105,6 +106,7 @@ public class DBUtils {
         final String query = String.format("SELECT %s FROM %s %s %s", selectColumnsString, tableName, whereKeyWord, filterArgumentsString);
         final ResultSet resultSet = statement.executeQuery(query);
 
+        connection.close();
         return new DBCursorHolder(resultSet, statement);
     }
 
@@ -131,6 +133,7 @@ public class DBUtils {
         final String query = String.format("SELECT %s FROM %s NATURAL INNER JOIN %s %s %s", selectColumnsString, tableNameR, tableNameL, whereKeyWord, filterArgumentsString);
         final ResultSet resultSet = statement.executeQuery(query);
 
+        connection.close();
         return new DBCursorHolder(resultSet, statement);
     };
 
