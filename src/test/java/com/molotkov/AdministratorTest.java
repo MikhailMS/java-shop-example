@@ -42,7 +42,7 @@ public class AdministratorTest {
         statement.addBatch("INSERT INTO users VALUES ( 'testUser1', 'testUser1', FALSE )");
         statement.addBatch("INSERT INTO users VALUES ( 'testUser2', 'testUser2', FALSE )");
 
-        statement.addBatch("CREATE TABLE IF NOT EXISTS products ( product_id serial PRIMARY KEY, product_name text PRIMARY NOT NULL," +
+        statement.addBatch("CREATE TABLE IF NOT EXISTS products ( product_id serial PRIMARY KEY, product_name text NOT NULL PRIMARY KEY," +
                 " product_weight numeric (6,3) NOT NULL, product_price numeric (8,2) NOT NULL )");
         statement.addBatch("INSERT INTO products ( product_name, product_weight, product_price ) VALUES ( 'apple', 0.150, 0.8 )");
         statement.addBatch("INSERT INTO products ( product_name, product_weight, product_price ) VALUES ( 'chicken', 1, 2.3 )");
