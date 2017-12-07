@@ -94,7 +94,7 @@ public class AdministratorTest {
             newProductString += String.format("%s ",cursor.getResults().getString(3));
         }
 
-        assertEquals("addProductToInventory succeeds", "turkey 3.00 0 ", newProductString);
+        assertEquals("removeProductToInventory succeeds", "turkey 3.00 0 ", newProductString);
         cursor.closeCursor();
     }
 }
