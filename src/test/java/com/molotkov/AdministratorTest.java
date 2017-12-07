@@ -14,8 +14,6 @@ import org.testcontainers.containers.PostgreSQLContainer;
 
 import java.sql.SQLException;
 import java.sql.Statement;
-import java.util.ArrayList;
-import java.util.Arrays;
 
 import static org.rnorth.visibleassertions.VisibleAssertions.assertEquals;
 
@@ -48,13 +46,13 @@ public class AdministratorTest {
                 " products_amount text NOT NULL, processed boolean DEFAULT FALSE, created_at timestamp DEFAULT CURRENT_TIMESTAMP )");
         statement.addBatch("INSERT INTO baskets ( basket_owner, products_name, products_amount ) VALUES ( 'testUser1', 'apple,chicken', '1,2' )");
         statement.addBatch("INSERT INTO baskets ( basket_owner, products_name, products_amount ) VALUES ( 'testUser2', 'apple', '2' )");
-
+    /*
         statement.addBatch("CREATE TABLE IF NOT EXISTS orders ( order_id serial, basket_id int4 REFERENCES baskets(basket_id) ON DELETE CASCADE," +
                 " order_owner text REFERENCES users(user_name) ON DELETE CASCADE, address text NOT NULL, completed boolean DEFAULT FALSE," +
                 " created_at timestamp DEFAULT CURRENT_TIMESTAMP )");
         statement.addBatch("INSERT INTO orders ( basket_id, order_owner, address ) VALUES ( 1, 'testUser1', 'Manchester' )");
         statement.addBatch("INSERT INTO orders ( basket_id, order_owner, address ) VALUES ( 2, 'testUser2', 'London' )");
-
+    */
         statement.addBatch("CREATE TABLE IF NOT EXISTS products ( product_id serial PRIMARY KEY, product_name text NOT NULL," +
                 " product_weight numeric (6,3) NOT NULL, product_price numeric (8,2) NOT NULL )");
         statement.addBatch("INSERT INTO products ( product_name, product_weight, product_price ) VALUES ( 'apple', 0.150, 0.8 )");
