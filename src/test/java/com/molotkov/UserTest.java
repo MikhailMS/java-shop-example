@@ -107,8 +107,8 @@ public class UserTest {
 
 
         // Ensure user can filter orders by date
-        String date = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd"));
-        date = String.format("orders.created_at <= '%s'::date",date);
+        String date = LocalDateTime.now().plusDays(2).format(DateTimeFormatter.ofPattern("yyyy-MM-dd"));
+        date = String.format("orders.created_at < '%s'::date",date);
         cursor = testUser1.fetchOrders(dataSource.getConnection(), new String[]{date});
         orders = "";
 
