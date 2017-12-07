@@ -6,7 +6,6 @@ import com.molotkov.products.Product;
 
 import java.sql.Connection;
 import java.sql.SQLException;
-import java.sql.Statement;
 
 public class Administrator extends User {
 
