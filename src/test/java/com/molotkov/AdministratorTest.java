@@ -64,7 +64,7 @@ public class AdministratorTest {
 
     // TESTING addProductToInventory
         Product newProduct = new Product("turkey", 1.5, 3);
-
+        int amount = 1;
         // Method starts ------------------
         DBUtils.insertSpecificIntoTable(dataSource.getConnection(), "products", new String[]{"product_name","product_weight","product_price"},
                 new String[]{String.format("'%s'",newProduct.getName()), Double.toString(newProduct.getWeight()), Double.toString(newProduct.getPrice())});
@@ -75,7 +75,7 @@ public class AdministratorTest {
         cursor.closeCursor();
 
         DBUtils.insertSpecificIntoTable(dataSource.getConnection(), "inventory", new String[]{"product_id", "product_amount"},
-                new String[]{Integer.toString(productId), Integer.toString(1)});
+                new String[]{Integer.toString(productId), Integer.toString(amount)});
         // Method ends --------------------
 
         cursor = DBUtils.filterFromTable(dataSource.getConnection(), "products", new String[]{"product_name", "product_price"},
@@ -87,7 +87,7 @@ public class AdministratorTest {
             newProductString += String.format("%s ",cursor.getResults().getString(2));
         }
 
-        assertEquals("addProductToInventory succeeds", "turkey 3.0 ", newProductString);
+        assertEquals("addProductToInventory succeeds", "turkey 3.00 ", newProductString);
         cursor.closeCursor();
     /*
     // TESTING removeProductFromInventory
