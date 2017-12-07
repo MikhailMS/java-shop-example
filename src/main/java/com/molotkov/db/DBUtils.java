@@ -108,8 +108,8 @@ public class DBUtils {
         return new DBCursorHolder(resultSet, statement);
     }
 
-    public static DBCursorHolder naturalJoinTables(final Connection connection, final String tableNameR, final String tableNameL,
-                                            final String[] selectColumns, final String[] filterArguments) throws SQLException  {
+    public static DBCursorHolder innerJoinTables(final Connection connection, final String tableNameR, final String tableNameL,
+                                                 final String innerJoinColumn, final String[] selectColumns, final String[] filterArguments) throws SQLException  {
         final Statement statement = connection.createStatement();
 
         String whereKeyWord;
@@ -128,7 +128,8 @@ public class DBUtils {
             selectColumnsString = Stream.of(selectColumns).collect(Collectors.joining(", "));
         }
 
-        final String query = String.format("SELECT %s FROM %s NATURAL INNER JOIN %s %s %s", selectColumnsString, tableNameR, tableNameL, whereKeyWord, filterArgumentsString);
+        final String query = String.format("SELECT %s FROM %s INNER JOIN %s USING (%s) %s %s", selectColumnsString,
+                tableNameR, tableNameL, innerJoinColumn ,whereKeyWord, filterArgumentsString);
         final ResultSet resultSet = statement.executeQuery(query);
 
         return new DBCursorHolder(resultSet, statement);

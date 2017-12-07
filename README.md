@@ -37,7 +37,7 @@ Also I am using TDD approach to complete this project as I found this really con
           - [ ] See total cost of all completed orders
           - [ ] Add user to the system
           - [ ] Delete user from system
-          - [ ] Filter products by name, price and weight **IN TESTING**
+          - [x] Filter products by name, price and weight
           - [ ] Filter orders by date and total price **IN DEVELOPMENT**
       - [ ] Client user can
           - [x] See all available products
@@ -49,8 +49,8 @@ Also I am using TDD approach to complete this project as I found this really con
           - [ ] Save order
           - [ ] Complete order
           - [ ] Restore order
-          - [x] See all completed orders (client can see only his orders)
-          - [ ] Filter products by name, price and weight **IN TESTING**
+          - [x] See all orders (client can see only his orders)
+          - [x] Filter products by name, price and weight
           - [ ] Filter orders by date and total price **IN DEVELOPMENT**
       - [ ] Can login into system and gain appropriate rights
       

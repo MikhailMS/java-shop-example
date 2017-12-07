@@ -25,7 +25,6 @@ public class DBUtilsTest {
     @Before
     public void setUp() throws SQLException {
         hikariConfig = new HikariConfig();
-        //hikariConfig.setMaximumPoolSize(20);
         hikariConfig.setJdbcUrl(postgres.getJdbcUrl());
         hikariConfig.setUsername(postgres.getUsername());
         hikariConfig.setPassword(postgres.getPassword());
@@ -93,7 +92,7 @@ public class DBUtilsTest {
         DBUtils.insertSpecificIntoTable(dataSource.getConnection(),"inventory",
                 new String[]{"product_id", "product_amount"}, new String[]{"2", "4"});
 
-        cursor = DBUtils.naturalJoinTables(dataSource.getConnection(), "products", "inventory", new String[] {"product_id", "product_name", "product_weight", "product_price", "product_amount"},
+        cursor = DBUtils.innerJoinTables(dataSource.getConnection(), "products", "inventory", "product_id" ,new String[] {"product_id", "product_name", "product_weight", "product_price", "product_amount"},
                 new String[]{});
         String resultString5 = "";
         while (cursor.getResults().next()) {

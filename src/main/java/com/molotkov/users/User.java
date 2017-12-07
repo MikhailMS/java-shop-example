@@ -37,13 +37,13 @@ public class User implements UserInterface {
             nameAndFilterArguments.add(String.format("order_owner = '%s'",userName));
             nameAndFilterArguments.addAll(Arrays.asList(filterArguments));
             cursor = DBUtils.filterFromTable(connection, "orders", new String[]{}, nameAndFilterArguments.toArray(new String[0]));
-            return  cursor;
+            return cursor;
         }
     }
 
     @Override
     public DBCursorHolder fetchInventory(final Connection connection, final  String[] filterArguments) throws SQLException {
-        return DBUtils.naturalJoinTables(connection, "products", "inventory", new String[] {"product_id", "product_name", "product_weight", "product_price", "product_amount"},
+        return DBUtils.innerJoinTables(connection, "products", "inventory", "product_id" ,new String[] {"product_id", "product_name", "product_weight", "product_price", "product_amount"},
                 filterArguments);
     }
 
