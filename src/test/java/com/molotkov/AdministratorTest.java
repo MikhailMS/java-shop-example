@@ -84,7 +84,7 @@ public class AdministratorTest {
 
         while (cursor.getResults().next()) {
             newProductString += String.format("%s ",cursor.getResults().getString(1));
-            newProductString += String.format("%f ",cursor.getResults().getString(2));
+            newProductString += String.format("%s ",cursor.getResults().getString(2));
         }
 
         assertEquals("addProductToInventory succeeds", "turkey 3.0 ", newProductString);
