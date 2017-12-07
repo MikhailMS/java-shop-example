@@ -107,7 +107,7 @@ public class UserTest {
 
         // Ensure user can filter orders by date
         String date = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
-        date = String.format("created_at < '%s'::date",date);
+        date = String.format("orders.created_at < '%s'::date",date);
         cursor = testUser1.fetchOrders(dataSource.getConnection(), new String[]{date});
         orders = "";
 
@@ -192,7 +192,7 @@ public class UserTest {
 
         // Ensure admin can sort all orders by date
         date = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
-        date = String.format("created_at < '%s'::date",date);
+        date = String.format("orders.created_at < '%s'::date",date);
         cursor = admin.fetchOrders(dataSource.getConnection(), new String[]{date});
         orders = "";
 
