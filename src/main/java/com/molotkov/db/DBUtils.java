@@ -80,8 +80,7 @@ public class DBUtils {
         final String query = String.format("SELECT %s FROM %s", selectColumnsString, tableName);
         final ResultSet resultSet = statement.executeQuery(query);
 
-        connection.close();
-        return new DBCursorHolder(resultSet, statement);
+        return new DBCursorHolder(resultSet, statement, connection);
     }
 
     public static DBCursorHolder filterFromTable(final Connection connection, final String tableName, final String[] selectColumns, final String[] filterArguments) throws SQLException {
@@ -106,8 +105,7 @@ public class DBUtils {
         final String query = String.format("SELECT %s FROM %s %s %s", selectColumnsString, tableName, whereKeyWord, filterArgumentsString);
         final ResultSet resultSet = statement.executeQuery(query);
 
-        connection.close();
-        return new DBCursorHolder(resultSet, statement);
+        return new DBCursorHolder(resultSet, statement, connection);
     }
 
     public static DBCursorHolder naturalJoinTables(final Connection connection, final String tableNameR, final String tableNameL,
@@ -133,8 +131,7 @@ public class DBUtils {
         final String query = String.format("SELECT %s FROM %s NATURAL INNER JOIN %s %s %s", selectColumnsString, tableNameR, tableNameL, whereKeyWord, filterArgumentsString);
         final ResultSet resultSet = statement.executeQuery(query);
 
-        connection.close();
-        return new DBCursorHolder(resultSet, statement);
+        return new DBCursorHolder(resultSet, statement, connection);
     };
 
     public static void deleteTable(final Connection connection, final String tableName) {
