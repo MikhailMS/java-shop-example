@@ -32,11 +32,11 @@ Also I am using TDD approach to complete this project as I found this really con
           - [x] See all available products
           - [x] See total cost of all products
           - [x] Add products to inventory
-          - [ ] Remove products from inventory **IN DEVELOPMENT**
+          - [x] Remove products from inventory
           - [x] See orders completed by any user
-          - [ ] See total cost of all completed orders
-          - [ ] Add user to the system
-          - [ ] Delete user from system
+          - [ ] See total cost of all completed orders **IN DEVELOPMENT**
+          - [ ] Add user to the system **IN DEVELOPMENT**
+          - [ ] Delete user from system **IN DEVELOPMENT**
           - [x] Filter products by name, price and weight
           - [x] Filter orders by date
           - [x] Filter orders by total price (only require adding 'total' column to 'order' table)

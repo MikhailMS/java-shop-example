@@ -58,7 +58,6 @@ public class DBUtils {
             final String columnValueString = Stream.of(columnValueList.toArray(new String[0])).collect(Collectors.joining(" "));
             final String filterArgumentsString = Stream.of(filterArguments).collect(Collectors.joining(" "));
             final String query = String.format("UPDATE %s SET %s WHERE %s", tableName, columnValueString, filterArgumentsString);
-            System.out.println(query);
             statement.execute(query);
             statement.close();
         } catch (SQLException ex) {
