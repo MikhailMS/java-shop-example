@@ -6,6 +6,7 @@ import com.molotkov.products.Product;
 
 import java.sql.Connection;
 import java.sql.SQLException;
+import java.sql.Statement;
 
 public class Administrator extends User {
 
@@ -14,8 +15,9 @@ public class Administrator extends User {
     }
 
     public double getTotalPriceOfInventory(final Connection connection) throws SQLException {
-        DBUtils.insertSpecificIntoTable(connection, "products", new String[]{"product_name","product_weight","product_price"},
-                new String[]{"'apple'", "0.150", "0.8"});
+        Statement statement = connection.createStatement();
+        statement.execute("SELECT product_id, product_name, product_weight, product_price, product_amount " +
+                "FROM products INNER JOIN inventory USING (product_id)");
         DBCursorHolder cursor = DBUtils.innerJoinTables(connection, "products", "inventory", "product_id",
                 new String[]{"product_price","product_amount"}, new String[]{});
         double total = 0.0;
