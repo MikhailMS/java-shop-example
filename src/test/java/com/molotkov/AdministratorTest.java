@@ -55,7 +55,7 @@ public class AdministratorTest {
     // TESTING getTotalPriceOfInventory
         Administrator admin = new Administrator("admin", "admin");
         assertEquals("getTotalPriceOfInventory succeeds", 11.6, admin.getTotalPriceOfInventory(dataSource.getConnection()));
-
+    /*
     // TESTING addProductToInventory
         Product newProduct = new Product("turkey", 1.5, 3);
         admin.addProductToInventory(dataSource.getConnection(), newProduct, 1);
@@ -86,6 +86,6 @@ public class AdministratorTest {
 
         assertEquals("addProductToInventory succeeds", "", newProductString);
         cursor.closeCursor();
-
+    */
     }
 }
