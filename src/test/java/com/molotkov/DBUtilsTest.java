@@ -25,6 +25,7 @@ public class DBUtilsTest {
     @Before
     public void setUp() throws SQLException {
         hikariConfig = new HikariConfig();
+        hikariConfig.setMaximumPoolSize(20);
         hikariConfig.setJdbcUrl(postgres.getJdbcUrl());
         hikariConfig.setUsername(postgres.getUsername());
         hikariConfig.setPassword(postgres.getPassword());
