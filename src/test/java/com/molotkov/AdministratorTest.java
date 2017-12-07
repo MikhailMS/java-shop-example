@@ -64,9 +64,21 @@ public class AdministratorTest {
 
     // TESTING addProductToInventory
         Product newProduct = new Product("turkey", 1.5, 3);
-        admin.addProductToInventory(dataSource.getConnection(), newProduct, 1);
 
-        DBCursorHolder cursor = DBUtils.filterFromTable(dataSource.getConnection(), "products", new String[]{"product_name", "product_price"},
+        // Method starts ------------------
+        DBUtils.insertSpecificIntoTable(dataSource.getConnection(), "products", new String[]{"product_name","product_weight","product_price"},
+                new String[]{String.format("'%s'",newProduct.getName()), Double.toString(newProduct.getWeight()), Double.toString(newProduct.getPrice())});
+        DBCursorHolder cursor = DBUtils.filterFromTable(dataSource.getConnection(), "products", new String[]{"product_id"},
+                new String[]{String.format("product_name = '%s'", newProduct.getName())});
+        cursor.getResults().next();
+        int productId = cursor.getResults().getInt(1);
+        cursor.closeCursor();
+
+        DBUtils.insertSpecificIntoTable(dataSource.getConnection(), "inventory", new String[]{"product_id", "product_amount"},
+                new String[]{Integer.toString(productId), Integer.toString(1)});
+        // Method ends --------------------
+
+        cursor = DBUtils.filterFromTable(dataSource.getConnection(), "products", new String[]{"product_name", "product_price"},
                 new String[]{String.format("product_name LIKE '%s'",newProduct.getName())});
         String newProductString = "";
 
