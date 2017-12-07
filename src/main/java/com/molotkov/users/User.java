@@ -30,13 +30,15 @@ public class User implements UserInterface {
         cursor.closeCursor();
 
         if (userPrivilege) {
-            cursor = DBUtils.filterFromTable(connection, "orders", new String[]{}, filterArguments);
+            cursor = DBUtils.innerJoinTables(connection, "baskets", "orders", "basket_id",
+                    new String[]{"products_name", "products_amount", "address"}, filterArguments);
             return cursor;
         } else {
             List<String> nameAndFilterArguments = new ArrayList<>();
             nameAndFilterArguments.add(String.format("order_owner = '%s'",userName));
             nameAndFilterArguments.addAll(Arrays.asList(filterArguments));
-            cursor = DBUtils.filterFromTable(connection, "orders", new String[]{}, nameAndFilterArguments.toArray(new String[0]));
+            cursor = DBUtils.innerJoinTables(connection, "baskets", "orders", "basket_id",
+                    new String[]{"products_name", "products_amount", "address"}, nameAndFilterArguments.toArray(new String[0]));
             return cursor;
         }
     }

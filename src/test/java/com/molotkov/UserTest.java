@@ -82,10 +82,12 @@ public class UserTest {
         String orders = "";
 
         while (cursor.getResults().next()) {
+            orders += String.format("%s ",cursor.getResults().getString(1));
+            orders += String.format("%s ",cursor.getResults().getString(2));
             orders += String.format("%s ",cursor.getResults().getString(3));
         }
 
-        assertEquals("testUser1 has only his orders", true, orders.contains("testUser1") && !orders.contains("testUser2"));
+        assertEquals("testUser1 has only his orders", "apple,chicken 1,2 Manchester ", orders);
         cursor.closeCursor();
 
         // Ensure testUser2 gets only his orders
@@ -93,10 +95,12 @@ public class UserTest {
         orders = "";
 
         while (cursor.getResults().next()) {
+            orders += String.format("%s ",cursor.getResults().getString(1));
+            orders += String.format("%s ",cursor.getResults().getString(2));
             orders += String.format("%s ",cursor.getResults().getString(3));
         }
 
-        assertEquals("testUser2 has only his orders", true, orders.contains("testUser2") && !orders.contains("testUser1"));
+        assertEquals("testUser2 has only his orders", "apple 2 London ", orders);
         cursor.closeCursor();
 
         // Ensure user can see inventory
@@ -161,10 +165,12 @@ public class UserTest {
         orders = "";
 
         while (cursor.getResults().next()) {
+            orders += String.format("%s ",cursor.getResults().getString(1));
+            orders += String.format("%s ",cursor.getResults().getString(2));
             orders += String.format("%s ",cursor.getResults().getString(3));
         }
 
-        assertEquals("admin has all orders", true, orders.contains("testUser1") && orders.contains("testUser2"));
+        assertEquals("admin has all orders", "apple,chicken 1,2 Manchester apple 2 London ", orders);
         cursor.closeCursor();
 
         // Ensure admin can see inventory
