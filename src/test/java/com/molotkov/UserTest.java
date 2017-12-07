@@ -67,7 +67,7 @@ public class UserTest {
     }
 
     @Test
-    public void testUserSuperClassMethods() throws SQLException {
+    public void testUserSuperClassMethods() throws SQLException, InterruptedException {
     //-------------- User test cases -------------------------------
         User testUser = new User("testUser", "testUser");
         assertEquals("Constructor succeeds", true, testUser instanceof User);
@@ -84,9 +84,6 @@ public class UserTest {
         String orders = "";
 
         while (cursor.getResults().next()) {
-            System.out.println(cursor.getResults().getString(1));
-            System.out.println(cursor.getResults().getString(2));
-            System.out.println(cursor.getResults().getString(3));
             orders += String.format("%s ",cursor.getResults().getString(1));
             orders += String.format("%s ",cursor.getResults().getString(2));
             orders += String.format("%s ",cursor.getResults().getString(3));
@@ -108,6 +105,8 @@ public class UserTest {
         assertEquals("testUser2 has only his orders", "apple 2 London ", orders);
         cursor.closeCursor();
 
+        Thread.sleep(3000);
+
         // Ensure user can filter orders by date
         String date = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
         date = String.format("orders.created_at < '%s'::date",date);
@@ -115,6 +114,9 @@ public class UserTest {
         orders = "";
 
         while (cursor.getResults().next()) {
+            System.out.println(cursor.getResults().getString(1));
+            System.out.println(cursor.getResults().getString(2));
+            System.out.println(cursor.getResults().getString(3));
             orders += String.format("%s ",cursor.getResults().getString(1));
             orders += String.format("%s ",cursor.getResults().getString(2));
             orders += String.format("%s ",cursor.getResults().getString(3));
