@@ -46,8 +46,10 @@ public class AdministratorTest {
         statement.addBatch("INSERT INTO inventory ( product_id, product_amount ) VALUES ( 1, 3 )");
         statement.addBatch("INSERT INTO inventory ( product_id, product_amount ) VALUES ( 2, 4 )");
 
-        statement.executeBatch();
+        int[] st = statement.executeBatch();
+
         statement.close();
+        System.out.println(st);
     }
 
     @Test

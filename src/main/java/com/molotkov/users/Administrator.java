@@ -24,10 +24,10 @@ public class Administrator extends User {
     }
 
     public void addProductToInventory(final Connection connection, final Product product, final int amount) {
-
+        // TO-DO
     }
 
     public void removeProductFromInventory(final Connection connection, final Product product, final int amount) {
-
+        // TO-DO
     }
 }

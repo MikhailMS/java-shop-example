@@ -30,7 +30,7 @@ Also I am using TDD approach to complete this project as I found this really con
   - [ ] As an optional part, I'd like to introduce user system: administration and clients. First would be able to see all completed orders and inventory stock and its total cost, while customers can fill in baskets, make orders and see theirs basket and orders only
       - [ ] Administrator user can
           - [x] See all available products
-          - [x] See total cost of all products **IN TESTING**
+          - [x] See total cost of all products
           - [ ] Add products to inventory **IN DEVELOPMENT**
           - [ ] Remove products from inventory **IN DEVELOPMENT**
           - [x] See orders completed by any user
