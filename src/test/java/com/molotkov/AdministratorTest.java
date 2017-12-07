@@ -15,6 +15,7 @@ import org.testcontainers.containers.PostgreSQLContainer;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
+import java.util.Arrays;
 
 import static org.rnorth.visibleassertions.VisibleAssertions.assertEquals;
 
@@ -49,7 +50,7 @@ public class AdministratorTest {
         int[] st = statement.executeBatch();
 
         statement.close();
-        System.out.println(st);
+        System.out.println(Arrays.toString(st));
     }
 
     @Test
