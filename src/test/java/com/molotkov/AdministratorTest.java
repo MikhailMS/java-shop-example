@@ -27,7 +27,7 @@ public class AdministratorTest {
     @Before
     public void setUp() throws SQLException {
         hikariConfig = new HikariConfig();
-        hikariConfig.setMaximumPoolSize(20);
+        hikariConfig.setMaximumPoolSize(30);
         hikariConfig.setJdbcUrl(postgres.getJdbcUrl());
         hikariConfig.setUsername(postgres.getUsername());
         hikariConfig.setPassword(postgres.getPassword());
