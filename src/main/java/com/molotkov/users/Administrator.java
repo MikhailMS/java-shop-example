@@ -49,7 +49,7 @@ public class Administrator extends User {
         int newAmount = productAmount - amount;
         if (newAmount >= 0) {
             DBUtils.updateTable(connection, "inventory", new String[]{"product_amount"}, new String[]{Integer.toString(newAmount)},
-                    new String[]{String.format("product_id = %d",productId),String.format("product_name = '%s'",product.getName())});
+                    new String[]{String.format("product_id = %d",productId)});
         } else {
             throw new InventoryException("You cannot order specified amount of product");
         }
