@@ -96,7 +96,7 @@ public class DBUtilsTest {
             resultString5 += String.format("%s ",cursor.getResults().getString(5));
         }
 
-        assertEquals("Natural join query succeeds", "apple 0.150 0.8 3 chicken 1 2.3 4 ", resultString5);
+        assertEquals("Natural join query succeeds", "apple 0.150 0.80 3 chicken 1.000 2.30 4 ", resultString5);
         cursor.closeCursor();
     }
 
