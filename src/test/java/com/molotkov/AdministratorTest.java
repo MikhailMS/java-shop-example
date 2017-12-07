@@ -71,9 +71,6 @@ public class AdministratorTest {
 
     @Test
     public void testAdministratorMethods() throws SQLException {
-        Statement statement = dataSource.getConnection().createStatement();
-        statement.execute("SELECT product_id, product_name, product_weight, product_price, product_amount " +
-                "FROM products INNER JOIN inventory USING (product_id)");
     // TESTING getTotalPriceOfInventory
         Administrator admin = new Administrator("admin", "admin");
         final double result = admin.getTotalPriceOfInventory(dataSource.getConnection());
