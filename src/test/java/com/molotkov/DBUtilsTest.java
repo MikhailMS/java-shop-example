@@ -98,7 +98,6 @@ public class DBUtilsTest {
 
         assertEquals("Natural join query succeeds", "apple 0.150 0.8 3 chicken 1 2.3 4 ", resultString5);
         cursor.closeCursor();
-        assertEquals("Update query succeeds", "4", resultString4);
     }
 
     @Test(expected = SQLException.class)

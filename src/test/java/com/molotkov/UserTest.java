@@ -103,7 +103,10 @@ public class UserTest {
         String inventory = "";
 
         while (cursor.getResults().next()) {
+            inventory += String.format("%s ",cursor.getResults().getString(2));
             inventory += String.format("%s ",cursor.getResults().getString(3));
+            inventory += String.format("%s ",cursor.getResults().getString(4));
+            inventory += String.format("%s ",cursor.getResults().getString(5));
         }
 
         assertEquals("testUser can see inventory", "apple 0.150 0.8 3 chicken 1 2.3 4 ", inventory);
@@ -114,10 +117,13 @@ public class UserTest {
         inventory = "";
 
         while (cursor.getResults().next()) {
+            inventory += String.format("%s ",cursor.getResults().getString(2));
             inventory += String.format("%s ",cursor.getResults().getString(3));
+            inventory += String.format("%s ",cursor.getResults().getString(4));
+            inventory += String.format("%s ",cursor.getResults().getString(5));
         }
 
-        assertEquals("admin can see inventory", "apple 0.150 0.8 3 ", inventory);
+        assertEquals("testUser can sort inventory by name", "apple 0.150 0.8 3 ", inventory);
         cursor.closeCursor();
 
         // Ensure user can sort inventory by weight
@@ -125,10 +131,13 @@ public class UserTest {
         inventory = "";
 
         while (cursor.getResults().next()) {
+            inventory += String.format("%s ",cursor.getResults().getString(2));
             inventory += String.format("%s ",cursor.getResults().getString(3));
+            inventory += String.format("%s ",cursor.getResults().getString(4));
+            inventory += String.format("%s ",cursor.getResults().getString(5));
         }
 
-        assertEquals("admin can see inventory", "apple 0.150 0.8 3 ", inventory);
+        assertEquals("testUser can sort inventory by weight", "apple 0.150 0.8 3 ", inventory);
         cursor.closeCursor();
 
         // Ensure user can sort inventory by price
@@ -136,10 +145,13 @@ public class UserTest {
         inventory = "";
 
         while (cursor.getResults().next()) {
+            inventory += String.format("%s ",cursor.getResults().getString(2));
             inventory += String.format("%s ",cursor.getResults().getString(3));
+            inventory += String.format("%s ",cursor.getResults().getString(4));
+            inventory += String.format("%s ",cursor.getResults().getString(5));
         }
 
-        assertEquals("admin can see inventory", "apple 0.150 0.8 3 ", inventory);
+        assertEquals("testUser can sort inventory by price", "apple 0.150 0.8 3 ", inventory);
         cursor.closeCursor();
 
     //-------------- Admin test cases ------------------------------
@@ -179,7 +191,7 @@ public class UserTest {
             inventory += String.format("%s ",cursor.getResults().getString(5));
         }
 
-        assertEquals("admin can see inventory", "apple 0.150 0.8 3 ", inventory);
+        assertEquals("admin can sort inventory by name", "apple 0.150 0.8 3 ", inventory);
         cursor.closeCursor();
 
         // Ensure admin can sort inventory by weight
@@ -193,7 +205,7 @@ public class UserTest {
             inventory += String.format("%s ",cursor.getResults().getString(5));
         }
 
-        assertEquals("admin can see inventory", "apple 0.150 0.8 3 ", inventory);
+        assertEquals("admin can sort inventory by weight", "apple 0.150 0.8 3 ", inventory);
         cursor.closeCursor();
 
         // Ensure admin can sort inventory by price
@@ -207,7 +219,7 @@ public class UserTest {
             inventory += String.format("%s ",cursor.getResults().getString(5));
         }
 
-        assertEquals("admin can see inventory", "apple 0.150 0.8 3 ", inventory);
+        assertEquals("admin can sort inventory by price", "apple 0.150 0.8 3 ", inventory);
         cursor.closeCursor();
     }
 }
