@@ -30,16 +30,16 @@ Also I am using TDD approach to complete this project as I found this really con
   - [ ] As an optional part, I'd like to introduce user system: administration and clients. First would be able to see all completed orders and inventory stock and its total cost, while customers can fill in baskets, make orders and see theirs basket and orders only
       - [ ] Administrator user can
           - [x] See all available products
-          - [ ] See total cost of all products
-          - [ ] Add products to inventory
-          - [ ] Remove products from inventory
+          - [x] See total cost of all products **IN TESTING**
+          - [ ] Add products to inventory **IN DEVELOPMENT**
+          - [ ] Remove products from inventory **IN DEVELOPMENT**
           - [x] See orders completed by any user
           - [ ] See total cost of all completed orders
           - [ ] Add user to the system
           - [ ] Delete user from system
           - [x] Filter products by name, price and weight
           - [x] Filter orders by date
-          - [ ] Filter orders by total price **IN DEVELOPMENT**
+          - [x] Filter orders by total price (only require adding 'total' column to 'order' table)
       - [ ] Client user can
           - [x] See all available products
           - [ ] Add to basket
@@ -53,7 +53,7 @@ Also I am using TDD approach to complete this project as I found this really con
           - [x] See all orders (client can see only his orders)
           - [x] Filter products by name, price and weight
           - [x] Filter orders by date
-          - [ ] Filter orders by total price **IN DEVELOPMENT**
+          - [x] Filter orders by total price (only require adding 'total' column to 'order' table) 
       - [ ] Can login into system and gain appropriate rights
       
   - [ ] As an optional part, I'd like to introduce GUI, which will make it easier to fill basket, see orders and etc
