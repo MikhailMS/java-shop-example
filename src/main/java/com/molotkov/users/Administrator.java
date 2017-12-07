@@ -23,8 +23,17 @@ public class Administrator extends User {
         return total;
     }
 
-    public void addProductToInventory(final Connection connection, final Product product, final int amount) {
-        // TO-DO
+    public void addProductToInventory(final Connection connection, final Product product, final int amount) throws SQLException {
+        DBUtils.insertSpecificIntoTable(connection, "products", new String[]{"product_name","product_weight","product_price"},
+                new String[]{String.format("'%s'",product.getName()), Double.toString(product.getWeight()), Double.toString(product.getPrice())});
+        DBCursorHolder cursor = DBUtils.filterFromTable(connection, "products", new String[]{"product_id"},
+                new String[]{String.format("product_name = '%s'", product.getName())});
+        cursor.getResults().next();
+        int productId = cursor.getResults().getInt(1);
+        cursor.closeCursor();
+
+        DBUtils.insertSpecificIntoTable(connection, "inventory", new String[]{"product_id", "product_amount"},
+                new String[]{Integer.toString(productId), Integer.toString(amount)});
     }
 
     public void removeProductFromInventory(final Connection connection, final Product product, final int amount) {
