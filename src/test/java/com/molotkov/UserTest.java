@@ -1,9 +1,6 @@
 package com.molotkov;
 
 import com.molotkov.db.DBCursorHolder;
-import com.molotkov.db.DBUtils;
-import com.molotkov.exceptions.BasketException;
-import com.molotkov.products.Product;
 import com.molotkov.users.User;
 import com.zaxxer.hikari.HikariConfig;
 import com.zaxxer.hikari.HikariDataSource;
@@ -14,7 +11,6 @@ import org.testcontainers.containers.PostgreSQLContainer;
 
 import java.sql.SQLException;
 import java.sql.Statement;
-import java.util.ArrayList;
 
 import static org.rnorth.visibleassertions.VisibleAssertions.assertEquals;
 
@@ -69,6 +65,7 @@ public class UserTest {
 
     @Test
     public void testUserSuperClassMethods() throws SQLException {
+    //-------------- User test cases -------------------------------
         User testUser = new User("testUser", "testUser");
         assertEquals("Constructor succeeds", true, testUser instanceof User);
 
@@ -101,6 +98,51 @@ public class UserTest {
         assertEquals("testUser2 has only his orders", true, orders.contains("testUser2") && !orders.contains("testUser1"));
         cursor.closeCursor();
 
+        // Ensure user can see inventory
+        cursor = testUser1.fetchInventory(dataSource.getConnection(), new String[]{});
+        String inventory = "";
+
+        while (cursor.getResults().next()) {
+            inventory += String.format("%s ",cursor.getResults().getString(3));
+        }
+
+        assertEquals("testUser can see inventory", "apple 0.150 0.8 3 chicken 1 2.3 4 ", inventory);
+        cursor.closeCursor();
+
+        // Ensure user can sort inventory by name
+        cursor = testUser1.fetchInventory(dataSource.getConnection(), new String[]{"product_name LIKE 'apple'"});
+        inventory = "";
+
+        while (cursor.getResults().next()) {
+            inventory += String.format("%s ",cursor.getResults().getString(3));
+        }
+
+        assertEquals("admin can see inventory", "apple 0.150 0.8 3 ", inventory);
+        cursor.closeCursor();
+
+        // Ensure user can sort inventory by weight
+        cursor = testUser1.fetchInventory(dataSource.getConnection(), new String[]{"product_weight = 0.150"});
+        inventory = "";
+
+        while (cursor.getResults().next()) {
+            inventory += String.format("%s ",cursor.getResults().getString(3));
+        }
+
+        assertEquals("admin can see inventory", "apple 0.150 0.8 3 ", inventory);
+        cursor.closeCursor();
+
+        // Ensure user can sort inventory by price
+        cursor = testUser1.fetchInventory(dataSource.getConnection(), new String[]{"product_price = 0.8"});
+        inventory = "";
+
+        while (cursor.getResults().next()) {
+            inventory += String.format("%s ",cursor.getResults().getString(3));
+        }
+
+        assertEquals("admin can see inventory", "apple 0.150 0.8 3 ", inventory);
+        cursor.closeCursor();
+
+    //-------------- Admin test cases ------------------------------
         // Ensure admin gets all orders
         cursor = admin.fetchOrders(dataSource.getConnection(), new String[]{});
         orders = "";
@@ -112,26 +154,60 @@ public class UserTest {
         assertEquals("admin has all orders", true, orders.contains("testUser1") && orders.contains("testUser2"));
         cursor.closeCursor();
 
-        // Ensure user can see inventory
-        cursor = testUser1.fetchInventory(dataSource.getConnection());
-        String inventory = "";
-
-        while (cursor.getResults().next()) {
-            inventory += String.format("%s ",cursor.getResults().getString(3));
-        }
-
-        assertEquals("testUser1 can see inventory", true, inventory.contains("3") && inventory.contains("4"));
-        cursor.closeCursor();
-
-        // Unsure admin can see inventory
-        cursor = admin.fetchInventory(dataSource.getConnection());
+        // Ensure admin can see inventory
+        cursor = admin.fetchInventory(dataSource.getConnection(), new String[]{});
         inventory = "";
 
         while (cursor.getResults().next()) {
+            inventory += String.format("%s ",cursor.getResults().getString(2));
             inventory += String.format("%s ",cursor.getResults().getString(3));
+            inventory += String.format("%s ",cursor.getResults().getString(4));
+            inventory += String.format("%s ",cursor.getResults().getString(5));
         }
 
-        assertEquals("admin can see inventory", true, inventory.contains("3") && inventory.contains("4"));
+        assertEquals("admin can see inventory", "apple 0.150 0.8 3 chicken 1 2.3 4 ", inventory);
+        cursor.closeCursor();
+
+        // Ensure admin can sort inventory by name
+        cursor = admin.fetchInventory(dataSource.getConnection(), new String[]{"product_name LIKE 'apple'"});
+        inventory = "";
+
+        while (cursor.getResults().next()) {
+            inventory += String.format("%s ",cursor.getResults().getString(2));
+            inventory += String.format("%s ",cursor.getResults().getString(3));
+            inventory += String.format("%s ",cursor.getResults().getString(4));
+            inventory += String.format("%s ",cursor.getResults().getString(5));
+        }
+
+        assertEquals("admin can see inventory", "apple 0.150 0.8 3 ", inventory);
+        cursor.closeCursor();
+
+        // Ensure admin can sort inventory by weight
+        cursor = admin.fetchInventory(dataSource.getConnection(), new String[]{"product_weight = 0.150"});
+        inventory = "";
+
+        while (cursor.getResults().next()) {
+            inventory += String.format("%s ",cursor.getResults().getString(2));
+            inventory += String.format("%s ",cursor.getResults().getString(3));
+            inventory += String.format("%s ",cursor.getResults().getString(4));
+            inventory += String.format("%s ",cursor.getResults().getString(5));
+        }
+
+        assertEquals("admin can see inventory", "apple 0.150 0.8 3 ", inventory);
+        cursor.closeCursor();
+
+        // Ensure admin can sort inventory by price
+        cursor = admin.fetchInventory(dataSource.getConnection(), new String[]{"product_price = 0.8"});
+        inventory = "";
+
+        while (cursor.getResults().next()) {
+            inventory += String.format("%s ",cursor.getResults().getString(2));
+            inventory += String.format("%s ",cursor.getResults().getString(3));
+            inventory += String.format("%s ",cursor.getResults().getString(4));
+            inventory += String.format("%s ",cursor.getResults().getString(5));
+        }
+
+        assertEquals("admin can see inventory", "apple 0.150 0.8 3 ", inventory);
         cursor.closeCursor();
     }
 }

@@ -6,7 +6,6 @@ import com.molotkov.interfaces.UserInterface;
 
 import java.sql.Connection;
 import java.sql.SQLException;
-import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -43,8 +42,9 @@ public class User implements UserInterface {
     }
 
     @Override
-    public DBCursorHolder fetchInventory(final Connection connection) throws SQLException {
-        return DBUtils.selectFromTable(connection, "inventory", new String[]{});
+    public DBCursorHolder fetchInventory(final Connection connection, final  String[] filterArguments) throws SQLException {
+        return DBUtils.naturalJoinTables(connection, "products", "inventory", new String[] {"product_id", "product_name", "product_weight", "product_price", "product_amount"},
+                filterArguments);
     }
 
     public String getUserName() {

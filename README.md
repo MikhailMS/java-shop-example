@@ -29,7 +29,7 @@ Also I am using TDD approach to complete this project as I found this really con
       
   - [ ] As an optional part, I'd like to introduce user system: administration and clients. First would be able to see all completed orders and inventory stock and its total cost, while customers can fill in baskets, make orders and see theirs basket and orders only
       - [ ] Administrator user can
-          - [x] See all available products **TESTING**
+          - [x] See all available products
           - [ ] See total cost of all products
           - [ ] Add products to inventory
           - [ ] Remove products from inventory
@@ -37,8 +37,10 @@ Also I am using TDD approach to complete this project as I found this really con
           - [ ] See total cost of all completed orders
           - [ ] Add user to the system
           - [ ] Delete user from system
+          - [ ] Filter products by name, price and weight **IN TESTING**
+          - [ ] Filter orders by date and total price **IN DEVELOPMENT**
       - [ ] Client user can
-          - [x] See all available products **TESTING**
+          - [x] See all available products
           - [ ] Add to basket
           - [ ] Remove from basket
           - [ ] Save basket
@@ -48,9 +50,8 @@ Also I am using TDD approach to complete this project as I found this really con
           - [ ] Complete order
           - [ ] Restore order
           - [x] See all completed orders (client can see only his orders)
-          - [ ] Search for specific product by name
-          - [ ] Filter products by price, weight
-          - [ ] Filter orders by date/total price
+          - [ ] Filter products by name, price and weight **IN TESTING**
+          - [ ] Filter orders by date and total price **IN DEVELOPMENT**
       - [ ] Can login into system and gain appropriate rights
       
   - [ ] As an optional part, I'd like to introduce GUI, which will make it easier to fill basket, see orders and etc
@@ -78,6 +79,9 @@ Also I am using TDD approach to complete this project as I found this really con
           - [ ] See total cost of all completed orders
           - [ ] Add user to the system
           - [ ] Delete user from system
+          - [ ] Search for specific product by name
+          - [ ] Filter products by price, weight
+          - [ ] Filter orders by date/total price
           
   - [ ] As an optional part, I'd like to write a service, which will keep shop's inventory in sync with DB and completed orders
       - [ ] Once order is completed, service will update inventory in the DB and update local copy of the inventory

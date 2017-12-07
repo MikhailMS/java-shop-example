@@ -34,15 +34,17 @@ public class OrderDBTest {
         dataSource = new HikariDataSource(hikariConfig);
         Statement statement = dataSource.getConnection().createStatement();
 
-        statement.execute("CREATE TABLE IF NOT EXISTS users ( user_name text PRIMARY KEY, user_passwd text NOT NULL," +
+        statement.addBatch("CREATE TABLE IF NOT EXISTS users ( user_name text PRIMARY KEY, user_passwd text NOT NULL," +
                 " privileges boolean DEFAULT FALSE )");
-        statement.execute(" CREATE TABLE IF NOT EXISTS baskets ( basket_id serial PRIMARY KEY," +
+        statement.addBatch(" CREATE TABLE IF NOT EXISTS baskets ( basket_id serial PRIMARY KEY," +
                 " basket_owner text REFERENCES users(user_name) ON DELETE CASCADE, products_name text NOT NULL," +
                 " products_amount text NOT NULL, processed boolean DEFAULT FALSE, created_at timestamp DEFAULT CURRENT_TIMESTAMP )");
-        statement.execute("CREATE TABLE IF NOT EXISTS orders ( order_id serial," +
+        statement.addBatch("CREATE TABLE IF NOT EXISTS orders ( order_id serial," +
                 " basket_id int4 REFERENCES baskets(basket_id) ON DELETE CASCADE, order_owner text REFERENCES users(user_name) ON DELETE CASCADE," +
                 " address text NOT NULL, created_at timestamp DEFAULT CURRENT_TIMESTAMP )");
-        statement.execute("INSERT INTO users VALUES ( 'testUser', 'testUser', FALSE )");
+        statement.addBatch("INSERT INTO users VALUES ( 'testUser', 'testUser', FALSE )");
+
+        statement.executeBatch();
         statement.close();
     }
 

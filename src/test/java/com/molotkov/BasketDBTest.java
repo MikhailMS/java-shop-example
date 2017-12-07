@@ -34,12 +34,14 @@ public class BasketDBTest {
         dataSource = new HikariDataSource(hikariConfig);
         Statement statement = dataSource.getConnection().createStatement();
 
-        statement.executeUpdate("CREATE TABLE IF NOT EXISTS users ( user_name text PRIMARY KEY, user_passwd text NOT NULL," +
+        statement.addBatch("CREATE TABLE IF NOT EXISTS users ( user_name text PRIMARY KEY, user_passwd text NOT NULL," +
                 " privileges boolean DEFAULT FALSE )");
-        statement.executeUpdate(" CREATE TABLE IF NOT EXISTS baskets ( basket_id serial PRIMARY KEY," +
+        statement.addBatch(" CREATE TABLE IF NOT EXISTS baskets ( basket_id serial PRIMARY KEY," +
                 " basket_owner text REFERENCES users(user_name) ON DELETE CASCADE, products_name text NOT NULL," +
                 " products_amount text NOT NULL, created_at timestamp DEFAULT CURRENT_TIMESTAMP )");
-        statement.executeUpdate("INSERT INTO users VALUES ( 'testUser', 'testUser', FALSE )");
+        statement.addBatch("INSERT INTO users VALUES ( 'testUser', 'testUser', FALSE )");
+
+        statement.executeBatch();
         statement.close();
     }
 
