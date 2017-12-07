@@ -105,11 +105,10 @@ public class UserTest {
         assertEquals("testUser2 has only his orders", "apple 2 London ", orders);
         cursor.closeCursor();
 
-        Thread.sleep(3000);
 
         // Ensure user can filter orders by date
-        String date = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
-        date = String.format("orders.created_at < '%s'::date",date);
+        String date = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd"));
+        date = String.format("orders.created_at <= '%s'::date",date);
         cursor = testUser1.fetchOrders(dataSource.getConnection(), new String[]{date});
         orders = "";
 
