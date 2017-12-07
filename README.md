@@ -31,7 +31,7 @@ Also I am using TDD approach to complete this project as I found this really con
       - [ ] Administrator user can
           - [x] See all available products
           - [x] See total cost of all products
-          - [x] Add products to inventory **IN TESTING**
+          - [x] Add products to inventory
           - [ ] Remove products from inventory **IN DEVELOPMENT**
           - [x] See orders completed by any user
           - [ ] See total cost of all completed orders

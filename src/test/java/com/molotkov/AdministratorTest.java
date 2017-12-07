@@ -3,6 +3,7 @@ package com.molotkov;
 import com.molotkov.db.DBCursorHolder;
 import com.molotkov.db.DBUtils;
 import com.molotkov.exceptions.BasketException;
+import com.molotkov.exceptions.InventoryException;
 import com.molotkov.products.Product;
 import com.molotkov.users.Administrator;
 import com.zaxxer.hikari.HikariConfig;
@@ -41,7 +42,7 @@ public class AdministratorTest {
         statement.addBatch("INSERT INTO users VALUES ( 'testUser1', 'testUser1', FALSE )");
         statement.addBatch("INSERT INTO users VALUES ( 'testUser2', 'testUser2', FALSE )");
 
-        statement.addBatch("CREATE TABLE IF NOT EXISTS products ( product_id serial PRIMARY KEY, product_name text NOT NULL," +
+        statement.addBatch("CREATE TABLE IF NOT EXISTS products ( product_id serial PRIMARY KEY, product_name text PRIMARY NOT NULL," +
                 " product_weight numeric (6,3) NOT NULL, product_price numeric (8,2) NOT NULL )");
         statement.addBatch("INSERT INTO products ( product_name, product_weight, product_price ) VALUES ( 'apple', 0.150, 0.8 )");
         statement.addBatch("INSERT INTO products ( product_name, product_weight, product_price ) VALUES ( 'chicken', 1, 2.3 )");
@@ -56,7 +57,7 @@ public class AdministratorTest {
     }
 
     @Test
-    public void testAdministratorMethods() throws SQLException {
+    public void testAdministratorMethods() throws SQLException, InventoryException {
     // TESTING getTotalPriceOfInventory
         Administrator admin = new Administrator("admin", "admin");
         final double result = admin.getTotalPriceOfInventory(dataSource.getConnection());
@@ -65,21 +66,7 @@ public class AdministratorTest {
     // TESTING addProductToInventory
         Product newProduct = new Product("turkey", 1.5, 3);
         int amount = 1;
-        /*// Method starts ------------------
-        DBUtils.insertSpecificIntoTable(dataSource.getConnection(), "products", new String[]{"product_name","product_weight","product_price"},
-                new String[]{String.format("'%s'",newProduct.getName()), Double.toString(newProduct.getWeight()), Double.toString(newProduct.getPrice())});
-        DBCursorHolder cursor = DBUtils.filterFromTable(dataSource.getConnection(), "products", new String[]{"product_id"},
-                new String[]{String.format("product_name = '%s'", newProduct.getName())});
-        cursor.getResults().next();
-        int productId = cursor.getResults().getInt(1);
-        cursor.closeCursor();
-
-        DBUtils.insertSpecificIntoTable(dataSource.getConnection(), "inventory", new String[]{"product_id", "product_amount"},
-                new String[]{Integer.toString(productId), Integer.toString(amount)});
-        // Method ends -------------------- */
-
         admin.addProductToInventory(dataSource.getConnection(),newProduct, amount);
-        // Method ends --------------------
 
         DBCursorHolder cursor = DBUtils.filterFromTable(dataSource.getConnection(), "products", new String[]{"product_name", "product_price"},
                 new String[]{String.format("product_name LIKE '%s'",newProduct.getName())});
@@ -92,7 +79,7 @@ public class AdministratorTest {
 
         assertEquals("addProductToInventory succeeds", "turkey 3.00 ", newProductString);
         cursor.closeCursor();
-    /*
+
     // TESTING removeProductFromInventory
         admin.removeProductFromInventory(dataSource.getConnection(), newProduct, 1);
 
@@ -107,6 +94,5 @@ public class AdministratorTest {
 
         assertEquals("addProductToInventory succeeds", "", newProductString);
         cursor.closeCursor();
-    */
     }
 }

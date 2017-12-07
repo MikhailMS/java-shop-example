@@ -2,6 +2,7 @@ package com.molotkov.users;
 
 import com.molotkov.db.DBCursorHolder;
 import com.molotkov.db.DBUtils;
+import com.molotkov.exceptions.InventoryException;
 import com.molotkov.products.Product;
 
 import java.sql.Connection;
@@ -36,7 +37,21 @@ public class Administrator extends User {
                 new String[]{Integer.toString(productId), Integer.toString(amount)});
     }
 
-    public void removeProductFromInventory(final Connection connection, final Product product, final int amount) {
-        // TO-DO
+    public void removeProductFromInventory(final Connection connection, final Product product, final int amount) throws SQLException, InventoryException {
+        DBCursorHolder cursor = DBUtils.innerJoinTables(connection, "products", "inventory", "product_id",
+                new String[]{"product_id","product_amount"}, new String[]{String.format("product_name = '%s'",product.getName())});
+        int productId = -1;
+        int productAmount = -1;
+        while(cursor.getResults().next()) {
+            productId = cursor.getResults().getInt(1);
+            productAmount = cursor.getResults().getInt(2);
+        }
+        int newAmount = productAmount - amount;
+        if (newAmount >= 0) {
+            DBUtils.updateTable(connection, "inventory", new String[]{"product_amount"}, new String[]{Integer.toString(newAmount)},
+                    new String[]{String.format("product_id = %d",productId),String.format("product_name = '%s'",product.getName())});
+        } else {
+            throw new InventoryException("You cannot order specified amount of product");
+        }
     }
 }
