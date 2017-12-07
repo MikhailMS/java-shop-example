@@ -54,7 +54,8 @@ public class AdministratorTest {
     public void testAdministratorMethods() throws SQLException {
     // TESTING getTotalPriceOfInventory
         Administrator admin = new Administrator("admin", "admin");
-        assertEquals("getTotalPriceOfInventory succeeds", 11.6, admin.getTotalPriceOfInventory(dataSource.getConnection()));
+        final double result = admin.getTotalPriceOfInventory(dataSource.getConnection());
+        assertEquals("getTotalPriceOfInventory succeeds", 11.6, result);
     /*
     // TESTING addProductToInventory
         Product newProduct = new Product("turkey", 1.5, 3);
