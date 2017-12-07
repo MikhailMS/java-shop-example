@@ -40,13 +40,7 @@ public class AdministratorTest {
         statement.addBatch("INSERT INTO users VALUES ( 'admin', 'admin', TRUE )");
         statement.addBatch("INSERT INTO users VALUES ( 'testUser1', 'testUser1', FALSE )");
         statement.addBatch("INSERT INTO users VALUES ( 'testUser2', 'testUser2', FALSE )");
-    /*
-        statement.addBatch(" CREATE TABLE IF NOT EXISTS baskets ( basket_id serial PRIMARY KEY," +
-                " basket_owner text REFERENCES users(user_name) ON DELETE CASCADE, products_name text NOT NULL," +
-                " products_amount text NOT NULL, processed boolean DEFAULT FALSE, created_at timestamp DEFAULT CURRENT_TIMESTAMP )");
-        statement.addBatch("INSERT INTO baskets ( basket_owner, products_name, products_amount ) VALUES ( 'testUser1', 'apple,chicken', '1,2' )");
-        statement.addBatch("INSERT INTO baskets ( basket_owner, products_name, products_amount ) VALUES ( 'testUser2', 'apple', '2' )");
-    */
+
         statement.addBatch("CREATE TABLE IF NOT EXISTS products ( product_id serial PRIMARY KEY, product_name text NOT NULL," +
                 " product_weight numeric (6,3) NOT NULL, product_price numeric (8,2) NOT NULL )");
         statement.addBatch("INSERT INTO products ( product_name, product_weight, product_price ) VALUES ( 'apple', 0.150, 0.8 )");
@@ -67,7 +61,7 @@ public class AdministratorTest {
         Administrator admin = new Administrator("admin", "admin");
         final double result = admin.getTotalPriceOfInventory(dataSource.getConnection());
         assertEquals("getTotalPriceOfInventory succeeds", 11.6, result);
-    /*
+
     // TESTING addProductToInventory
         Product newProduct = new Product("turkey", 1.5, 3);
         admin.addProductToInventory(dataSource.getConnection(), newProduct, 1);
@@ -83,7 +77,7 @@ public class AdministratorTest {
 
         assertEquals("addProductToInventory succeeds", "turkey 3.0 ", newProductString);
         cursor.closeCursor();
-
+    /*
     // TESTING removeProductFromInventory
         admin.removeProductFromInventory(dataSource.getConnection(), newProduct, 1);
 
