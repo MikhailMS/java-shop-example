@@ -38,7 +38,7 @@ Also I am using TDD approach to complete this project as I found this really con
           - [ ] Add user to the system
           - [ ] Delete user from system
           - [x] Filter products by name, price and weight
-          - [ ] Filter orders by date **IN TESTING**
+          - [x] Filter orders by date
           - [ ] Filter orders by total price **IN DEVELOPMENT**
       - [ ] Client user can
           - [x] See all available products
@@ -52,7 +52,7 @@ Also I am using TDD approach to complete this project as I found this really con
           - [ ] Restore order
           - [x] See all orders (client can see only his orders)
           - [x] Filter products by name, price and weight
-          - [ ] Filter orders by date **IN TESTING**
+          - [x] Filter orders by date
           - [ ] Filter orders by total price **IN DEVELOPMENT**
       - [ ] Can login into system and gain appropriate rights
       

@@ -113,15 +113,12 @@ public class UserTest {
         orders = "";
 
         while (cursor.getResults().next()) {
-            System.out.println(cursor.getResults().getString(1));
-            System.out.println(cursor.getResults().getString(2));
-            System.out.println(cursor.getResults().getString(3));
             orders += String.format("%s ",cursor.getResults().getString(1));
             orders += String.format("%s ",cursor.getResults().getString(2));
             orders += String.format("%s ",cursor.getResults().getString(3));
         }
 
-        assertEquals("testUser1 can filter only his orders by date", "apple 2 London ", orders);
+        assertEquals("testUser1 can filter only his orders by date", "apple,chicken 1,2 Manchester ", orders);
         cursor.closeCursor();
 
         // Ensure user can see inventory
