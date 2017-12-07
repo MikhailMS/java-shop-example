@@ -15,9 +15,6 @@ public class Administrator extends User {
     }
 
     public double getTotalPriceOfInventory(final Connection connection) throws SQLException {
-        Statement statement = connection.createStatement();
-        statement.execute("SELECT product_id, product_name, product_weight, product_price, product_amount " +
-                "FROM products INNER JOIN inventory USING (product_id)");
         DBCursorHolder cursor = DBUtils.innerJoinTables(connection, "products", "inventory", "product_id",
                 new String[]{"product_price","product_amount"}, new String[]{});
         double total = 0.0;
