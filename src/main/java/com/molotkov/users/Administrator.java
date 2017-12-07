@@ -18,6 +18,7 @@ public class Administrator extends User {
                 new String[]{"product_price","product_amount"}, new String[]{});
         double total = 0.0;
         while (cursor.getResults().next()) {
+            System.out.println(cursor.getResults().getDouble(1));
             total += cursor.getResults().getDouble(1) * cursor.getResults().getDouble(2);
         }
         return total;

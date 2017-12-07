@@ -36,7 +36,7 @@ public class OrderDBTest {
 
         statement.addBatch("CREATE TABLE IF NOT EXISTS users ( user_name text PRIMARY KEY, user_passwd text NOT NULL," +
                 " privileges boolean DEFAULT FALSE )");
-        statement.addBatch(" CREATE TABLE IF NOT EXISTS baskets ( basket_id serial PRIMARY KEY," +
+        statement.addBatch("CREATE TABLE IF NOT EXISTS baskets ( basket_id serial PRIMARY KEY," +
                 " basket_owner text REFERENCES users(user_name) ON DELETE CASCADE, products_name text NOT NULL," +
                 " products_amount text NOT NULL, processed boolean DEFAULT FALSE, created_at timestamp DEFAULT CURRENT_TIMESTAMP )");
         statement.addBatch("CREATE TABLE IF NOT EXISTS orders ( order_id serial," +
