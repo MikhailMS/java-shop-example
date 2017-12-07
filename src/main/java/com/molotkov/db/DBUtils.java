@@ -16,6 +16,7 @@ public class DBUtils {
             final String query = String.format("CREATE TABLE IF NOT EXISTS %s ( %s )", tableName, columnsString);
             statement.execute(query);
             statement.close();
+            connection.close();
         } catch (SQLException ex) {
             ex.printStackTrace();
         }
@@ -28,6 +29,7 @@ public class DBUtils {
             final String query = String.format("INSERT INTO %s VALUES ( %s )", tableName, columnsString);
             statement.execute(query);
             statement.close();
+            connection.close();
         } catch (SQLException ex) {
             ex.printStackTrace();
         }
@@ -41,6 +43,7 @@ public class DBUtils {
             final String query = String.format("INSERT INTO %s ( %s ) VALUES ( %s )", tableName, insertToString, insertValuesString);
             statement.execute(query);
             statement.close();
+            connection.close();
         } catch (SQLException ex) {
             ex.printStackTrace();
         }
@@ -60,6 +63,7 @@ public class DBUtils {
             final String query = String.format("UPDATE %s SET %s WHERE %s", tableName, columnValueString, filterArgumentsString);
             statement.execute(query);
             statement.close();
+            connection.close();
         } catch (SQLException ex) {
             ex.printStackTrace();
         }
@@ -136,6 +140,7 @@ public class DBUtils {
             final String query = String.format("DROP TABLE IF EXISTS %s", tableName);
             statement.execute(query);
             statement.close();
+            connection.close();
         } catch (SQLException ex) {
             ex.printStackTrace();
         }
