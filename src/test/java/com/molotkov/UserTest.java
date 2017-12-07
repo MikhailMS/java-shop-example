@@ -192,7 +192,7 @@ public class UserTest {
         cursor.closeCursor();
 
         // Ensure admin can sort all orders by date
-        date = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
+        date = LocalDateTime.now().plusDays(2).format(DateTimeFormatter.ofPattern("yyyy-MM-dd"));
         date = String.format("orders.created_at < '%s'::date",date);
         cursor = admin.fetchOrders(dataSource.getConnection(), new String[]{date});
         orders = "";
