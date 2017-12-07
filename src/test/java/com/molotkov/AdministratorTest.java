@@ -68,31 +68,33 @@ public class AdministratorTest {
         int amount = 1;
         admin.addProductToInventory(dataSource.getConnection(),newProduct, amount);
 
-        DBCursorHolder cursor = DBUtils.filterFromTable(dataSource.getConnection(), "products", new String[]{"product_name", "product_price"},
-                new String[]{String.format("product_name LIKE '%s'",newProduct.getName())});
+        DBCursorHolder cursor = DBUtils.innerJoinTables(dataSource.getConnection(), "products", "inventory", "product_id",
+                new String[]{"product_name", "product_price", "product_amount"}, new String[]{String.format("product_name = '%s'",newProduct.getName())});
         String newProductString = "";
 
         while (cursor.getResults().next()) {
             newProductString += String.format("%s ",cursor.getResults().getString(1));
             newProductString += String.format("%s ",cursor.getResults().getString(2));
+            newProductString += String.format("%s ",cursor.getResults().getString(3));
         }
 
-        assertEquals("addProductToInventory succeeds", "turkey 3.00 ", newProductString);
+        assertEquals("addProductToInventory succeeds", "turkey 3.00 1 ", newProductString);
         cursor.closeCursor();
 
     // TESTING removeProductFromInventory
         admin.removeProductFromInventory(dataSource.getConnection(), newProduct, 1);
 
-        cursor = DBUtils.filterFromTable(dataSource.getConnection(), "products", new String[]{"product_name", "product_price"},
-                new String[]{String.format("product_name LIKE '%s'",newProduct.getName())});
+        cursor = DBUtils.innerJoinTables(dataSource.getConnection(), "products", "inventory", "product_id",
+                new String[]{"product_name", "product_price", "product_amount"}, new String[]{String.format("product_name = '%s'",newProduct.getName())});
         newProductString = "";
 
         while (cursor.getResults().next()) {
             newProductString += String.format("%s ",cursor.getResults().getString(1));
-            newProductString += String.format("%f ",cursor.getResults().getDouble(2));
+            newProductString += String.format("%s ",cursor.getResults().getString(2));
+            newProductString += String.format("%s ",cursor.getResults().getString(3));
         }
 
-        assertEquals("addProductToInventory succeeds", "", newProductString);
+        assertEquals("addProductToInventory succeeds", "turkey 3.00 0 ", newProductString);
         cursor.closeCursor();
     }
 }
