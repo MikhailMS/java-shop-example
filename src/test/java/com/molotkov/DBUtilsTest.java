@@ -25,7 +25,7 @@ public class DBUtilsTest {
     @Before
     public void setUp() throws SQLException {
         hikariConfig = new HikariConfig();
-        //hikariConfig.setMaximumPoolSize(20);
+        hikariConfig.setMaximumPoolSize(20);
         hikariConfig.setJdbcUrl(postgres.getJdbcUrl());
         hikariConfig.setUsername(postgres.getUsername());
         hikariConfig.setPassword(postgres.getPassword());
@@ -114,5 +114,6 @@ public class DBUtilsTest {
         DBUtils.deleteTable(dataSource.getConnection(), "test_table");
 
         final DBCursorHolder cursor = DBUtils.selectFromTable(dataSource.getConnection(), "test_table", new String[]{});
+        cursor.closeCursor();
     }
 }
