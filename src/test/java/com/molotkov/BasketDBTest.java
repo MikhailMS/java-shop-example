@@ -77,6 +77,7 @@ public class BasketDBTest {
         restoredBasket.restoreFromDB(productsName, productsAmount);
         assertEquals("RetrieveBasketFromDB succeeded", "Basket has 1 product.",restoredBasket.toString());
         cursor.closeCursor();
+
         dataSource.close();
     }
 }

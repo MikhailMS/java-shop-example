@@ -222,5 +222,7 @@ public class UserTest {
 
         assertEquals("admin can sort inventory by price", "apple 0.150 0.80 3 ", inventory);
         cursor.closeCursor();
+
+        dataSource.close();
     }
 }
