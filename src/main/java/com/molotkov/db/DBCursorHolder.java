@@ -8,12 +8,10 @@ import java.sql.Statement;
 public class DBCursorHolder {
     private ResultSet results;
     private Statement statement;
-    private Connection connection;
 
-    public DBCursorHolder(final ResultSet resultSet, final Statement statement, final Connection connection) {
+    public DBCursorHolder(final ResultSet resultSet, final Statement statement) {
         this.results = resultSet;
         this.statement = statement;
-        this.connection = connection;
     }
 
     public ResultSet getResults() {
@@ -23,8 +21,7 @@ public class DBCursorHolder {
     public void closeCursor() {
         try {
             this.results.close();
-            this.statement.close();
-            this.connection.close();
+            this.statement.close();;
         } catch (SQLException e) {
             e.printStackTrace();
         }
