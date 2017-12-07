@@ -11,6 +11,8 @@ import org.testcontainers.containers.PostgreSQLContainer;
 
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 
 import static org.rnorth.visibleassertions.VisibleAssertions.assertEquals;
 
@@ -103,6 +105,21 @@ public class UserTest {
         assertEquals("testUser2 has only his orders", "apple 2 London ", orders);
         cursor.closeCursor();
 
+        // Ensure user can filter orders by date
+        String date = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
+        date = String.format("created_at < '%s'::date",date);
+        cursor = testUser1.fetchOrders(dataSource.getConnection(), new String[]{date});
+        orders = "";
+
+        while (cursor.getResults().next()) {
+            orders += String.format("%s ",cursor.getResults().getString(1));
+            orders += String.format("%s ",cursor.getResults().getString(2));
+            orders += String.format("%s ",cursor.getResults().getString(3));
+        }
+
+        assertEquals("testUser1 can filter only his orders by date", "apple 2 London ", orders);
+        cursor.closeCursor();
+
         // Ensure user can see inventory
         cursor = testUser1.fetchInventory(dataSource.getConnection(), new String[]{});
         String inventory = "";
@@ -171,6 +188,21 @@ public class UserTest {
         }
 
         assertEquals("admin has all orders", "apple,chicken 1,2 Manchester apple 2 London ", orders);
+        cursor.closeCursor();
+
+        // Ensure admin can sort all orders by date
+        date = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
+        date = String.format("created_at < '%s'::date",date);
+        cursor = admin.fetchOrders(dataSource.getConnection(), new String[]{date});
+        orders = "";
+
+        while (cursor.getResults().next()) {
+            orders += String.format("%s ",cursor.getResults().getString(1));
+            orders += String.format("%s ",cursor.getResults().getString(2));
+            orders += String.format("%s ",cursor.getResults().getString(3));
+        }
+
+        assertEquals("admin can sort all orders by date", "apple,chicken 1,2 Manchester apple 2 London ", orders);
         cursor.closeCursor();
 
         // Ensure admin can see inventory
