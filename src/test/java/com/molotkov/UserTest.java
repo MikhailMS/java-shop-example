@@ -84,6 +84,9 @@ public class UserTest {
         String orders = "";
 
         while (cursor.getResults().next()) {
+            System.out.println(cursor.getResults().getString(1));
+            System.out.println(cursor.getResults().getString(2));
+            System.out.println(cursor.getResults().getString(3));
             orders += String.format("%s ",cursor.getResults().getString(1));
             orders += String.format("%s ",cursor.getResults().getString(2));
             orders += String.format("%s ",cursor.getResults().getString(3));
