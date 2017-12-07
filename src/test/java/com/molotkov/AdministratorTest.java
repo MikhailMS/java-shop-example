@@ -60,7 +60,7 @@ public class AdministratorTest {
         Product newProduct = new Product("turkey", 1.5, 3);
         admin.addProductToInventory(dataSource.getConnection(), newProduct, 1);
 
-        DBCursorHolder cursor = DBUtils.filterFromTable(dataSource.getConnection(), "products", new String[]{"product_name", "product_price", "product_amount"},
+        DBCursorHolder cursor = DBUtils.filterFromTable(dataSource.getConnection(), "products", new String[]{"product_name", "product_price"},
                 new String[]{String.format("product_name LIKE '%s'",newProduct.getName())});
         String newProductString = "";
 
@@ -69,7 +69,7 @@ public class AdministratorTest {
             newProductString += String.format("%f ",cursor.getResults().getDouble(2));
         }
 
-        assertEquals("addProductToInventory succeeds", "turkey 3.0 1 ", newProductString);
+        assertEquals("addProductToInventory succeeds", "turkey 3.0 ", newProductString);
         cursor.closeCursor();
 
     // TESTING removeProductFromInventory
