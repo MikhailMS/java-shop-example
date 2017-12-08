@@ -13,20 +13,20 @@ import java.util.ArrayList;
 
 public class Client extends User {
 
-    public Client(String name, String passwd) {
+    public Client(final String name, final String passwd) {
         super(name, passwd);
     }
 
-    public void addProductToBasket(Basket basket, final Product product, int amount) throws BasketException {
+    public void addProductToBasket(Basket basket, final Product product, final int amount) throws BasketException {
         basket.addProducts(product, amount);
     }
 
-    public void removeProductFromBasket(Basket basket, final Product product, final int amount) throws BasketException {
+    public void removeProductFromBasket(final Basket basket, final Product product, final int amount) throws BasketException {
         basket.removeProducts(product, amount);
     }
 
     public void saveBasket(final Connection connection, final Basket basket) {
-        ArrayList<String> valuesList = new ArrayList<>();
+        final ArrayList<String> valuesList = new ArrayList<>();
         valuesList.add(String.format("'%s'", super.getUserName()));
         valuesList.addAll(basket.toDBFormat());
 
@@ -49,15 +49,15 @@ public class Client extends User {
         return restoredBasket;
     }
 
-    public void saveOrder(final Connection connection, Order order) throws SQLException {
-        DBCursorHolder cursor = DBUtils.filterFromTable(connection, "baskets", new String[]{"basket_id"},
+    public void saveOrder(final Connection connection, final Order order) throws SQLException {
+        final DBCursorHolder cursor = DBUtils.filterFromTable(connection, "baskets", new String[]{"basket_id"},
                 new String[]{String.format("basket_owner = '%s'", getUserName()), "AND", "processed = FALSE"});
         cursor.getResults().next();
 
         final String basketId = cursor.getResults().getString(1);
         cursor.closeCursor();
 
-        ArrayList<String> orderValuesList = new ArrayList<>();
+        final ArrayList<String> orderValuesList = new ArrayList<>();
         orderValuesList.add(basketId);
         orderValuesList.add(String.format("'%s'", order.getAddress()));
         orderValuesList.add(String.format("'%s'", getUserName()));
@@ -96,7 +96,7 @@ public class Client extends User {
 
     public void completeOrder(final Connection connection) throws SQLException {
         // Retrieve order
-        DBCursorHolder cursor = DBUtils.filterFromTable(connection, "orders", new String[]{"basket_id"},
+        final DBCursorHolder cursor = DBUtils.filterFromTable(connection, "orders", new String[]{"basket_id"},
                 new String[]{String.format("order_owner = '%s'", getUserName()), "AND", "completed = FALSE"});
         cursor.getResults().next();
 

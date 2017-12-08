@@ -25,14 +25,14 @@ public class AdministratorTest {
 
     @Before
     public void setUp() throws SQLException {
-        HikariConfig hikariConfig = new HikariConfig();
+        final HikariConfig hikariConfig = new HikariConfig();
         hikariConfig.setMaximumPoolSize(30);
         hikariConfig.setJdbcUrl(postgres.getJdbcUrl());
         hikariConfig.setUsername(postgres.getUsername());
         hikariConfig.setPassword(postgres.getPassword());
 
         dataSource = new HikariDataSource(hikariConfig);
-        Statement statement = dataSource.getConnection().createStatement();
+        final Statement statement = dataSource.getConnection().createStatement();
 
         statement.addBatch("CREATE TABLE IF NOT EXISTS users ( user_name text PRIMARY KEY, user_passwd text NOT NULL," +
                 " privileges boolean DEFAULT FALSE )");
@@ -69,7 +69,7 @@ public class AdministratorTest {
     @Test
     public void testAdministratorMethods() throws SQLException, InventoryException {
     // TESTING getTotalPriceOfInventory
-        Administrator admin = new Administrator("admin", "admin");
+        final Administrator admin = new Administrator("admin", "admin");
         final double totalOfInventory = admin.getTotalPriceOfInventory(dataSource.getConnection());
         assertEquals("getTotalPriceOfInventory succeeds", 11.6, totalOfInventory);
 
@@ -78,8 +78,8 @@ public class AdministratorTest {
         assertEquals("getTotalPriceOfAllOrders succeeds", 4.95, totalOfOrders);
 
     // TESTING addProductToInventory
-        Product newProduct = new Product("turkey", 1.5, 3);
-        int amount = 1;
+        final Product newProduct = new Product("turkey", 1.5, 3);
+        final int amount = 1;
         admin.addProductToInventory(dataSource.getConnection(),newProduct, amount);
 
         DBCursorHolder cursor = DBUtils.innerJoinTables(dataSource.getConnection(), "products", "inventory", "product_id",

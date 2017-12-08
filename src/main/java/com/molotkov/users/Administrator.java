@@ -10,12 +10,12 @@ import java.sql.SQLException;
 
 public class Administrator extends User {
 
-    public Administrator(String name, String passwd) {
+    public Administrator(final String name, final String passwd) {
         super(name, passwd);
     }
 
     public double getTotalPriceOfInventory(final Connection connection) throws SQLException {
-        DBCursorHolder cursor = DBUtils.innerJoinTables(connection, "products", "inventory", "product_id",
+        final DBCursorHolder cursor = DBUtils.innerJoinTables(connection, "products", "inventory", "product_id",
                 new String[]{"product_price","product_amount"}, new String[]{});
         double total = 0.0;
         while (cursor.getResults().next()) {
@@ -25,7 +25,7 @@ public class Administrator extends User {
     }
 
     public double getTotalPriceOfAllOrders(final Connection connection) throws SQLException {
-        DBCursorHolder cursor = DBUtils.filterFromTable(connection, "orders", new String[]{"total_price"}, new String[]{});
+        final DBCursorHolder cursor = DBUtils.filterFromTable(connection, "orders", new String[]{"total_price"}, new String[]{});
         double total = 0.0;
         while (cursor.getResults().next()) {
             total += cursor.getResults().getDouble(1);
@@ -36,10 +36,10 @@ public class Administrator extends User {
     public void addProductToInventory(final Connection connection, final Product product, final int amount) throws SQLException {
         DBUtils.insertSpecificIntoTable(connection, "products", new String[]{"product_name","product_weight","product_price"},
                 new String[]{String.format("'%s'",product.getName()), Double.toString(product.getWeight()), Double.toString(product.getPrice())});
-        DBCursorHolder cursor = DBUtils.filterFromTable(connection, "products", new String[]{"product_id"},
+        final DBCursorHolder cursor = DBUtils.filterFromTable(connection, "products", new String[]{"product_id"},
                 new String[]{String.format("product_name = '%s'", product.getName())});
         cursor.getResults().next();
-        int productId = cursor.getResults().getInt(1);
+        final int productId = cursor.getResults().getInt(1);
         cursor.closeCursor();
 
         DBUtils.insertSpecificIntoTable(connection, "inventory", new String[]{"product_id", "product_amount"},
@@ -48,7 +48,7 @@ public class Administrator extends User {
 
     public void removeProductFromInventory(final Connection connection, final Product product, final int amount)
             throws SQLException, InventoryException {
-        DBCursorHolder cursor = DBUtils.innerJoinTables(connection, "products", "inventory", "product_id",
+        final DBCursorHolder cursor = DBUtils.innerJoinTables(connection, "products", "inventory", "product_id",
                 new String[]{"product_id","product_amount"}, new String[]{String.format("product_name = '%s'",product.getName())});
         int productId = -1;
         int productAmount = -1;
@@ -56,7 +56,7 @@ public class Administrator extends User {
             productId = cursor.getResults().getInt(1);
             productAmount = cursor.getResults().getInt(2);
         }
-        int newAmount = productAmount - amount;
+        final int newAmount = productAmount - amount;
         if (newAmount >= 0) {
             DBUtils.updateTable(connection, "inventory", new String[]{"product_amount"}, new String[]{Integer.toString(newAmount)},
                     new String[]{String.format("product_id = %d",productId)});

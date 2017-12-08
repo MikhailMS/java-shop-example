@@ -25,13 +25,13 @@ public class OrderDBTest {
 
     @Before
     public void setUp() throws SQLException {
-        HikariConfig hikariConfig = new HikariConfig();
+        final HikariConfig hikariConfig = new HikariConfig();
         hikariConfig.setJdbcUrl(postgres.getJdbcUrl());
         hikariConfig.setUsername(postgres.getUsername());
         hikariConfig.setPassword(postgres.getPassword());
 
         dataSource = new HikariDataSource(hikariConfig);
-        Statement statement = dataSource.getConnection().createStatement();
+        final Statement statement = dataSource.getConnection().createStatement();
 
         statement.addBatch("CREATE TABLE IF NOT EXISTS users ( user_name text PRIMARY KEY, user_passwd text NOT NULL," +
                 " privileges boolean DEFAULT FALSE )");
@@ -50,16 +50,16 @@ public class OrderDBTest {
     @Test
     public void testOrderToFromDB() throws SQLException {
     // -------------------
-        Basket testBasket = new Basket();
+        final Basket testBasket = new Basket();
         try {
             testBasket.addProducts(new Product("apple", 0.150, 0.8), 2);
         } catch (BasketException ex) {
             ex.printStackTrace();
         }
-        Order savedOrder = new Order(testBasket, "London");
+        final Order savedOrder = new Order(testBasket, "London");
 
         // Save basket
-        ArrayList<String> valuesList = new ArrayList<>();
+        final ArrayList<String> valuesList = new ArrayList<>();
         valuesList.add("'testUser'");
         valuesList.addAll(testBasket.toDBFormat());
         DBUtils.insertSpecificIntoTable(dataSource.getConnection(),"baskets",
@@ -109,7 +109,7 @@ public class OrderDBTest {
         final String basketRetrievedProductAmounts = cursor.getResults().getString(2);
         cursor.closeCursor();
 
-        Basket restoredBasket = new Basket();
+        final Basket restoredBasket = new Basket();
         restoredBasket.restoreFromDB(basketRetrievedProductNames, basketRetrievedProductAmounts);
 
         // Restore order

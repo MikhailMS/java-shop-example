@@ -14,7 +14,7 @@ public class User implements UserInterface {
     private String userName;
     private String userPasswd;
 
-    public User(String name, String passwd) {
+    public User(final String name, final String passwd) {
         this.userName = name;
         this.userPasswd = passwd;
     }
@@ -34,7 +34,7 @@ public class User implements UserInterface {
                     new String[]{"products_name", "products_amount", "address"}, filterArguments);
             return cursor;
         } else {
-            List<String> nameAndFilterArguments = new ArrayList<>();
+            final List<String> nameAndFilterArguments = new ArrayList<>();
             nameAndFilterArguments.add(String.format("order_owner = '%s'",userName));
             if (filterArguments.length!=0) {
                 nameAndFilterArguments.add("AND");

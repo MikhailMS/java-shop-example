@@ -23,14 +23,14 @@ public class DBUtilsTest {
 
     @Before
     public void setUp() throws SQLException {
-        HikariConfig hikariConfig = new HikariConfig();
+        final HikariConfig hikariConfig = new HikariConfig();
         hikariConfig.setMaximumPoolSize(25);
         hikariConfig.setJdbcUrl(postgres.getJdbcUrl());
         hikariConfig.setUsername(postgres.getUsername());
         hikariConfig.setPassword(postgres.getPassword());
         dataSource = new HikariDataSource(hikariConfig);
 
-        Statement statement = dataSource.getConnection().createStatement();
+        final Statement statement = dataSource.getConnection().createStatement();
 
         statement.addBatch("CREATE TABLE IF NOT EXISTS products ( product_id serial PRIMARY KEY, product_name text NOT NULL," +
                 " product_weight numeric (6,3) NOT NULL, product_price numeric (8,2) NOT NULL )");

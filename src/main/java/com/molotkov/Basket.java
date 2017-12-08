@@ -63,7 +63,7 @@ public class Basket implements ProductStorage {
             On bigger sets this implementation could be a bottleneck. Creation of 'names' and 'amounts' strings could be
             improved by either using threads or combine those two together
          */
-        ArrayList<String> result = new ArrayList<>();
+        final ArrayList<String> result = new ArrayList<>();
         final String names = this.products.entrySet()
                 .parallelStream()
                 .map(p -> String.format("'%s'",p.getKey().getName()))

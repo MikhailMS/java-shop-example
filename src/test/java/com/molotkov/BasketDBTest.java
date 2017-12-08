@@ -25,13 +25,13 @@ public class BasketDBTest {
 
     @Before
     public void setUp() throws SQLException {
-        HikariConfig hikariConfig = new HikariConfig();
+        final HikariConfig hikariConfig = new HikariConfig();
         hikariConfig.setJdbcUrl(postgres.getJdbcUrl());
         hikariConfig.setUsername(postgres.getUsername());
         hikariConfig.setPassword(postgres.getPassword());
 
         dataSource = new HikariDataSource(hikariConfig);
-        Statement statement = dataSource.getConnection().createStatement();
+        final Statement statement = dataSource.getConnection().createStatement();
 
         statement.addBatch("CREATE TABLE IF NOT EXISTS users ( user_name text PRIMARY KEY, user_passwd text NOT NULL," +
                 " privileges boolean DEFAULT FALSE )");
@@ -46,13 +46,13 @@ public class BasketDBTest {
 
     @Test
     public void testBasketToFromDB() throws SQLException {
-        Basket savedBasket = new Basket();
+        final Basket savedBasket = new Basket();
         try {
             savedBasket.addProducts(new Product("apple", 0.150, 0.8),2);
         } catch (BasketException ex) {
             ex.printStackTrace();
         }
-        ArrayList<String> valuesList = new ArrayList<>();
+        final ArrayList<String> valuesList = new ArrayList<>();
         valuesList.add("'testUser'");
         valuesList.addAll(savedBasket.toDBFormat());
 
@@ -72,7 +72,7 @@ public class BasketDBTest {
         final String productsName = cursor.getResults().getString(1);
         final String productsAmount = cursor.getResults().getString(2);
 
-        Basket restoredBasket = new Basket();
+        final Basket restoredBasket = new Basket();
         restoredBasket.restoreFromDB(productsName, productsAmount);
         assertEquals("RetrieveBasketFromDB succeeded", "Basket has 1 product.",restoredBasket.toString());
         cursor.closeCursor();

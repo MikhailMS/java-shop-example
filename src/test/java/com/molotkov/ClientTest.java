@@ -25,14 +25,14 @@ public class ClientTest {
 
     @Before
     public void setUp() throws SQLException {
-        HikariConfig hikariConfig = new HikariConfig();
+        final HikariConfig hikariConfig = new HikariConfig();
         hikariConfig.setMaximumPoolSize(25);
         hikariConfig.setJdbcUrl(postgres.getJdbcUrl());
         hikariConfig.setUsername(postgres.getUsername());
         hikariConfig.setPassword(postgres.getPassword());
 
         dataSource = new HikariDataSource(hikariConfig);
-        Statement statement = dataSource.getConnection().createStatement();
+        final Statement statement = dataSource.getConnection().createStatement();
 
         statement.addBatch("CREATE TABLE IF NOT EXISTS users ( user_name text PRIMARY KEY, user_passwd text NOT NULL," +
                 " privileges boolean DEFAULT FALSE )");
@@ -52,9 +52,9 @@ public class ClientTest {
 
     @Test
     public void testClientMethods() throws BasketException, SQLException {
-        Client client = new Client("client", "client");
-        Basket basket = new Basket();
-        Product apple = new Product("apple", 0.150, 0.8);
+        final Client client = new Client("client", "client");
+        final Basket basket = new Basket();
+        final Product apple = new Product("apple", 0.150, 0.8);
     // TESTING addProductToBasket
         client.addProductToBasket(basket, apple, 2);
         assertEquals("addProductToBasket succeeds", true, basket.getProducts().containsKey(apple));
@@ -70,7 +70,7 @@ public class ClientTest {
                 new String[]{String.format("basket_owner = '%s'", client.getUserName())});
         cursor.getResults().next();
 
-        String resultSaveBasket = cursor.getResults().getString(1);
+        final String resultSaveBasket = cursor.getResults().getString(1);
         assertEquals("saveBasket succeeds", "1", resultSaveBasket);
         cursor.closeCursor();
 
@@ -79,7 +79,7 @@ public class ClientTest {
         assertEquals("restoreBasket succeeds", basket.toString(), restoredBasket.toString());
 
     // TESTING saveOrder
-        Order order = new Order(basket, "London");
+        final Order order = new Order(basket, "London");
         client.saveOrder(dataSource.getConnection(), order);
         cursor = DBUtils.filterFromTable(dataSource.getConnection(), "orders", new String[]{"order_id"},
                 new String[]{String.format("order_owner = '%s'", client.getUserName())});
@@ -90,8 +90,8 @@ public class ClientTest {
         cursor.closeCursor();
 
     // TESTING restoreOrder
-        Order resoredOrder = client.restoreOrder(dataSource.getConnection());
-        assertEquals("restoreOrder succeeds", order.toString(), resoredOrder.toString());
+        final Order restoredOrder = client.restoreOrder(dataSource.getConnection());
+        assertEquals("restoreOrder succeeds", order.toString(), restoredOrder.toString());
 
     // TESTING completeOrder
         client.completeOrder(dataSource.getConnection());
@@ -99,7 +99,7 @@ public class ClientTest {
                 new String[]{String.format("order_owner = '%s'", client.getUserName()), "AND", "completed = TRUE"});
         cursor.getResults().next();
 
-        String resultCompleteOrder = cursor.getResults().getString(1);
+        final String resultCompleteOrder = cursor.getResults().getString(1);
         assertEquals("completeOrder - order update - succeeds", "1", resultCompleteOrder);
         cursor.closeCursor();
 
@@ -107,7 +107,7 @@ public class ClientTest {
                 new String[]{String.format("basket_owner = '%s'", client.getUserName()), "AND", "processed = TRUE"});
         cursor.getResults().next();
 
-        String resultCompleteBasket = cursor.getResults().getString(1);
+        final String resultCompleteBasket = cursor.getResults().getString(1);
         assertEquals("completeOrder - basket update - succeeds", "1", resultCompleteBasket);
         cursor.closeCursor();
     }
