@@ -27,7 +27,7 @@ Also I am using TDD approach to complete this project as I found this really con
       - [x] Can restore basket from DB
       - [x] Can restore order from DB
       
-  - [ ] As an optional part, I'd like to introduce user system: administration and clients. First would be able to see all completed orders and inventory stock and its total cost, while customers can fill in baskets, make orders and see theirs basket and orders only
+  - [x] As an optional part, I'd like to introduce user system: administration and clients. First would be able to see all completed orders and inventory stock and its total cost, while customers can fill in baskets, make orders and see theirs basket and orders only
       - [x] Administrator user can
           - [x] See all available products
           - [x] See total cost of all products
@@ -53,10 +53,10 @@ Also I am using TDD approach to complete this project as I found this really con
           - [x] Filter products by name, price and weight
           - [x] Filter orders by date
           - [x] Filter orders by total price 
-      - [ ] Can login into system and gain appropriate rights
       
   - [ ] As an optional part, I'd like to introduce GUI, which will make it easier to fill basket, see orders and etc
       - [ ] Login screen
+      - [ ] Can login into system and gain appropriate rights
       - [ ] Client GUI
           - [ ] See all available products
           - [ ] Add to basket
