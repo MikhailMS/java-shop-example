@@ -60,6 +60,7 @@ public class ClientTest {
         assertEquals("removeProductFromBasket succeeds", false, basket.getProducts().containsKey(apple));
 
     // TESTING saveBasket
+        client.addProductToBasket(basket, apple, 2);
         client.saveBasket(dataSource.getConnection(), basket);
         DBCursorHolder cursor = DBUtils.filterFromTable(dataSource.getConnection(), "baskets", new String[]{"basket_id"},
                 new String[]{String.format("basket_owner = '%s'", client.getUserName())});
