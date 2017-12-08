@@ -42,10 +42,10 @@ Also I am using TDD approach to complete this project as I found this really con
           - [x] Filter orders by total price
       - [ ] Client user can
           - [x] See all available products
-          - [ ] Add to basket      **IN DEVELOPMENT**
-          - [ ] Remove from basket **IN DEVELOPMENT**
-          - [ ] Save basket        **IN DEVELOPMENT**
-          - [ ] Restore basket     **IN DEVELOPMENT**
+          - [ ] Add to basket      **IN TESTING**
+          - [ ] Remove from basket **IN TESTING**
+          - [ ] Save basket        **IN TESTING**
+          - [ ] Restore basket     **IN TESTING**
           - [ ] Make order
           - [ ] Save order
           - [ ] Complete order

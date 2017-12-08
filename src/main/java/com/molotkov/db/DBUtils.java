@@ -146,7 +146,6 @@ public class DBUtils {
 
             final String filterArgumentsString = Stream.of(filterArguments).collect(Collectors.joining(" "));
             final String query = String.format("DELETE FROM %s %s %s", tableName, whereKeyWord, filterArgumentsString);
-            System.out.println(query);
             statement.execute(query);
             statement.close();
         } catch (SQLException ex) {

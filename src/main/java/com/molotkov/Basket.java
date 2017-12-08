@@ -14,7 +14,7 @@ public class Basket implements ProductStorage {
     private HashMap<Product, Integer> products;
     private StringFormatter stringFormatter;
 
-    Basket() {
+    public Basket() {
         this.products = new HashMap<>();
         this.stringFormatter = () -> {
             final int basketSize = this.products.size();
