@@ -42,14 +42,13 @@ Also I am using TDD approach to complete this project as I found this really con
           - [x] Filter orders by total price
       - [ ] Client user can
           - [x] See all available products
-          - [ ] Add to basket      **IN TESTING**
-          - [ ] Remove from basket **IN TESTING**
-          - [ ] Save basket        **IN TESTING**
-          - [ ] Restore basket     **IN TESTING**
-          - [ ] Make order
-          - [ ] Save order
-          - [ ] Complete order
-          - [ ] Restore order
+          - [x] Add to basket
+          - [x] Remove from basket
+          - [x] Save basket
+          - [x] Restore basket
+          - [ ] Save order      **IN TESTING**
+          - [ ] Restore order   **IN TESTING**
+          - [ ] Complete order  **IN TESTING**
           - [x] See all orders (client can see only his orders)
           - [x] Filter products by name, price and weight
           - [x] Filter orders by date

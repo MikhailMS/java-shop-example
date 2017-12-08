@@ -103,7 +103,6 @@ public class DBUtils {
             selectColumnsString = Stream.of(selectColumns).collect(Collectors.joining(", "));
         }
         final String query = String.format("SELECT %s FROM %s %s %s", selectColumnsString, tableName, whereKeyWord, filterArgumentsString);
-        System.out.println(query);
         final ResultSet resultSet = statement.executeQuery(query);
 
         return new DBCursorHolder(resultSet, statement);

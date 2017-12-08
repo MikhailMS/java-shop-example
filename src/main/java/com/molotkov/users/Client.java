@@ -1,6 +1,7 @@
 package com.molotkov.users;
 
 import com.molotkov.Basket;
+import com.molotkov.Order;
 import com.molotkov.db.DBCursorHolder;
 import com.molotkov.db.DBUtils;
 import com.molotkov.exceptions.BasketException;
@@ -35,7 +36,7 @@ public class Client extends User {
 
     public Basket restoreBasket(final Connection connection) throws SQLException {
         DBCursorHolder cursor = DBUtils.filterFromTable(connection,"baskets", new String[] {"products_name", "products_amount"},
-                new String[] {String.format("basket_owner = '%s'",super.getUserName()), "AND" , "processed = FALSE"});
+                new String[] {String.format("basket_owner = '%s'", getUserName()), "AND" , "processed = FALSE"});
 
         cursor.getResults().next();
         final String productsName = cursor.getResults().getString(1);
@@ -47,4 +48,64 @@ public class Client extends User {
 
         return restoredBasket;
     }
+
+    public void saveOrder(final Connection connection, Order order) throws SQLException {
+        DBCursorHolder cursor = DBUtils.filterFromTable(connection, "baskets", new String[]{"basket_id"},
+                new String[]{String.format("basket_owner = '%s'", getUserName()), "AND", "processed = FALSE"});
+        cursor.getResults().next();
+
+        final String basketId = cursor.getResults().getString(1);
+        cursor.closeCursor();
+
+        ArrayList<String> orderValuesList = new ArrayList<>();
+        orderValuesList.add(basketId);
+        orderValuesList.add(String.format("'%s'", order.getAddress()));
+        orderValuesList.add(String.format("'%s'", getUserName()));
+        DBUtils.insertSpecificIntoTable(connection, "orders", new String[]{"basket_id", "address", "order_owner"},
+                orderValuesList.toArray(new String[0]));
+    }
+
+    public Order restoreOrder(final Connection connection) throws SQLException {
+        // Retrieve order
+        DBCursorHolder cursor = DBUtils.filterFromTable(connection, "orders", new String[]{"basket_id", "address"},
+                new String[]{String.format("order_owner = '%s'", getUserName()), "AND", "completed = FALSE"});
+        cursor.getResults().next();
+
+        final String orderRetrieveBasketId = cursor.getResults().getString(1);
+        final String orderRetrieveAddress = cursor.getResults().getString(2);
+        cursor.closeCursor();
+
+        // Retrieve related basket
+        cursor = DBUtils.filterFromTable(connection, "baskets", new String[]{"products_name","products_amount"},
+                new String[]{String.format("basket_id = %s", orderRetrieveBasketId), "AND", String.format("basket_owner = '%s'",getUserName())});
+        cursor.getResults().next();
+
+        final String basketRetrievedProductNames = cursor.getResults().getString(1);
+        final String basketRetrievedProductAmounts = cursor.getResults().getString(2);
+        cursor.closeCursor();
+
+        // Restore basket
+        Basket restoredBasket = new Basket();
+        restoredBasket.restoreFromDB(basketRetrievedProductNames, basketRetrievedProductAmounts);
+
+        // Restore order
+        Order restoredOrder = new Order(restoredBasket, orderRetrieveAddress);
+        return restoredOrder;
+    }
+
+    public void completeOrder(final Connection connection) throws SQLException {
+        // Retrieve order
+        DBCursorHolder cursor = DBUtils.filterFromTable(connection, "orders", new String[]{"basket_id"},
+                new String[]{String.format("order_owner = '%s'", getUserName()), "AND", "completed = FALSE"});
+        cursor.getResults().next();
+
+        final String orderRetrieveBasketId = cursor.getResults().getString(1);
+        cursor.closeCursor();
+
+        DBUtils.updateTable(connection, "orders", new String[]{"completed"}, new String[]{"TRUE"},
+                new String[]{String.format("basket_id = %s", orderRetrieveBasketId), "AND", String.format("order_owner = '%s'", getUserName())});
+        DBUtils.updateTable(connection, "baskets", new String[]{"processed"}, new String[]{"TRUE"},
+                new String[]{String.format("basket_id = %s", orderRetrieveBasketId), "AND", String.format("basket_owner = '%s'", getUserName())});
+    }
+
 }

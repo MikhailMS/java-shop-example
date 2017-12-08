@@ -42,6 +42,10 @@ public class ClientTest {
                 " basket_owner text REFERENCES users(user_name) ON DELETE CASCADE, products_name text NOT NULL," +
                 " products_amount text NOT NULL, processed boolean DEFAULT FALSE, created_at timestamp DEFAULT CURRENT_TIMESTAMP )");
 
+        statement.addBatch("CREATE TABLE IF NOT EXISTS orders ( order_id serial, basket_id int4 REFERENCES baskets(basket_id) ON DELETE CASCADE," +
+                " order_owner text REFERENCES users(user_name) ON DELETE CASCADE, address text NOT NULL, total_price numeric (8,2) NOT NULL," +
+                " completed boolean DEFAULT FALSE, created_at timestamp DEFAULT CURRENT_TIMESTAMP )");
+
         statement.executeBatch();
         statement.close();
     }
@@ -66,11 +70,34 @@ public class ClientTest {
                 new String[]{String.format("basket_owner = '%s'", client.getUserName())});
         cursor.getResults().next();
 
-        String result = cursor.getResults().getString(1);
-        assertEquals("saveBasket succeeds", "1", result);
+        String resultSaveBasket = cursor.getResults().getString(1);
+        assertEquals("saveBasket succeeds", "1", resultSaveBasket);
 
     // TESTING restoreBasket
         Basket restoredBasket = client.restoreBasket(dataSource.getConnection());
         assertEquals("restoreBasket succeeds", basket.toString(), restoredBasket.toString());
+
+    // TESTING saveOrder
+        Order order = new Order(basket, "London");
+        client.saveOrder(dataSource.getConnection(), order);
+        cursor = DBUtils.filterFromTable(dataSource.getConnection(), "orders", new String[]{"order_id"},
+                new String[]{String.format("order_owner = '%s'", client.getUserName())});
+        cursor.getResults().next();
+
+        String resultSaveOrder = cursor.getResults().getString(1);
+        assertEquals("saveOrder succeeds", "1", resultSaveOrder);
+
+    // TESTING restoreOrder
+        Order resoredOrder = client.restoreOrder(dataSource.getConnection());
+        assertEquals("restoreOrder succeeds", order.toString(), resoredOrder.toString());
+
+    // TESTING completeOrder
+        client.completeOrder(dataSource.getConnection());
+        cursor = DBUtils.filterFromTable(dataSource.getConnection(), "orders", new String[]{"order_id"},
+                new String[]{String.format("order_owner = '%s'", client.getUserName()), "AND", "completed = TRUE"});
+        cursor.getResults().next();
+
+        String resultCompleteOrder = cursor.getResults().getString(1);
+        assertEquals("completeOrder succeeds", "1", resultCompleteOrder);
     }
 }
