@@ -54,7 +54,7 @@ public class DBUtils {
             final Statement statement = connection.createStatement();
             final List<String> columnsList = Arrays.asList(columnsToUpdate);
             final List<String> valuesList = Arrays.asList(newValues);
-            List<String> columnValueList = new ArrayList<>();
+            final List<String> columnValueList = new ArrayList<>();
             iterateSimultaneously(columnsList, valuesList, (String column, String value) -> {
                 columnValueList.add(String.format("%s = %s",column, value));
             });

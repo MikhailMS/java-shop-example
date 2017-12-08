@@ -24,7 +24,7 @@ public class UserTest {
 
     @Before
     public void setUp() throws SQLException {
-        HikariConfig hikariConfig = new HikariConfig();
+        final HikariConfig hikariConfig = new HikariConfig();
         hikariConfig.setMaximumPoolSize(20);
         hikariConfig.setJdbcUrl(postgres.getJdbcUrl());
         hikariConfig.setUsername(postgres.getUsername());
@@ -81,7 +81,7 @@ public class UserTest {
         // Ensure testUser1 gets only his orders
         DBCursorHolder cursor = testUser1.fetchOrders(dataSource.getConnection(), new String[]{});
 
-        StringBuilder ordersBuilder = new StringBuilder();
+        final StringBuilder ordersBuilder = new StringBuilder();
         while (cursor.getResults().next()) {
             ordersBuilder.append(String.format("%s ", cursor.getResults().getString(1)));
             ordersBuilder.append(String.format("%s ", cursor.getResults().getString(2)));
@@ -95,7 +95,7 @@ public class UserTest {
         // Ensure testUser2 gets only his orders
         cursor = testUser2.fetchOrders(dataSource.getConnection(), new String[]{});
 
-        StringBuilder ordersBuilder1 = new StringBuilder();
+        final StringBuilder ordersBuilder1 = new StringBuilder();
         while (cursor.getResults().next()) {
             ordersBuilder1.append(String.format("%s ", cursor.getResults().getString(1)));
             ordersBuilder1.append(String.format("%s ", cursor.getResults().getString(2)));
@@ -112,7 +112,7 @@ public class UserTest {
         date = String.format("orders.created_at < '%s'::date",date);
         cursor = testUser1.fetchOrders(dataSource.getConnection(), new String[]{date});
 
-        StringBuilder ordersBuilder2 = new StringBuilder();
+        final StringBuilder ordersBuilder2 = new StringBuilder();
         while (cursor.getResults().next()) {
             ordersBuilder2.append(String.format("%s ", cursor.getResults().getString(1)));
             ordersBuilder2.append(String.format("%s ", cursor.getResults().getString(2)));
@@ -126,7 +126,7 @@ public class UserTest {
         // Ensure user can see inventory
         cursor = testUser1.fetchInventory(dataSource.getConnection(), new String[]{});
 
-        StringBuilder inventoryBuilder = new StringBuilder();
+        final StringBuilder inventoryBuilder = new StringBuilder();
         while (cursor.getResults().next()) {
             inventoryBuilder.append(String.format("%s ", cursor.getResults().getString(2)));
             inventoryBuilder.append(String.format("%s ", cursor.getResults().getString(3)));
@@ -141,7 +141,7 @@ public class UserTest {
         // Ensure user can sort inventory by name
         cursor = testUser1.fetchInventory(dataSource.getConnection(), new String[]{"product_name LIKE 'apple'"});
 
-        StringBuilder inventoryBuilder1 = new StringBuilder();
+        final StringBuilder inventoryBuilder1 = new StringBuilder();
         while (cursor.getResults().next()) {
             inventoryBuilder1.append(String.format("%s ", cursor.getResults().getString(2)));
             inventoryBuilder1.append(String.format("%s ", cursor.getResults().getString(3)));
@@ -156,7 +156,7 @@ public class UserTest {
         // Ensure user can sort inventory by weight
         cursor = testUser1.fetchInventory(dataSource.getConnection(), new String[]{"product_weight = 0.150"});
 
-        StringBuilder inventoryBuilder2 = new StringBuilder();
+        final StringBuilder inventoryBuilder2 = new StringBuilder();
         while (cursor.getResults().next()) {
             inventoryBuilder2.append(String.format("%s ", cursor.getResults().getString(2)));
             inventoryBuilder2.append(String.format("%s ", cursor.getResults().getString(3)));
@@ -171,7 +171,7 @@ public class UserTest {
         // Ensure user can sort inventory by price
         cursor = testUser1.fetchInventory(dataSource.getConnection(), new String[]{"product_price = 0.8"});
 
-        StringBuilder inventoryBuilder3 = new StringBuilder();
+        final StringBuilder inventoryBuilder3 = new StringBuilder();
         while (cursor.getResults().next()) {
             inventoryBuilder3.append(String.format("%s ", cursor.getResults().getString(2)));
             inventoryBuilder3.append(String.format("%s ", cursor.getResults().getString(3)));
@@ -187,7 +187,7 @@ public class UserTest {
         // Ensure admin gets all orders
         cursor = admin.fetchOrders(dataSource.getConnection(), new String[]{});
 
-        StringBuilder ordersBuilder3 = new StringBuilder();
+        final StringBuilder ordersBuilder3 = new StringBuilder();
         while (cursor.getResults().next()) {
             ordersBuilder3.append(String.format("%s ", cursor.getResults().getString(1)));
             ordersBuilder3.append(String.format("%s ", cursor.getResults().getString(2)));
@@ -203,7 +203,7 @@ public class UserTest {
         date = String.format("orders.created_at < '%s'::date",date);
         cursor = admin.fetchOrders(dataSource.getConnection(), new String[]{date});
 
-        StringBuilder ordersBuilder4 = new StringBuilder();
+        final StringBuilder ordersBuilder4 = new StringBuilder();
         while (cursor.getResults().next()) {
             ordersBuilder4.append(String.format("%s ", cursor.getResults().getString(1)));
             ordersBuilder4.append(String.format("%s ", cursor.getResults().getString(2)));
@@ -217,7 +217,7 @@ public class UserTest {
         // Ensure admin can see inventory
         cursor = admin.fetchInventory(dataSource.getConnection(), new String[]{});
 
-        StringBuilder inventoryBuilder4 = new StringBuilder();
+        final StringBuilder inventoryBuilder4 = new StringBuilder();
         while (cursor.getResults().next()) {
             inventoryBuilder4.append(String.format("%s ", cursor.getResults().getString(2)));
             inventoryBuilder4.append(String.format("%s ", cursor.getResults().getString(3)));
@@ -232,7 +232,7 @@ public class UserTest {
         // Ensure admin can sort inventory by name
         cursor = admin.fetchInventory(dataSource.getConnection(), new String[]{"product_name LIKE 'apple'"});
 
-        StringBuilder inventoryBuilder5 = new StringBuilder();
+        final StringBuilder inventoryBuilder5 = new StringBuilder();
         while (cursor.getResults().next()) {
             inventoryBuilder5.append(String.format("%s ", cursor.getResults().getString(2)));
             inventoryBuilder5.append(String.format("%s ", cursor.getResults().getString(3)));
@@ -247,7 +247,7 @@ public class UserTest {
         // Ensure admin can sort inventory by weight
         cursor = admin.fetchInventory(dataSource.getConnection(), new String[]{"product_weight = 0.150"});
 
-        StringBuilder inventoryBuilder6 = new StringBuilder();
+        final StringBuilder inventoryBuilder6 = new StringBuilder();
         while (cursor.getResults().next()) {
             inventoryBuilder6.append(String.format("%s ", cursor.getResults().getString(2)));
             inventoryBuilder6.append(String.format("%s ", cursor.getResults().getString(3)));
@@ -262,7 +262,7 @@ public class UserTest {
         // Ensure admin can sort inventory by price
         cursor = admin.fetchInventory(dataSource.getConnection(), new String[]{"product_price = 0.8"});
 
-        StringBuilder inventoryBuilder7 = new StringBuilder();
+        final StringBuilder inventoryBuilder7 = new StringBuilder();
         while (cursor.getResults().next()) {
             inventoryBuilder7.append(String.format("%s ", cursor.getResults().getString(2)));
             inventoryBuilder7.append(String.format("%s ", cursor.getResults().getString(3)));

@@ -75,7 +75,7 @@ public class ClientTest {
         cursor.closeCursor();
 
     // TESTING restoreBasket
-        Basket restoredBasket = client.restoreBasket(dataSource.getConnection());
+        final Basket restoredBasket = client.restoreBasket(dataSource.getConnection());
         assertEquals("restoreBasket succeeds", basket.toString(), restoredBasket.toString());
 
     // TESTING saveOrder
@@ -85,7 +85,7 @@ public class ClientTest {
                 new String[]{String.format("order_owner = '%s'", client.getUserName())});
         cursor.getResults().next();
 
-        String resultSaveOrder = cursor.getResults().getString(1);
+        final String resultSaveOrder = cursor.getResults().getString(1);
         assertEquals("saveOrder succeeds", "1", resultSaveOrder);
         cursor.closeCursor();
 

@@ -73,7 +73,7 @@ public class OrderDBTest {
         cursor.closeCursor();
 
         // Save order
-        ArrayList<String> orderValuesList = new ArrayList<>();
+        final ArrayList<String> orderValuesList = new ArrayList<>();
         orderValuesList.add(basketId);
         orderValuesList.add(String.format("'%s'",savedOrder.getAddress()));
         DBUtils.insertSpecificIntoTable(dataSource.getConnection(), "orders", new String[]{"basket_id","address"},
@@ -113,7 +113,7 @@ public class OrderDBTest {
         restoredBasket.restoreFromDB(basketRetrievedProductNames, basketRetrievedProductAmounts);
 
         // Restore order
-        Order restoredOrder = new Order(restoredBasket, orderRetrieveAddress);
+        final Order restoredOrder = new Order(restoredBasket, orderRetrieveAddress);
 
         // Check if orders match
         assertEquals("Retrieve order query succeeded", savedOrder.toString(), restoredOrder.toString());

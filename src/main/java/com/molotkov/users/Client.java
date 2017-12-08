@@ -17,7 +17,7 @@ public class Client extends User {
         super(name, passwd);
     }
 
-    public void addProductToBasket(Basket basket, final Product product, final int amount) throws BasketException {
+    public void addProductToBasket(final Basket basket, final Product product, final int amount) throws BasketException {
         basket.addProducts(product, amount);
     }
 
@@ -35,14 +35,14 @@ public class Client extends User {
     }
 
     public Basket restoreBasket(final Connection connection) throws SQLException {
-        DBCursorHolder cursor = DBUtils.filterFromTable(connection,"baskets", new String[] {"products_name", "products_amount"},
+        final DBCursorHolder cursor = DBUtils.filterFromTable(connection,"baskets", new String[] {"products_name", "products_amount"},
                 new String[] {String.format("basket_owner = '%s'", getUserName()), "AND" , "processed = FALSE"});
 
         cursor.getResults().next();
         final String productsName = cursor.getResults().getString(1);
         final String productsAmount = cursor.getResults().getString(2);
 
-        Basket restoredBasket = new Basket();
+        final Basket restoredBasket = new Basket();
         restoredBasket.restoreFromDB(productsName, productsAmount);
         cursor.closeCursor();
 
@@ -89,9 +89,7 @@ public class Client extends User {
         Basket restoredBasket = new Basket();
         restoredBasket.restoreFromDB(basketRetrievedProductNames, basketRetrievedProductAmounts);
 
-        // Restore order
-        Order restoredOrder = new Order(restoredBasket, orderRetrieveAddress);
-        return restoredOrder;
+        return new Order(restoredBasket, orderRetrieveAddress);
     }
 
     public void completeOrder(final Connection connection) throws SQLException {

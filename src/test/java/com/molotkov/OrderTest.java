@@ -11,7 +11,7 @@ public class OrderTest {
 
     @Before
     public void setUp() throws BasketException {
-        Basket basket = new Basket();
+        final Basket basket = new Basket();
         final Product test1 = new Product("Apple", 0.150, 0.8);
         basket.addProducts(test1, 1);
         order = new Order(basket, "London");

@@ -26,7 +26,7 @@ public class User implements UserInterface {
                 new String[]{String.format("user_name = '%s'",userName)});
         cursor.getResults().next();
 
-        boolean userPrivilege = cursor.getResults().getBoolean(1);
+        final boolean userPrivilege = cursor.getResults().getBoolean(1);
         cursor.closeCursor();
 
         if (userPrivilege) {
