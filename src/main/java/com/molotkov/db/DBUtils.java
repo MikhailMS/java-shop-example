@@ -40,6 +40,7 @@ public class DBUtils {
             final String insertToString = Stream.of(insertToColumns).collect(Collectors.joining(","));
             final String insertValuesString = Stream.of(insertValues).collect(Collectors.joining(","));
             final String query = String.format("INSERT INTO %s ( %s ) VALUES ( %s )", tableName, insertToString, insertValuesString);
+            System.out.println(query);
             statement.execute(query);
             statement.close();
         } catch (SQLException ex) {
