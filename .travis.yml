@@ -4,6 +4,7 @@ jdk:
 
 env:
         - CODACY_PROJECT_TOKEN=30ded88adc3944479b2de1780b26f01b
+
 sudo: required
 services:
   - docker

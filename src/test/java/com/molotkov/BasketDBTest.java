@@ -18,7 +18,6 @@ import java.util.ArrayList;
 import static org.rnorth.visibleassertions.VisibleAssertions.assertEquals;
 
 public class BasketDBTest {
-    private HikariConfig hikariConfig;
     private HikariDataSource dataSource;
 
     @ClassRule
@@ -26,7 +25,7 @@ public class BasketDBTest {
 
     @Before
     public void setUp() throws SQLException {
-        hikariConfig = new HikariConfig();
+        HikariConfig hikariConfig = new HikariConfig();
         hikariConfig.setJdbcUrl(postgres.getJdbcUrl());
         hikariConfig.setUsername(postgres.getUsername());
         hikariConfig.setPassword(postgres.getPassword());
@@ -34,12 +33,14 @@ public class BasketDBTest {
         dataSource = new HikariDataSource(hikariConfig);
         Statement statement = dataSource.getConnection().createStatement();
 
-        statement.executeUpdate("CREATE TABLE IF NOT EXISTS users ( user_name text PRIMARY KEY, user_passwd text NOT NULL," +
+        statement.addBatch("CREATE TABLE IF NOT EXISTS users ( user_name text PRIMARY KEY, user_passwd text NOT NULL," +
                 " privileges boolean DEFAULT FALSE )");
-        statement.executeUpdate(" CREATE TABLE IF NOT EXISTS baskets ( basket_id serial PRIMARY KEY," +
+        statement.addBatch(" CREATE TABLE IF NOT EXISTS baskets ( basket_id serial PRIMARY KEY," +
                 " basket_owner text REFERENCES users(user_name) ON DELETE CASCADE, products_name text NOT NULL," +
                 " products_amount text NOT NULL, created_at timestamp DEFAULT CURRENT_TIMESTAMP )");
-        statement.executeUpdate("INSERT INTO users VALUES ( 'testUser', 'testUser', FALSE )");
+        statement.addBatch("INSERT INTO users VALUES ( 'testUser', 'testUser', FALSE )");
+
+        statement.executeBatch();
         statement.close();
     }
 
@@ -75,6 +76,7 @@ public class BasketDBTest {
         restoredBasket.restoreFromDB(productsName, productsAmount);
         assertEquals("RetrieveBasketFromDB succeeded", "Basket has 1 product.",restoredBasket.toString());
         cursor.closeCursor();
+
         dataSource.close();
     }
 }

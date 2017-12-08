@@ -1,5 +1,6 @@
 package com.molotkov.db;
 
+import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
@@ -20,7 +21,7 @@ public class DBCursorHolder {
     public void closeCursor() {
         try {
             this.results.close();
-            this.statement.close();
+            this.statement.close();;
         } catch (SQLException e) {
             e.printStackTrace();
         }

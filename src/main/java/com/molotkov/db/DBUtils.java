@@ -33,12 +33,14 @@ public class DBUtils {
         }
     }
 
-    public static void insertSpecificIntoTable(final Connection connection, final String tableName, final String[] insertToColumns, final String[] insertValues) {
+    public static void insertSpecificIntoTable(final Connection connection, final String tableName,
+                                               final String[] insertToColumns, final String[] insertValues) {
         try {
             final Statement statement = connection.createStatement();
             final String insertToString = Stream.of(insertToColumns).collect(Collectors.joining(","));
             final String insertValuesString = Stream.of(insertValues).collect(Collectors.joining(","));
             final String query = String.format("INSERT INTO %s ( %s ) VALUES ( %s )", tableName, insertToString, insertValuesString);
+            System.out.println(query);
             statement.execute(query);
             statement.close();
         } catch (SQLException ex) {
@@ -46,7 +48,8 @@ public class DBUtils {
         }
     }
 
-    public static void updateTable(final Connection connection, final String tableName, final String[] columnsToUpdate, final String[] newValues, final String[] filterArguments) {
+    public static void updateTable(final Connection connection, final String tableName, final String[] columnsToUpdate,
+                                   final String[] newValues, final String[] filterArguments) {
         try {
             final Statement statement = connection.createStatement();
             final List<String> columnsList = Arrays.asList(columnsToUpdate);
@@ -65,7 +68,8 @@ public class DBUtils {
         }
     }
 
-    public static DBCursorHolder selectFromTable(final Connection connection, final String tableName, final String[] selectColumns) throws SQLException {
+    public static DBCursorHolder selectFromTable(final Connection connection, final String tableName,
+                                                 final String[] selectColumns) throws SQLException {
         final Statement statement = connection.createStatement();
         String selectColumnsString;
         if (selectColumns.length==0) {
@@ -79,19 +83,75 @@ public class DBUtils {
         return new DBCursorHolder(resultSet, statement);
     }
 
-    public static DBCursorHolder filterFromTable(final Connection connection, final String tableName, final String[] selectColumns, final String[] filterArguments) throws SQLException {
+    public static DBCursorHolder filterFromTable(final Connection connection, final String tableName, final String[] selectColumns,
+                                                 final String[] filterArguments) throws SQLException {
         final Statement statement = connection.createStatement();
+
+        String whereKeyWord;
+        if (filterArguments.length==0) {
+            whereKeyWord = "";
+        } else {
+            whereKeyWord = "WHERE";
+        }
+
         final String filterArgumentsString = Stream.of(filterArguments).collect(Collectors.joining(" "));
+
         String selectColumnsString;
         if (selectColumns.length==0) {
             selectColumnsString = "*";
         } else {
             selectColumnsString = Stream.of(selectColumns).collect(Collectors.joining(", "));
         }
-        final String query = String.format("SELECT %s FROM %s WHERE %s", selectColumnsString, tableName, filterArgumentsString);
+        final String query = String.format("SELECT %s FROM %s %s %s", selectColumnsString, tableName, whereKeyWord, filterArgumentsString);
         final ResultSet resultSet = statement.executeQuery(query);
 
         return new DBCursorHolder(resultSet, statement);
+    }
+
+    public static DBCursorHolder innerJoinTables(final Connection connection, final String tableNameR, final String tableNameL,
+                                                 final String innerJoinColumn, final String[] selectColumns, final String[] filterArguments) throws SQLException  {
+        final Statement statement = connection.createStatement();
+
+        String whereKeyWord;
+        if (filterArguments.length==0) {
+            whereKeyWord = "";
+        } else {
+            whereKeyWord = "WHERE";
+        }
+
+        final String filterArgumentsString = Stream.of(filterArguments).collect(Collectors.joining(" "));
+
+        String selectColumnsString;
+        if (selectColumns.length==0) {
+            selectColumnsString = "*";
+        } else {
+            selectColumnsString = Stream.of(selectColumns).collect(Collectors.joining(", "));
+        }
+
+        final String query = String.format("SELECT %s FROM %s INNER JOIN %s USING (%s) %s %s", selectColumnsString,
+                tableNameR, tableNameL, innerJoinColumn ,whereKeyWord, filterArgumentsString);
+        final ResultSet resultSet = statement.executeQuery(query);
+
+        return new DBCursorHolder(resultSet, statement);
+    };
+
+    public static void deleteFromTable(final Connection connection, final String tableName, final String[] filterArguments) {
+        try {
+            final Statement statement = connection.createStatement();
+            String whereKeyWord;
+            if (filterArguments.length==0) {
+                whereKeyWord = "";
+            } else {
+                whereKeyWord = "WHERE";
+            }
+
+            final String filterArgumentsString = Stream.of(filterArguments).collect(Collectors.joining(" "));
+            final String query = String.format("DELETE FROM %s %s %s", tableName, whereKeyWord, filterArgumentsString);
+            statement.execute(query);
+            statement.close();
+        } catch (SQLException ex) {
+            ex.printStackTrace();
+        }
     }
 
     public static void deleteTable(final Connection connection, final String tableName) {

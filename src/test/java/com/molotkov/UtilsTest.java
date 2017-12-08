@@ -15,9 +15,7 @@ public class UtilsTest {
         list1.add("hello");
         list2.add("world");
         List<String> result = new ArrayList<>();
-        Utils.iterateSimultaneously(list1,list2, (String str1, String str2) -> {
-            result.add(String.format("%s %s!", str1, str2));
-        });
+        Utils.iterateSimultaneously(list1,list2, (String str1, String str2) -> result.add(String.format("%s %s!", str1, str2)));
         assertEquals("IterateSimultaneously method succeeds", true, result.contains("hello world!"));
     }
 }

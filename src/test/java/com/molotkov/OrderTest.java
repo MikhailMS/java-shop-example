@@ -8,11 +8,10 @@ import static org.junit.Assert.assertTrue;
 
 public class OrderTest {
     private Order order;
-    private Basket basket;
 
     @Before
     public void setUp() throws BasketException {
-        basket = new Basket();
+        Basket basket = new Basket();
         final Product test1 = new Product("Apple", 0.150, 0.8);
         basket.addProducts(test1, 1);
         order = new Order(basket, "London");
