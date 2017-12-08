@@ -113,8 +113,8 @@ public class DBUtilsTest {
                 new String[]{});
         String resultString6 = "";
         while (cursor.getResults().next()) {
-            resultString5 += String.format("%s ",cursor.getResults().getString(1));
-            resultString5 += String.format("%s ",cursor.getResults().getString(2));
+            resultString6 += String.format("%s ",cursor.getResults().getString(1));
+            resultString6 += String.format("%s ",cursor.getResults().getString(2));
         }
 
         assertEquals("Delete from table query succeeds", "1 apple ", resultString6);
