@@ -4,7 +4,8 @@ import com.molotkov.interfaces.StringFormatter;
 
 public class Product {
     private String name;
-    private double weight, price;
+    private double weight;
+    private double price;
     private StringFormatter stringFormatter;
 
     public Product(final String name, final double weight, final double price) {
