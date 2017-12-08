@@ -40,15 +40,15 @@ Also I am using TDD approach to complete this project as I found this really con
           - [x] Filter products by name, price and weight
           - [x] Filter orders by date
           - [x] Filter orders by total price
-      - [ ] Client user can
+      - [x] Client user can
           - [x] See all available products
           - [x] Add to basket
           - [x] Remove from basket
           - [x] Save basket
           - [x] Restore basket
-          - [ ] Save order      **IN TESTING**
-          - [ ] Restore order   **IN TESTING**
-          - [ ] Complete order  **IN TESTING**
+          - [x] Save order 
+          - [x] Restore order
+          - [x] Complete order
           - [x] See all orders (client can see only his orders)
           - [x] Filter products by name, price and weight
           - [x] Filter orders by date

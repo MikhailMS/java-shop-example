@@ -72,6 +72,7 @@ public class ClientTest {
 
         String resultSaveBasket = cursor.getResults().getString(1);
         assertEquals("saveBasket succeeds", "1", resultSaveBasket);
+        cursor.closeCursor();
 
     // TESTING restoreBasket
         Basket restoredBasket = client.restoreBasket(dataSource.getConnection());
@@ -86,6 +87,7 @@ public class ClientTest {
 
         String resultSaveOrder = cursor.getResults().getString(1);
         assertEquals("saveOrder succeeds", "1", resultSaveOrder);
+        cursor.closeCursor();
 
     // TESTING restoreOrder
         Order resoredOrder = client.restoreOrder(dataSource.getConnection());
@@ -98,6 +100,15 @@ public class ClientTest {
         cursor.getResults().next();
 
         String resultCompleteOrder = cursor.getResults().getString(1);
-        assertEquals("completeOrder succeeds", "1", resultCompleteOrder);
+        assertEquals("completeOrder - order update - succeeds", "1", resultCompleteOrder);
+        cursor.closeCursor();
+
+        cursor = DBUtils.filterFromTable(dataSource.getConnection(), "baskets", new String[]{"basket_id"},
+                new String[]{String.format("basket_owner = '%s'", client.getUserName()), "AND", "processed = TRUE"});
+        cursor.getResults().next();
+
+        String resultCompleteBasket = cursor.getResults().getString(1);
+        assertEquals("completeOrder - basket update - succeeds", "1", resultCompleteBasket);
+        cursor.closeCursor();
     }
 }
