@@ -120,12 +120,16 @@ public class AdministratorTest {
 
         assertEquals("createUser succeeds", "testUser3", cursor.getResults().getString(1));
         cursor.closeCursor();
+
     // TESTING deleteUser
         admin.deleteUser(dataSource.getConnection(), "testUser3");
         cursor = DBUtils.filterFromTable(dataSource.getConnection(), "users", new String[]{"user_name"}, new String[]{"user_passwd = 'testUser3'"});
-        cursor.getResults().next();
+        String empty = "";
+        while (cursor.getResults().next()) {
+            empty += cursor.getResults().getString(1);
+        }
 
-        assertEquals("deleteUser succeeds", "", cursor.getResults().getString(1));
+        assertEquals("deleteUser succeeds", "", empty);
         cursor.closeCursor();
     }
 }
