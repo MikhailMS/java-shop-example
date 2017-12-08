@@ -105,6 +105,21 @@ public class DBUtilsTest {
 
         assertEquals("Inner join query succeeds", "apple 0.150 0.80 3 chicken 1.000 2.30 4 ", resultString5);
         cursor.closeCursor();
+
+    // DELETE FROM TABLE
+        DBUtils.deleteFromTable(dataSource.getConnection(), "products", new String[]{"product_name = 'chicken'"});
+        cursor = DBUtils.innerJoinTables(dataSource.getConnection(), "products", "inventory", "product_id" ,new String[] {"product_id", "product_name", "product_weight", "product_price", "product_amount"},
+                new String[]{});
+        String resultString6 = "";
+        while (cursor.getResults().next()) {
+            resultString5 += String.format("%s ",cursor.getResults().getString(2));
+            resultString5 += String.format("%s ",cursor.getResults().getString(3));
+            resultString5 += String.format("%s ",cursor.getResults().getString(4));
+            resultString5 += String.format("%s ",cursor.getResults().getString(5));
+        }
+
+        assertEquals("Inner join query succeeds", "apple 0.150 0.80 3 ", resultString6);
+        cursor.closeCursor();
     }
 
     @Test(expected = SQLException.class)
