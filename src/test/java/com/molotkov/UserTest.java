@@ -17,7 +17,6 @@ import java.time.format.DateTimeFormatter;
 import static org.rnorth.visibleassertions.VisibleAssertions.assertEquals;
 
 public class UserTest {
-    private HikariConfig hikariConfig;
     private HikariDataSource dataSource;
 
     @ClassRule
@@ -25,7 +24,7 @@ public class UserTest {
 
     @Before
     public void setUp() throws SQLException {
-        hikariConfig = new HikariConfig();
+        HikariConfig hikariConfig = new HikariConfig();
         hikariConfig.setMaximumPoolSize(20);
         hikariConfig.setJdbcUrl(postgres.getJdbcUrl());
         hikariConfig.setUsername(postgres.getUsername());

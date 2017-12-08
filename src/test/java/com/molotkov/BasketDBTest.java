@@ -18,7 +18,6 @@ import java.util.ArrayList;
 import static org.rnorth.visibleassertions.VisibleAssertions.assertEquals;
 
 public class BasketDBTest {
-    private HikariConfig hikariConfig;
     private HikariDataSource dataSource;
 
     @ClassRule
@@ -26,7 +25,7 @@ public class BasketDBTest {
 
     @Before
     public void setUp() throws SQLException {
-        hikariConfig = new HikariConfig();
+        HikariConfig hikariConfig = new HikariConfig();
         hikariConfig.setJdbcUrl(postgres.getJdbcUrl());
         hikariConfig.setUsername(postgres.getUsername());
         hikariConfig.setPassword(postgres.getPassword());

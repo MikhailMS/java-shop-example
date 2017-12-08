@@ -2,7 +2,6 @@ package com.molotkov;
 
 import com.molotkov.db.DBCursorHolder;
 import com.molotkov.db.DBUtils;
-import com.molotkov.exceptions.BasketException;
 import com.molotkov.exceptions.InventoryException;
 import com.molotkov.products.Product;
 import com.molotkov.users.Administrator;
@@ -19,7 +18,6 @@ import java.sql.Statement;
 import static org.rnorth.visibleassertions.VisibleAssertions.assertEquals;
 
 public class AdministratorTest {
-    private HikariConfig hikariConfig;
     private HikariDataSource dataSource;
 
     @ClassRule
@@ -27,7 +25,7 @@ public class AdministratorTest {
 
     @Before
     public void setUp() throws SQLException {
-        hikariConfig = new HikariConfig();
+        HikariConfig hikariConfig = new HikariConfig();
         hikariConfig.setMaximumPoolSize(30);
         hikariConfig.setJdbcUrl(postgres.getJdbcUrl());
         hikariConfig.setUsername(postgres.getUsername());

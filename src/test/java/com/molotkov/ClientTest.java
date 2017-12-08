@@ -18,7 +18,6 @@ import java.util.ArrayList;
 import static org.rnorth.visibleassertions.VisibleAssertions.assertEquals;
 
 public class ClientTest {
-    private HikariConfig hikariConfig;
     private HikariDataSource dataSource;
 
     @ClassRule
@@ -26,7 +25,8 @@ public class ClientTest {
 
     @Before
     public void setUp() throws SQLException {
-        hikariConfig = new HikariConfig();
+        HikariConfig hikariConfig = new HikariConfig();
+        hikariConfig.setMaximumPoolSize(25);
         hikariConfig.setJdbcUrl(postgres.getJdbcUrl());
         hikariConfig.setUsername(postgres.getUsername());
         hikariConfig.setPassword(postgres.getPassword());
