@@ -108,16 +108,17 @@ public class DBUtilsTest {
         cursor.closeCursor();
 
     // DELETE FROM TABLE
-        DBUtils.deleteFromTable(dataSource.getConnection(), "products", new String[]{"product_name = 'chicken'"});
-        cursor = DBUtils.filterFromTable(dataSource.getConnection(), "products", new String[]{"product_id","product_name"},
+        DBUtils.deleteFromTable(dataSource.getConnection(), "inventory", new String[]{"entry_id = 1"});
+        cursor = DBUtils.filterFromTable(dataSource.getConnection(), "products", new String[]{"entry_id","product_amount","product_amount"},
                 new String[]{});
         String resultString6 = "";
         while (cursor.getResults().next()) {
             resultString6 += String.format("%s ",cursor.getResults().getString(1));
             resultString6 += String.format("%s ",cursor.getResults().getString(2));
+            resultString6 += String.format("%s ",cursor.getResults().getString(3));
         }
 
-        assertEquals("Delete from table query succeeds", "1 apple ", resultString6);
+        assertEquals("Delete from table query succeeds", "2 2 4 ", resultString6);
         cursor.closeCursor();
     }
 
