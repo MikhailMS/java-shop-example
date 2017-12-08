@@ -48,10 +48,10 @@ public class Basket implements ProductStorage {
     }
 
     public double calculateTotal() {
-        return this.products.entrySet()
-                .parallelStream()
-                .mapToDouble((product) -> product.getKey().getPrice()*product.getValue())
-                .sum();
+        return this.products.entrySet().
+                parallelStream().
+                mapToDouble(product -> product.getKey().getPrice()*product.getValue()).
+                sum();
     }
 
     public void setStringFormatter(final StringFormatter stringFormatter) {
@@ -64,14 +64,14 @@ public class Basket implements ProductStorage {
             improved by either using threads or combine those two together
          */
         final ArrayList<String> result = new ArrayList<>();
-        final String names = this.products.entrySet()
-                .parallelStream()
-                .map(p -> String.format("'%s'",p.getKey().getName()))
-                .collect(Collectors.joining(","));
-        final String amounts = this.products.entrySet()
-                .parallelStream()
-                .map(p -> p.getValue().toString())
-                .collect(Collectors.joining(","));
+        final String names = this.products.entrySet().
+                parallelStream().
+                map(p -> String.format("'%s'",p.getKey().getName())).
+                collect(Collectors.joining(","));
+        final String amounts = this.products.entrySet().
+                parallelStream().
+                map(p -> p.getValue().toString()).
+                collect(Collectors.joining(","));
         result.add(names);
         result.add(amounts);
 

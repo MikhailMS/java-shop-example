@@ -36,8 +36,8 @@ public class Inventory implements ProductStorage {
         } else if (this.products.get(product) == amount) {
             this.products.remove(product);
         } else {
-            throw new InventoryException(String.format("Cannot remove %d instances of product as there are only %d instances!",
-                    amount, this.products.get(product)));
+            throw new InventoryException(String.format("Cannot remove %d instances" +
+                    " of product as there are only %d instances!", amount, this.products.get(product)));
         }
     }
 
@@ -46,10 +46,10 @@ public class Inventory implements ProductStorage {
     }
 
     public double calculateTotal() {
-        return this.products.entrySet()
-                .parallelStream()
-                .mapToDouble((product) -> product.getKey().getPrice()*product.getValue())
-                .sum();
+        return this.products.entrySet().
+                parallelStream().
+                mapToDouble(product -> product.getKey().getPrice()*product.getValue()).
+                sum();
     }
 
     public void setStringFormatter(final StringFormatter stringFormatter) {

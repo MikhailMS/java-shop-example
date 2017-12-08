@@ -3,6 +3,7 @@ package com.molotkov;
 import com.molotkov.db.DBConnector;
 import org.junit.Before;
 import org.junit.Test;
+
 import static org.junit.Assert.assertTrue;
 import java.sql.Connection;
 

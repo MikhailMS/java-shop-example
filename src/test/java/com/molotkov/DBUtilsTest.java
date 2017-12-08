@@ -44,7 +44,7 @@ public class DBUtilsTest {
     @Test
     public void testDBUtilsInFullButDeleteTable() throws SQLException {
         final String[] selectColumns = {
-                "id"
+            "id"
         };
     // CREATE TABLE
         DBUtils.createTable(dataSource.getConnection(), "test_table", new String[]{"id integer NOT NULL", "string text NOT NULL"});
@@ -66,8 +66,8 @@ public class DBUtilsTest {
         cursor.closeCursor();
 
     // INSERT SPECIFIC FIELDS INTO TABLE
-        DBUtils.insertSpecificIntoTable(dataSource.getConnection(), "test_table", new String[] {"id", "string"}, new String[]{
-                "3", "'once more'"});
+        DBUtils.insertSpecificIntoTable(dataSource.getConnection(), "test_table", new String[] {"id", "string"},
+                new String[]{"3", "'once more'"});
         cursor = DBUtils.filterFromTable(dataSource.getConnection(), "test_table", selectColumns, new String[]{"string LIKE 'once%'"});
         cursor.getResults().next();
         final String resultString3 = cursor.getResults().getString(1);

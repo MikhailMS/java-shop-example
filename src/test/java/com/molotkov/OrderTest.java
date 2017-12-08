@@ -4,6 +4,7 @@ import com.molotkov.exceptions.BasketException;
 import com.molotkov.products.Product;
 import org.junit.Before;
 import org.junit.Test;
+
 import static org.junit.Assert.assertTrue;
 
 public class OrderTest {
@@ -21,6 +22,7 @@ public class OrderTest {
     public void testOrderConstructor() {
         assertTrue(order instanceof Order);
     }
+
     @Test
     public void testSetBasket() {
         final Basket testBasket = new Basket();
@@ -28,28 +30,33 @@ public class OrderTest {
 
         assertTrue(order.getBasket().equals(testBasket));
     }
+
     @Test
     public void testRemoveBasket() {
         order.removeBasket();
 
         assertTrue(null == order.getBasket());
     }
+
     @Test
     public void testChangeAddress() {
         order.changeAddress("Manchester");
 
         assertTrue(order.getAddress().equals("Manchester"));
     }
+
     @Test
     public void testSetStringFormatter() {
         order.setStringFormatter(() -> "New formatter");
 
         assertTrue(order.toString().equals("New formatter"));
     }
+
     @Test
     public void testToStringWithOneProduct() {
         assertTrue(order.toString().equals("Order includes 1 product and would be delivered to London"));
     }
+
     @Test
     public void testToStringWithMultipleProducts() throws BasketException {
         order.getBasket().addProducts(new Product("Chicken", 1, 2.3), 2);

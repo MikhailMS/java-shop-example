@@ -7,15 +7,15 @@ public class Order {
     private String address;
     private StringFormatter stringFormatter;
 
-     public Order(final Basket basket, final String address) {
-         this.basket = basket;
-         this.address = address;
-         this.stringFormatter = () -> {
-             final int basketSize = basket.getProducts().size();
-             final String itemString = basketSize > 1 ? basketSize + " products" : basketSize + " product";
-             return String.format("Order includes %s and would be delivered to %s", itemString, address);
-         };
-     }
+    public Order(final Basket basket, final String address) {
+        this.basket = basket;
+        this.address = address;
+        this.stringFormatter = () -> {
+            final int basketSize = basket.getProducts().size();
+            final String itemString = basketSize > 1 ? basketSize + " products" : basketSize + " product";
+            return String.format("Order includes %s and would be delivered to %s", itemString, address);
+        };
+    }
 
     public Basket getBasket() {
         return basket;
@@ -26,7 +26,7 @@ public class Order {
     }
 
     public void removeBasket() {
-         this.basket = null;
+        this.basket = null;
     }
 
     public String getAddress() {
