@@ -61,7 +61,8 @@ public class Client extends User {
         orderValuesList.add(basketId);
         orderValuesList.add(String.format("'%s'", order.getAddress()));
         orderValuesList.add(String.format("'%s'", getUserName()));
-        DBUtils.insertSpecificIntoTable(connection, "orders", new String[]{"basket_id", "address", "order_owner"},
+        orderValuesList.add(Double.toString(order.getBasket().calculateTotal()));
+        DBUtils.insertSpecificIntoTable(connection, "orders", new String[]{"basket_id", "address", "order_owner", "total_price"},
                 orderValuesList.toArray(new String[0]));
     }
 
