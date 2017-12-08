@@ -108,8 +108,8 @@ public class DBUtilsTest {
         cursor.closeCursor();
 
     // DELETE FROM TABLE
-        DBUtils.deleteFromTable(dataSource.getConnection(), "inventory", new String[]{"entry_id = 1"});
-        cursor = DBUtils.filterFromTable(dataSource.getConnection(), "products", new String[]{"entry_id","product_amount","product_amount"},
+        DBUtils.deleteFromTable(dataSource.getConnection(), "inventory", new String[]{"product_id = 1"});
+        cursor = DBUtils.filterFromTable(dataSource.getConnection(), "inventory", new String[]{"entry_id","product_amount","product_amount"},
                 new String[]{});
         String resultString6 = "";
         while (cursor.getResults().next()) {
