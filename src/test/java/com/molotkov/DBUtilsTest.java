@@ -93,7 +93,8 @@ public class DBUtilsTest {
         DBUtils.insertSpecificIntoTable(dataSource.getConnection(),"inventory",
                 new String[]{"product_id", "product_amount"}, new String[]{"2", "4"});
 
-        cursor = DBUtils.innerJoinTables(dataSource.getConnection(), "products", "inventory", "product_id" ,new String[] {"product_id", "product_name", "product_weight", "product_price", "product_amount"},
+        cursor = DBUtils.innerJoinTables(dataSource.getConnection(), "products", "inventory",
+                "product_id" ,new String[] {"product_id", "product_name", "product_weight", "product_price", "product_amount"},
                 new String[]{});
         String resultString5 = "";
         while (cursor.getResults().next()) {
@@ -108,17 +109,15 @@ public class DBUtilsTest {
 
     // DELETE FROM TABLE
         DBUtils.deleteFromTable(dataSource.getConnection(), "products", new String[]{"product_name = 'chicken'"});
-        cursor = DBUtils.innerJoinTables(dataSource.getConnection(), "products", "inventory", "product_id" ,new String[] {"product_id", "product_name", "product_weight", "product_price", "product_amount"},
+        cursor = DBUtils.filterFromTable(dataSource.getConnection(), "products", new String[]{"product_id","product_name"},
                 new String[]{});
         String resultString6 = "";
         while (cursor.getResults().next()) {
+            resultString5 += String.format("%s ",cursor.getResults().getString(1));
             resultString5 += String.format("%s ",cursor.getResults().getString(2));
-            resultString5 += String.format("%s ",cursor.getResults().getString(3));
-            resultString5 += String.format("%s ",cursor.getResults().getString(4));
-            resultString5 += String.format("%s ",cursor.getResults().getString(5));
         }
 
-        assertEquals("Inner join query succeeds", "apple 0.150 0.80 3 ", resultString6);
+        assertEquals("Delete from table query succeeds", "1 apple ", resultString6);
         cursor.closeCursor();
     }
 
