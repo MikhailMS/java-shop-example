@@ -28,24 +28,24 @@ Also I am using TDD approach to complete this project as I found this really con
       - [x] Can restore order from DB
       
   - [ ] As an optional part, I'd like to introduce user system: administration and clients. First would be able to see all completed orders and inventory stock and its total cost, while customers can fill in baskets, make orders and see theirs basket and orders only
-      - [ ] Administrator user can
+      - [x] Administrator user can
           - [x] See all available products
           - [x] See total cost of all products
           - [x] Add products to inventory
           - [x] Remove products from inventory
           - [x] See orders completed by any user
-          - [ ] See total cost of all completed orders **IN TESTING**
-          - [ ] Add user to the system **IN TESTING**
-          - [ ] Delete user from system **IN TESTING**
+          - [x] See total cost of all completed orders
+          - [x] Add user to the system
+          - [x] Delete user from system
           - [x] Filter products by name, price and weight
           - [x] Filter orders by date
-          - [x] Filter orders by total price (only require adding 'total' column to 'order' table)
+          - [x] Filter orders by total price
       - [ ] Client user can
           - [x] See all available products
-          - [ ] Add to basket
-          - [ ] Remove from basket
-          - [ ] Save basket
-          - [ ] Restore basket
+          - [ ] Add to basket      **IN DEVELOPMENT**
+          - [ ] Remove from basket **IN DEVELOPMENT**
+          - [ ] Save basket        **IN DEVELOPMENT**
+          - [ ] Restore basket     **IN DEVELOPMENT**
           - [ ] Make order
           - [ ] Save order
           - [ ] Complete order
@@ -53,7 +53,7 @@ Also I am using TDD approach to complete this project as I found this really con
           - [x] See all orders (client can see only his orders)
           - [x] Filter products by name, price and weight
           - [x] Filter orders by date
-          - [x] Filter orders by total price (only require adding 'total' column to 'order' table) 
+          - [x] Filter orders by total price 
       - [ ] Can login into system and gain appropriate rights
       
   - [ ] As an optional part, I'd like to introduce GUI, which will make it easier to fill basket, see orders and etc
