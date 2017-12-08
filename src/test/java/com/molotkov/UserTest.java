@@ -66,7 +66,7 @@ public class UserTest {
     }
 
     @Test
-    public void testUserSuperClassMethods() throws SQLException, InterruptedException {
+    public void testUserClassMethods() throws SQLException, InterruptedException {
     //-------------- User test cases -------------------------------
         final User testUser = new User("testUser", "testUser");
         assertEquals("Constructor succeeds", true, testUser instanceof User);

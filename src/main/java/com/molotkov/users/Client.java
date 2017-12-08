@@ -86,7 +86,7 @@ public class Client extends User {
         cursor.closeCursor();
 
         // Restore basket
-        Basket restoredBasket = new Basket();
+        final Basket restoredBasket = new Basket();
         restoredBasket.restoreFromDB(basketRetrievedProductNames, basketRetrievedProductAmounts);
 
         return new Order(restoredBasket, orderRetrieveAddress);
