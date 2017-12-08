@@ -35,7 +35,7 @@ public class Client extends User {
 
     public Basket restoreBasket(final Connection connection) throws SQLException {
         DBCursorHolder cursor = DBUtils.filterFromTable(connection,"baskets", new String[] {"products_name", "products_amount"},
-                new String[] {String.format("basket_owner = '%s'",super.getUserName()), "processed = FALSE"});
+                new String[] {String.format("basket_owner = '%s'",super.getUserName()), "AND" , "processed = FALSE"});
 
         cursor.getResults().next();
         final String productsName = cursor.getResults().getString(1);
