@@ -1,23 +1,23 @@
 package com.molotkov.db;
 
+import com.molotkov.users.User;
+
 import java.sql.*;
 
 public class DBConnector {
     private String dbUrl;
-    private String dbUserName;
-    private String dbUserPasswd;
+    private User user;
     private Connection connection;
 
-    public DBConnector(final String dbUrl, final String dbUserName, final String dbUserPasswd) {
+    public DBConnector(final String dbUrl, final User user) {
         this.dbUrl = dbUrl;
         try {
             Class.forName("org.postgresql.Driver");
-            if (dbUserName.isEmpty() || dbUserPasswd.isEmpty()) {
+            if (user == null) {
                 this.connection = DriverManager.getConnection(this.dbUrl);
             } else {
-                this.dbUserName = dbUserName;
-                this.dbUserPasswd = dbUserPasswd;
-                this.connection = DriverManager.getConnection(this.dbUrl, this.dbUserName, this.dbUserPasswd);
+                this.user = user;
+                this.connection = DriverManager.getConnection(this.dbUrl, this.user.getUserName(), this.user.getUserPasswd());
             }
         } catch (ClassNotFoundException | SQLException ex) {
             ex.printStackTrace();
@@ -28,13 +28,16 @@ public class DBConnector {
         this.dbUrl = newUrl;
     }
 
-    public void changeUserNameAndPasswd(final String userName, final String userPasswd) {
-        this.dbUserName = userName;
-        this.dbUserPasswd = userPasswd;
+    public void changeUser(User user) {
+        this.user = user;
     }
 
     public String getDbUrl() {
         return dbUrl;
+    }
+
+    public User getUser() {
+        return user;
     }
 
     public Connection getConnection() {

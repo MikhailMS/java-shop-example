@@ -1,6 +1,7 @@
 package com.molotkov;
 
 import com.molotkov.db.DBConnector;
+import com.molotkov.users.User;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -18,7 +19,8 @@ public class DBConnectorTest {
 
     @Before
     public void setUp() {
-        connector = new DBConnector(postgres.getJdbcUrl(), postgres.getUsername(), postgres.getPassword());
+        User postgreUser = new User(postgres.getUsername(), postgres.getPassword());
+        connector = new DBConnector(postgres.getJdbcUrl(), postgreUser);
     }
 
     @Test
@@ -30,6 +32,13 @@ public class DBConnectorTest {
     public void testChangeDBUrl() {
         connector.changeDBUrl("new url");
         assertTrue(connector.getDbUrl().equals("new url"));
+    }
+
+    @Test
+    public void testChangeUsernameAndPasswd() {
+        User testUser = new User("newUser", "newUser");
+        connector.changeUser(testUser);
+        assertTrue(connector.getUser().getUserName().equals("newUser") && connector.getUser().getUserPasswd().equals("newUser"));
     }
 
     @Test
