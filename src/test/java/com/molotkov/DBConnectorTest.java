@@ -19,7 +19,7 @@ public class DBConnectorTest {
 
     @Before
     public void setUp() {
-        User postgreUser = new User(postgres.getUsername(), postgres.getPassword());
+        final User postgreUser = new User(postgres.getUsername(), postgres.getPassword());
         connector = new DBConnector(postgres.getJdbcUrl(), postgreUser);
     }
 
@@ -36,7 +36,7 @@ public class DBConnectorTest {
 
     @Test
     public void testChangeUsernameAndPasswd() {
-        User testUser = new User("newUser", "newUser");
+        final User testUser = new User("newUser", "newUser");
         connector.changeUser(testUser);
         assertTrue(connector.getUser().getUserName().equals("newUser") && connector.getUser().getUserPasswd().equals("newUser"));
     }

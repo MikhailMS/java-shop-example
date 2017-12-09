@@ -28,7 +28,7 @@ public class DBConnector {
         this.dbUrl = newUrl;
     }
 
-    public void changeUser(User user) {
+    public void changeUser(final User user) {
         this.user = user;
     }
 
