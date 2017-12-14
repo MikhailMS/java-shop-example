@@ -1,5 +1,6 @@
 package com.molotkov.users;
 
+import com.molotkov.Basket;
 import com.molotkov.db.DBCursorHolder;
 import com.molotkov.db.DBUtils;
 import com.molotkov.interfaces.UserInterface;
@@ -13,6 +14,7 @@ import java.util.List;
 public class User implements UserInterface {
     private String userName;
     private String userPasswd;
+    private Basket bakset;
 
     public User(final String name, final String passwd) {
         this.userName = name;
@@ -58,5 +60,13 @@ public class User implements UserInterface {
 
     public String getUserPasswd() {
         return userPasswd;
+    }
+
+    public void setBasket(Basket basket) {
+        this.bakset = basket;
+    }
+
+    public Basket getBasket() {
+        return bakset;
     }
 }
