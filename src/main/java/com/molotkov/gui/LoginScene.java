@@ -5,14 +5,12 @@ import com.molotkov.db.DBUtils;
 import com.molotkov.users.Administrator;
 import com.molotkov.users.Client;
 import com.molotkov.users.User;
-import javafx.application.Application;
 import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.event.Event;
 import javafx.event.EventType;
 import javafx.geometry.Insets;
 import javafx.scene.Node;
-import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.Button;
@@ -21,31 +19,14 @@ import javafx.scene.control.Label;
 import javafx.scene.control.ButtonBar.ButtonData;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.GridPane;
-import javafx.scene.layout.StackPane;
 import javafx.stage.Modality;
-import javafx.stage.Stage;
 import javafx.util.Pair;
 
 import java.sql.Connection;
 import java.sql.SQLException;
 
 public class LoginScene {
-/*
-    private User user;
-    private Connection connection;
 
-    @Override
-    public void start(Stage primaryStage) {
-        StackPane root = new StackPane();
-        root.getChildren().add(loginButton(user, connection));
-
-        Scene scene = new Scene(root, 300, 250);
-
-        primaryStage.setTitle("Super Java Shop");
-        primaryStage.setScene(scene);
-        primaryStage.show();
-    }
-*/
     public Button loginButton(User user, Connection connection) {
         Button btn = new Button();
         btn.setText("Gain access to the Shop");

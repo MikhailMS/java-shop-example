@@ -11,7 +11,7 @@ public class Inventory implements ProductStorage {
     private HashMap<Product, Integer> products;
     private StringFormatter stringFormatter;
 
-    Inventory() {
+    public Inventory() {
         this.products = new HashMap<>();
         this.stringFormatter = () -> {
             final int productsSize = this.products.size();

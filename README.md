@@ -55,10 +55,10 @@ Also I am using TDD approach to complete this project as I found this really con
           - [x] Filter orders by total price 
       
   - [ ] As an optional part, I'd like to introduce GUI, which will make it easier to fill basket, see orders and etc
-      - [ ] Login screen
-      - [ ] Can login into system and gain appropriate rights
+      - [x] Login screen
+      - [x] Can login into system and gain appropriate rights **IN DEVELOPMENT/TESTING**
       - [ ] Client GUI
-          - [ ] See all available products
+          - [x] See all available products **IN DEVELOPMENT/TESTING**
           - [ ] Add to basket
           - [ ] Remove from basket
           - [ ] Save basket
@@ -72,7 +72,7 @@ Also I am using TDD approach to complete this project as I found this really con
           - [ ] Filter products by price, weight
           - [ ] Filter orders by date/total price
       - [ ] Administrator GUI
-          - [ ] See all available products
+          - [x] See all available products **IN DEVELOPMENT/TESTING**
           - [ ] See total cost of all products
           - [ ] Add products to inventory
           - [ ] Remove products from inventory
