@@ -70,10 +70,11 @@ Also I am using TDD approach to complete this project as I found this really con
           - [ ] See all completed orders (client can see only his orders)
           - [ ] Search for specific product by name
           - [ ] Filter products by price, weight
+          - [x] Sort products by name, price
           - [ ] Filter orders by date/total price
       - [ ] Administrator GUI
           - [x] See all available products **IN DEVELOPMENT/TESTING**
-          - [ ] See total cost of all products
+          - [x] See total cost of all products
           - [ ] Add products to inventory
           - [ ] Remove products from inventory
           - [ ] See orders completed by any user
@@ -82,6 +83,7 @@ Also I am using TDD approach to complete this project as I found this really con
           - [ ] Delete user from system
           - [ ] Search for specific product by name
           - [ ] Filter products by price, weight
+          - [x] Sort products by name, price
           - [ ] Filter orders by date/total price
           
   - [ ] As an optional part, I'd like to write a service, which will keep shop's inventory in sync with DB and completed orders
@@ -89,4 +91,4 @@ Also I am using TDD approach to complete this project as I found this really con
       - [ ] It will also check, if order can be made, ie not enough products in the inventory
       - [ ] If product(-s) not available to order, notify user and administrator  
     
-## Build and tested on MacOS and Java 1.8
+## Build and tested on MacOS and Java 1.8 (_**required**_)
