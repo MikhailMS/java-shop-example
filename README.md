@@ -58,7 +58,7 @@ Also I am using TDD approach to complete this project as I found this really con
       - [x] Login screen
       - [x] Can login into system and gain appropriate rights **IN DEVELOPMENT/TESTING**
       - [ ] Client GUI
-          - [x] See all available products **IN DEVELOPMENT/TESTING**
+          - [x] See all available products
           - [ ] Add to basket
           - [ ] Remove from basket
           - [ ] Save basket
@@ -69,11 +69,11 @@ Also I am using TDD approach to complete this project as I found this really con
           - [ ] Restore order
           - [ ] See all completed orders (client can see only his orders)
           - [ ] Search for specific product by name
-          - [ ] Filter products by price, weight
+          - [x] Filter products by price, weight
           - [x] Sort products by name, price
           - [ ] Filter orders by date/total price
       - [ ] Administrator GUI
-          - [x] See all available products **IN DEVELOPMENT/TESTING**
+          - [x] See all available products 
           - [x] See total cost of all products
           - [ ] Add products to inventory
           - [ ] Remove products from inventory
@@ -82,7 +82,7 @@ Also I am using TDD approach to complete this project as I found this really con
           - [ ] Add user to the system
           - [ ] Delete user from system
           - [ ] Search for specific product by name
-          - [ ] Filter products by price, weight
+          - [x] Filter products by price, weight
           - [x] Sort products by name, price
           - [ ] Filter orders by date/total price
           
