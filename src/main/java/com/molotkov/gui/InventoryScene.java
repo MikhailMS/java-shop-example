@@ -8,19 +8,15 @@ import com.molotkov.users.Administrator;
 import com.molotkov.users.Client;
 import com.molotkov.users.User;
 import javafx.application.Application;
-import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
-import javafx.geometry.Insets;
-import javafx.geometry.Pos;
-import javafx.scene.Node;
 import javafx.scene.Scene;
-import javafx.scene.control.*;
-import javafx.scene.layout.BorderPane;
+import javafx.scene.control.Label;
+import javafx.scene.control.TableColumn;
+import javafx.scene.control.TableView;
 import javafx.scene.layout.HBox;
-import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 import org.controlsfx.control.table.TableFilter;
 import org.controlsfx.control.table.TableRowExpanderColumn;
@@ -44,7 +40,7 @@ public class InventoryScene  extends Application {
             e.printStackTrace();
         }
 
-        stage.setScene(new Scene(createInventoryTableView(inventory, client), 600, 400));
+        stage.setScene(new Scene(createInventoryTableView(inventory, admin), 600, 400));
         stage.show();
     }
 
@@ -52,10 +48,10 @@ public class InventoryScene  extends Application {
         ObservableList<Map.Entry<Product, Integer>> items = FXCollections.observableArrayList(inventory.getProducts().entrySet());
         final TableView<Map.Entry<Product, Integer>> table = new TableView<>(items);
 
-        TableColumn<Map.Entry<Product, Integer>, String> productNameColumn = new TableColumn<>("Product name");
+        final TableColumn<Map.Entry<Product, Integer>, String> productNameColumn = new TableColumn<>("Product name");
         productNameColumn.setCellValueFactory(item -> new SimpleStringProperty(item.getValue().getKey().getName()));
 
-        TableColumn<Map.Entry<Product, Integer>, Double> productWeightColumn = new TableColumn<>("Product Weight");
+        final TableColumn<Map.Entry<Product, Integer>, Double> productWeightColumn = new TableColumn<>("Product Weight");
         productWeightColumn.setCellValueFactory(item -> {
             double weight = item.getValue().getKey().getWeight();
             DecimalFormat df = new DecimalFormat("#.###");
@@ -63,7 +59,7 @@ public class InventoryScene  extends Application {
             return new SimpleObjectProperty<>(weight);
         });
 
-        TableColumn<Map.Entry<Product, Integer>, Double> productPriceColumn = new TableColumn<>("Product Price");
+        final TableColumn<Map.Entry<Product, Integer>, Double> productPriceColumn = new TableColumn<>("Product Price");
         productPriceColumn.setCellValueFactory(item -> {
             double price = item.getValue().getKey().getPrice();
             DecimalFormat df = new DecimalFormat("#.##");
@@ -71,10 +67,10 @@ public class InventoryScene  extends Application {
             return new SimpleObjectProperty<>(price);
         });
 
-        TableColumn<Map.Entry<Product, Integer>, Integer> productAmountColumn = new TableColumn<>("Amount");
+        final TableColumn<Map.Entry<Product, Integer>, Integer> productAmountColumn = new TableColumn<>("Amount");
         productAmountColumn.setCellValueFactory(item -> new SimpleObjectProperty<>(item.getValue().getValue()));
 
-        TableColumn<Map.Entry<Product, Integer>, String> productTotalColumn = new TableColumn<>("Product Total");
+        final TableColumn<Map.Entry<Product, Integer>, String> productTotalColumn = new TableColumn<>("Product Total");
         productTotalColumn.setCellValueFactory(item -> new SimpleStringProperty(String.format("%.2f", item.getValue().getKey().getPrice() * item.getValue().getValue())));
 
         if (user instanceof Administrator) table.getColumns().setAll(productNameColumn, productWeightColumn, productPriceColumn, productAmountColumn, productTotalColumn);
@@ -92,7 +88,7 @@ public class InventoryScene  extends Application {
 
         table.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
 
-        TableFilter<Map.Entry<Product,Integer>> filter = TableFilter.forTableView(table).lazy(false).apply();
+        final TableFilter<Map.Entry<Product,Integer>> filter = TableFilter.forTableView(table).lazy(false).apply();
 
         return table;
     }
