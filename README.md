@@ -68,9 +68,10 @@ Also I am using TDD approach to complete this project as I found this really con
           - [ ] Complete order
           - [ ] Restore order
           - [ ] See all completed orders (client can see only his orders)
-          - [ ] Search for specific product by name
-          - [x] Filter products by price, weight
+          - [x] Search for specific product by name
           - [x] Sort products by name, price
+          - [x] Filter products by price, weight
+          - [ ] Sort orders by date, total price
           - [ ] Filter orders by date/total price
       - [ ] Administrator GUI
           - [x] See all available products 
@@ -81,9 +82,10 @@ Also I am using TDD approach to complete this project as I found this really con
           - [ ] See total cost of all completed orders
           - [ ] Add user to the system
           - [ ] Delete user from system
-          - [ ] Search for specific product by name
-          - [x] Filter products by price, weight
+          - [x] Search for specific product by name
           - [x] Sort products by name, price
+          - [x] Filter products by price, weight
+          - [ ] Sort orders by date, total price
           - [ ] Filter orders by date/total price
           
   - [ ] As an optional part, I'd like to write a service, which will keep shop's inventory in sync with DB and completed orders
