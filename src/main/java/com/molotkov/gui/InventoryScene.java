@@ -24,7 +24,7 @@ import org.controlsfx.control.table.TableRowExpanderColumn;
 import java.text.DecimalFormat;
 import java.util.Map;
 
-public class InventoryScene  extends Application {
+public class InventoryScene extends Application {
 
     @Override
     public void start(Stage stage) {
