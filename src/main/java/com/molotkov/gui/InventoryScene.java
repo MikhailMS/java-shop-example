@@ -7,25 +7,33 @@ import com.molotkov.products.Product;
 import com.molotkov.users.Administrator;
 import com.molotkov.users.Client;
 import com.molotkov.users.User;
+import impl.org.controlsfx.skin.NotificationBar;
 import javafx.application.Application;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.geometry.Pos;
 import javafx.scene.Scene;
+import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.layout.HBox;
+import javafx.scene.paint.Color;
+import javafx.scene.shape.Rectangle;
 import javafx.stage.Stage;
+import javafx.util.Duration;
+import org.controlsfx.control.NotificationPane;
+import org.controlsfx.control.Notifications;
 import org.controlsfx.control.table.TableFilter;
 import org.controlsfx.control.table.TableRowExpanderColumn;
+import org.controlsfx.tools.Utils;
 
 import java.text.DecimalFormat;
 import java.util.Map;
 
 public class InventoryScene extends Application {
-
     @Override
     public void start(Stage stage) {
 
@@ -73,6 +81,7 @@ public class InventoryScene extends Application {
         final TableColumn<Map.Entry<Product, Integer>, String> productTotalColumn = new TableColumn<>("Product Total");
         productTotalColumn.setCellValueFactory(item -> new SimpleStringProperty(String.format("%.2f", item.getValue().getKey().getPrice() * item.getValue().getValue())));
 
+
         if (user instanceof Administrator) table.getColumns().setAll(productNameColumn, productWeightColumn, productPriceColumn, productAmountColumn, productTotalColumn);
         else table.getColumns().setAll(productNameColumn, productWeightColumn, productPriceColumn, productAmountColumn);
 
@@ -80,7 +89,33 @@ public class InventoryScene extends Application {
             HBox editor = new HBox(10);
             Label detailsLabel = new Label();
             detailsLabel.setText(String.format("Weight: %.3f | Price: %.2f", param.getValue().getKey().getWeight(), param.getValue().getKey().getPrice()));
-            editor.getChildren().addAll(detailsLabel);
+            Button addToBasket = new Button();
+            Button deleteFromBasket = new Button();
+            addToBasket.setText("Add to basket");
+            deleteFromBasket.setText("Delete from basket");
+
+            addToBasket.setOnMouseClicked(mouseEvent -> {
+                Notifications.create()
+                        .darkStyle()
+                        .title("Info")
+                        .text("Product has been added to basket")
+                        .position(Pos.CENTER)
+                        .owner(Utils.getWindow(editor))
+                        .hideAfter(Duration.seconds(2))
+                        .showConfirm();
+            });
+            deleteFromBasket.setOnMouseClicked(mouseEvent -> {
+                Notifications.create()
+                        .darkStyle()
+                        .title("Info")
+                        .text("Product has been deleted from basket")
+                        .position(Pos.CENTER)
+                        .owner(Utils.getWindow(editor))
+                        .hideAfter(Duration.seconds(2))
+                        .showConfirm();
+            });
+
+            editor.getChildren().addAll(detailsLabel, addToBasket, deleteFromBasket);
             return editor;
         });
 
