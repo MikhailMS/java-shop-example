@@ -36,7 +36,7 @@ public class Basket implements ProductStorage {
         if (this.products.get(product) > amount) {
             this.products.replace(product,this.products.get(product)-amount);
         } else if (this.products.get(product) == amount) {
-            this.products.remove(product);
+            this.products.replace(product, 0);
         } else {
             throw new BasketException(String.format("Cannot remove %d instances of product as there are only %d instances!",
                     amount, this.products.get(product)));

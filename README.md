@@ -62,12 +62,12 @@ Also I am using TDD approach to complete this project as I found this really con
           - [x] Add to basket
           - [x] Remove from basket
           - [ ] Save basket
-          - [ ] Restore basket
+          - [ ] Restore basket - **need to fix Basket.restoreFromDB method (high priority)**
           - [ ] Make order
           - [ ] Complete order
           - [ ] Save order
           - [ ] Restore order
-          - [ ] See all completed orders (client can see only his orders)
+          - [x] See all completed orders (client can see only his orders) - **shall be tested, once full gui is built**
           - [x] See total cost of all completed orders
           - [x] Sort orders by date, total price
           - [x] Filter orders by date/total price
@@ -77,9 +77,10 @@ Also I am using TDD approach to complete this project as I found this really con
       - [ ] Administrator GUI
           - [x] See all available products 
           - [x] See total cost of all products
-          - [ ] Add products to inventory
-          - [ ] Remove products from inventory
-          - [ ] See orders completed by any user
+          - [ ] Add new product to inventory
+          - [x] Add products to inventory
+          - [x] Remove products from inventory
+          - [x] See orders completed by any user - **shall be tested, once full gui is built**
           - [x] See total cost of all completed orders
           - [x] Sort orders by date, total price
           - [x] Filter orders by date/total price

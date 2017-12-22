@@ -2,8 +2,8 @@ package com.molotkov.gui;
 
 import com.molotkov.Basket;
 import com.molotkov.Inventory;
-import com.molotkov.exceptions.BasketException;
 import com.molotkov.exceptions.InventoryException;
+import com.molotkov.interfaces.ProductStorage;
 import com.molotkov.products.Product;
 
 import com.molotkov.users.Administrator;
@@ -49,7 +49,7 @@ public class InventoryScene extends Application {
 
         client.setBasket(userBasket);
 
-        stage.setScene(new Scene(createInventoryTableView(inventory, client), 600, 400));
+        stage.setScene(new Scene(createInventoryTableView(inventory, admin), 600, 400));
         stage.show();
     }
 
@@ -85,10 +85,11 @@ public class InventoryScene extends Application {
 
         if (user instanceof Administrator) {
             table.getColumns().setAll(productNameColumn, productWeightColumn, productPriceColumn, productAmountColumn, productTotalColumn);
+            addAdminRowExpander(table, inventory);
         }
         else {
             table.getColumns().setAll(productNameColumn, productWeightColumn, productPriceColumn, productAmountColumn);
-            addRowExpander(table, user);
+            addClientRowExpander(table, user);
         }
 
         table.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
@@ -98,41 +99,57 @@ public class InventoryScene extends Application {
         return table;
     }
 
-    private void addRowExpander(final TableView table, final User user) {
+    private void addClientRowExpander(final TableView table, final User user) {
         TableRowExpanderColumn<Map.Entry<Product, Integer>> expander = new TableRowExpanderColumn<>(param -> {
             HBox editor = new HBox(10);
             Label detailsLabel = new Label();
             detailsLabel.setText(String.format("Weight: %.3f | Price: %.2f", param.getValue().getKey().getWeight(), param.getValue().getKey().getPrice()));
 
 
-            editor.getChildren().addAll(detailsLabel, addButtonToExpander(user, editor, param)
-                    , addDeleteButtonToExpander(user, editor, param));
+            editor.getChildren().addAll(detailsLabel, createAddButton("Add to basket","Product has been added to basket",
+                    "Something went wrong while adding product to basket", user.getBasket(), editor, param),
+                    createDeleteButton("Remove from basket","Product has been deleted from basket",
+                            "Something went wrong while deleting product from basket: Possibly you tried to delete more occurrences of a product, than exist in basket",
+                            user.getBasket(), editor, param));
             return editor;
         });
 
         table.getColumns().add(expander);
     }
 
-    private Button addButtonToExpander(final User user, HBox editor , final TableRowExpanderColumn.TableRowDataFeatures<Map.Entry<Product, Integer>> param) {
+    private void addAdminRowExpander(final TableView table, Inventory inventory) {
+        TableRowExpanderColumn<Map.Entry<Product, Integer>> expander =  new TableRowExpanderColumn<>(param -> {
+            HBox editor = new HBox(10);
+            editor.getChildren().addAll(createAddButton("Add to inventory","Product has been added to inventory",
+                    "Something went wrong while adding product to inventory", inventory, editor, param),
+                    createDeleteButton("Remove from inventory", "Product has been removed from inventory",
+                            "Something went wrong while removing product from inventory: Possibly you tried to delete more occurrences of a product than exist in inventory ", inventory, editor, param));
+            return editor;
+        });
+
+        table.getColumns().add(expander);
+    }
+
+    private Button createAddButton(final String buttonText, final String notificationTextSuccess, final String notificationTextError, final ProductStorage storage, final HBox editor , final TableRowExpanderColumn.TableRowDataFeatures<Map.Entry<Product, Integer>> param) {
         Button addToBasket = new Button();
-        addToBasket.setText("Add to basket");
+        addToBasket.setText(buttonText);
 
         addToBasket.setOnMouseClicked(mouseEvent -> {
             try {
-                user.getBasket().addProducts(param.getValue().getKey(), 1);
+                storage.addProducts(param.getValue().getKey(), 1);
                 Notifications.create()
                         .darkStyle()
                         .title("Info")
-                        .text("Product has been added to basket")
+                        .text(notificationTextSuccess)
                         .position(Pos.CENTER)
                         .owner(Utils.getWindow(editor))
                         .hideAfter(Duration.seconds(2))
                         .showConfirm();
-            } catch (BasketException e) {
+            } catch (Exception e) {
                 Notifications.create()
                         .darkStyle()
                         .title("Error")
-                        .text("Something went wrong while adding product to basket")
+                        .text(notificationTextError)
                         .position(Pos.CENTER)
                         .owner(Utils.getWindow(editor))
                         .hideAfter(Duration.seconds(2))
@@ -143,25 +160,27 @@ public class InventoryScene extends Application {
         return addToBasket;
     }
 
-    private Button addDeleteButtonToExpander(final User user, HBox editor , final TableRowExpanderColumn.TableRowDataFeatures<Map.Entry<Product, Integer>> param) {
+    private Button createDeleteButton(final String buttonText, final String notificationTextSuccess, final String notificationTextError, final ProductStorage storage, final HBox editor , final TableRowExpanderColumn.TableRowDataFeatures<Map.Entry<Product, Integer>> param) {
         Button deleteFromBasket = new Button();
-        deleteFromBasket.setText("Delete from basket");
+        deleteFromBasket.setText(buttonText);
+
         deleteFromBasket.setOnMouseClicked(mouseEvent -> {
             try {
-                user.getBasket().removeProducts(param.getValue().getKey(), 1);
+                storage.removeProducts(param.getValue().getKey(), 1);
                 Notifications.create()
                         .darkStyle()
                         .title("Info")
-                        .text("Product has been deleted from basket")
+                        .text(notificationTextSuccess)
                         .position(Pos.CENTER)
                         .owner(Utils.getWindow(editor))
                         .hideAfter(Duration.seconds(2))
                         .showConfirm();
-            } catch (BasketException | NullPointerException e) {
+
+            } catch (Exception e) {
                 Notifications.create()
                         .darkStyle()
                         .title("Error")
-                        .text("Something went wrong while deleting product from basket: Possibly you tried to delete more quantities of the product, than presented in basket")
+                        .text(notificationTextError)
                         .position(Pos.CENTER)
                         .owner(Utils.getWindow(editor))
                         .hideAfter(Duration.seconds(4))

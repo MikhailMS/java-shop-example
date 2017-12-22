@@ -78,7 +78,7 @@ public class BasketTest {
         basket.addProducts(test,2);
         basket.removeProducts(test, 2);
 
-        assertFalse(basket.getProducts().containsKey(test));
+        assertTrue(basket.getProducts().get(test) == 0);
     }
 
     @Test(expected = BasketException.class)
