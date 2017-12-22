@@ -77,7 +77,7 @@ public class ShopTest {
         shop.addToInventory(test, 2);
         shop.removeFromInventory(test,2);
 
-        assertFalse(shop.getInventory().getProducts().containsKey(test));
+        assertTrue(shop.getInventory().getProducts().get(test) == 0);
     }
 
     @Test(expected = InventoryException.class)
