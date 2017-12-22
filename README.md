@@ -59,13 +59,13 @@ Also I am using TDD approach to complete this project as I found this really con
       - [x] Can login into system and gain appropriate rights **IN DEVELOPMENT/TESTING**
       - [ ] Client GUI
           - [x] See all available products
-          - [ ] Add to basket
-          - [ ] Remove from basket
+          - [x] Add to basket
+          - [x] Remove from basket
           - [ ] Save basket
           - [ ] Restore basket
           - [ ] Make order
-          - [ ] Save order
           - [ ] Complete order
+          - [ ] Save order
           - [ ] Restore order
           - [ ] See all completed orders (client can see only his orders)
           - [x] See total cost of all completed orders

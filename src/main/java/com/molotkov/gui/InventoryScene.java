@@ -1,13 +1,14 @@
 package com.molotkov.gui;
 
+import com.molotkov.Basket;
 import com.molotkov.Inventory;
+import com.molotkov.exceptions.BasketException;
 import com.molotkov.exceptions.InventoryException;
 import com.molotkov.products.Product;
 
 import com.molotkov.users.Administrator;
 import com.molotkov.users.Client;
 import com.molotkov.users.User;
-import impl.org.controlsfx.skin.NotificationBar;
 import javafx.application.Application;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.property.SimpleStringProperty;
@@ -20,11 +21,8 @@ import javafx.scene.control.Label;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.layout.HBox;
-import javafx.scene.paint.Color;
-import javafx.scene.shape.Rectangle;
 import javafx.stage.Stage;
 import javafx.util.Duration;
-import org.controlsfx.control.NotificationPane;
 import org.controlsfx.control.Notifications;
 import org.controlsfx.control.table.TableFilter;
 import org.controlsfx.control.table.TableRowExpanderColumn;
@@ -39,6 +37,7 @@ public class InventoryScene extends Application {
 
         User admin = new Administrator("t", "t");
         User client = new Client("t", "t");
+        Basket userBasket = new Basket();
 
         Inventory inventory = new Inventory();
         try {
@@ -48,7 +47,9 @@ public class InventoryScene extends Application {
             e.printStackTrace();
         }
 
-        stage.setScene(new Scene(createInventoryTableView(inventory, admin), 600, 400));
+        client.setBasket(userBasket);
+
+        stage.setScene(new Scene(createInventoryTableView(inventory, client), 600, 400));
         stage.show();
     }
 
@@ -75,26 +76,50 @@ public class InventoryScene extends Application {
             return new SimpleObjectProperty<>(price);
         });
 
-        final TableColumn<Map.Entry<Product, Integer>, Integer> productAmountColumn = new TableColumn<>("Amount");
+        final TableColumn<Map.Entry<Product, Integer>, Integer> productAmountColumn = new TableColumn<>("Amount in Inventory");
         productAmountColumn.setCellValueFactory(item -> new SimpleObjectProperty<>(item.getValue().getValue()));
 
         final TableColumn<Map.Entry<Product, Integer>, String> productTotalColumn = new TableColumn<>("Product Total");
         productTotalColumn.setCellValueFactory(item -> new SimpleStringProperty(String.format("%.2f", item.getValue().getKey().getPrice() * item.getValue().getValue())));
 
 
-        if (user instanceof Administrator) table.getColumns().setAll(productNameColumn, productWeightColumn, productPriceColumn, productAmountColumn, productTotalColumn);
-        else table.getColumns().setAll(productNameColumn, productWeightColumn, productPriceColumn, productAmountColumn);
+        if (user instanceof Administrator) {
+            table.getColumns().setAll(productNameColumn, productWeightColumn, productPriceColumn, productAmountColumn, productTotalColumn);
+        }
+        else {
+            table.getColumns().setAll(productNameColumn, productWeightColumn, productPriceColumn, productAmountColumn);
+            addRowExpander(table, user);
+        }
 
+        table.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
+
+        final TableFilter<Map.Entry<Product,Integer>> filter = TableFilter.forTableView(table).lazy(false).apply();
+
+        return table;
+    }
+
+    private void addRowExpander(final TableView table, final User user) {
         TableRowExpanderColumn<Map.Entry<Product, Integer>> expander = new TableRowExpanderColumn<>(param -> {
             HBox editor = new HBox(10);
             Label detailsLabel = new Label();
             detailsLabel.setText(String.format("Weight: %.3f | Price: %.2f", param.getValue().getKey().getWeight(), param.getValue().getKey().getPrice()));
-            Button addToBasket = new Button();
-            Button deleteFromBasket = new Button();
-            addToBasket.setText("Add to basket");
-            deleteFromBasket.setText("Delete from basket");
 
-            addToBasket.setOnMouseClicked(mouseEvent -> {
+
+            editor.getChildren().addAll(detailsLabel, addButtonToExpander(user, editor, param)
+                    , addDeleteButtonToExpander(user, editor, param));
+            return editor;
+        });
+
+        table.getColumns().add(expander);
+    }
+
+    private Button addButtonToExpander(final User user, HBox editor , final TableRowExpanderColumn.TableRowDataFeatures<Map.Entry<Product, Integer>> param) {
+        Button addToBasket = new Button();
+        addToBasket.setText("Add to basket");
+
+        addToBasket.setOnMouseClicked(mouseEvent -> {
+            try {
+                user.getBasket().addProducts(param.getValue().getKey(), 1);
                 Notifications.create()
                         .darkStyle()
                         .title("Info")
@@ -103,8 +128,27 @@ public class InventoryScene extends Application {
                         .owner(Utils.getWindow(editor))
                         .hideAfter(Duration.seconds(2))
                         .showConfirm();
-            });
-            deleteFromBasket.setOnMouseClicked(mouseEvent -> {
+            } catch (BasketException e) {
+                Notifications.create()
+                        .darkStyle()
+                        .title("Error")
+                        .text("Something went wrong while adding product to basket")
+                        .position(Pos.CENTER)
+                        .owner(Utils.getWindow(editor))
+                        .hideAfter(Duration.seconds(2))
+                        .showError();
+                e.printStackTrace();
+            }
+        });
+        return addToBasket;
+    }
+
+    private Button addDeleteButtonToExpander(final User user, HBox editor , final TableRowExpanderColumn.TableRowDataFeatures<Map.Entry<Product, Integer>> param) {
+        Button deleteFromBasket = new Button();
+        deleteFromBasket.setText("Delete from basket");
+        deleteFromBasket.setOnMouseClicked(mouseEvent -> {
+            try {
+                user.getBasket().removeProducts(param.getValue().getKey(), 1);
                 Notifications.create()
                         .darkStyle()
                         .title("Info")
@@ -113,19 +157,19 @@ public class InventoryScene extends Application {
                         .owner(Utils.getWindow(editor))
                         .hideAfter(Duration.seconds(2))
                         .showConfirm();
-            });
-
-            editor.getChildren().addAll(detailsLabel, addToBasket, deleteFromBasket);
-            return editor;
+            } catch (BasketException | NullPointerException e) {
+                Notifications.create()
+                        .darkStyle()
+                        .title("Error")
+                        .text("Something went wrong while deleting product from basket: Possibly you tried to delete more quantities of the product, than presented in basket")
+                        .position(Pos.CENTER)
+                        .owner(Utils.getWindow(editor))
+                        .hideAfter(Duration.seconds(4))
+                        .showError();
+                e.printStackTrace();
+            }
         });
-
-        table.getColumns().add(expander);
-
-        table.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
-
-        final TableFilter<Map.Entry<Product,Integer>> filter = TableFilter.forTableView(table).lazy(false).apply();
-
-        return table;
+        return deleteFromBasket;
     }
 
     public static void main(String[] args) {
