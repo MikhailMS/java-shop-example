@@ -61,7 +61,7 @@ public class ClientTest {
 
     // TESTING removeProductFromBasket
         client.removeProductFromBasket(basket, apple, 2);
-        assertEquals("removeProductFromBasket succeeds", false, basket.getProducts().containsKey(apple));
+        assertEquals("removeProductFromBasket succeeds", 0, basket.getProducts().get(apple));
 
     // TESTING saveBasket
         client.addProductToBasket(basket, apple, 2);
