@@ -13,14 +13,15 @@ import javafx.application.Application;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
+import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;
+import javafx.geometry.Insets;
 import javafx.geometry.Pos;
+import javafx.scene.Node;
 import javafx.scene.Scene;
-import javafx.scene.control.Button;
-import javafx.scene.control.Label;
-import javafx.scene.control.TableColumn;
-import javafx.scene.control.TableView;
+import javafx.scene.control.*;
 import javafx.scene.layout.HBox;
+import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 import javafx.util.Duration;
 import org.controlsfx.control.Notifications;
@@ -29,6 +30,7 @@ import org.controlsfx.control.table.TableRowExpanderColumn;
 import org.controlsfx.tools.Utils;
 
 import java.text.DecimalFormat;
+import java.util.HashMap;
 import java.util.Map;
 
 public class InventoryScene extends Application {
@@ -53,11 +55,17 @@ public class InventoryScene extends Application {
         stage.show();
     }
 
-    public TableView createInventoryTableView(final Inventory inventory, final User user) {
-        ObservableList<Map.Entry<Product, Integer>> items = FXCollections.observableArrayList(inventory.getProducts().entrySet());
-        final TableView<Map.Entry<Product, Integer>> table = new TableView<>(items);
+    public VBox createInventoryTableView(final Inventory inventory, final User user) {
+        final ObservableList<Map.Entry<Product, Integer>> items = FXCollections.observableArrayList(inventory.getProducts().entrySet());
 
-        final TableColumn<Map.Entry<Product, Integer>, String> productNameColumn = new TableColumn<>("Product name");
+        final TableView<Map.Entry<Product, Integer>> table = new TableView<>(items);
+        table.setEditable(true);
+
+        final VBox inventoryTableView = new VBox();
+        inventoryTableView.setSpacing(5);
+        inventoryTableView.setPadding(new Insets(5, 5, 5, 5));
+
+        final TableColumn<Map.Entry<Product, Integer>, String> productNameColumn = new TableColumn<>("Product Name");
         productNameColumn.setCellValueFactory(item -> new SimpleStringProperty(item.getValue().getKey().getName()));
 
         final TableColumn<Map.Entry<Product, Integer>, Double> productWeightColumn = new TableColumn<>("Product Weight");
@@ -76,7 +84,7 @@ public class InventoryScene extends Application {
             return new SimpleObjectProperty<>(price);
         });
 
-        final TableColumn<Map.Entry<Product, Integer>, Integer> productAmountColumn = new TableColumn<>("Amount in Inventory");
+        final TableColumn<Map.Entry<Product, Integer>, Integer> productAmountColumn = new TableColumn<>("Quantity available in Inventory");
         productAmountColumn.setCellValueFactory(item -> new SimpleObjectProperty<>(item.getValue().getValue()));
 
         final TableColumn<Map.Entry<Product, Integer>, String> productTotalColumn = new TableColumn<>("Product Total");
@@ -86,17 +94,21 @@ public class InventoryScene extends Application {
         if (user instanceof Administrator) {
             table.getColumns().setAll(productNameColumn, productWeightColumn, productPriceColumn, productAmountColumn, productTotalColumn);
             addAdminRowExpander(table, inventory);
+            final HBox addProductBox = createAddProductBox(productNameColumn, productWeightColumn, productPriceColumn, productAmountColumn, inventory, items);
+
+            inventoryTableView.getChildren().addAll(table, addProductBox);
         }
         else {
             table.getColumns().setAll(productNameColumn, productWeightColumn, productPriceColumn, productAmountColumn);
             addClientRowExpander(table, user);
+            inventoryTableView.getChildren().addAll(table);
         }
 
         table.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
 
         final TableFilter<Map.Entry<Product,Integer>> filter = TableFilter.forTableView(table).lazy(false).apply();
 
-        return table;
+        return inventoryTableView;
     }
 
     private void addClientRowExpander(final TableView table, final User user) {
@@ -119,7 +131,7 @@ public class InventoryScene extends Application {
 
     private void addAdminRowExpander(final TableView table, Inventory inventory) {
         TableRowExpanderColumn<Map.Entry<Product, Integer>> expander =  new TableRowExpanderColumn<>(param -> {
-            HBox editor = new HBox(10);
+            final HBox editor = new HBox(10);
             editor.getChildren().addAll(createAddButton("Add to inventory","Product has been added to inventory",
                     "Something went wrong while adding product to inventory", inventory, editor, param),
                     createDeleteButton("Remove from inventory", "Product has been removed from inventory",
@@ -189,6 +201,54 @@ public class InventoryScene extends Application {
             }
         });
         return deleteFromBasket;
+    }
+
+    private HBox createAddProductBox(final TableColumn productNameColumn, final TableColumn productWeightColumn, final TableColumn productPriceColumn,
+                                     final TableColumn productAmountColumn, final Inventory inventory, final ObservableList items) {
+        final HBox addProductBox = new HBox();
+        final TextField addProductName = new TextField();
+        addProductName.setPromptText("Product Name");
+        addProductName.setMaxWidth(productNameColumn.getPrefWidth());
+
+        final TextField addProductWeight = new TextField();
+        addProductWeight.setPromptText("Product Weight");
+        addProductWeight.setMaxWidth(productWeightColumn.getPrefWidth());
+
+        final TextField addProductPrice = new TextField();
+        addProductPrice.setPromptText("Product Price");
+        addProductPrice.setMaxWidth(productPriceColumn.getPrefWidth());
+
+        final TextField addProductAmount = new TextField();
+        addProductAmount.setPromptText("Quantity of product");
+        addProductAmount.setMaxWidth(productAmountColumn.getPrefWidth());
+
+        final Button addNewProductButton = new Button("Add new product");
+        addNewProductButton.setOnMouseClicked(mouseEvent -> {
+            final String newProductName = addProductName.getText();
+            final String newProductWeight = addProductWeight.getText();
+            final String newProductPrice = addProductPrice.getText();
+            final String newProductAmount = addProductAmount.getText();
+            if (!newProductName.isEmpty() && !newProductWeight.isEmpty() && !newProductPrice.isEmpty() && ! newProductAmount.isEmpty()) {
+                try {
+                    final Map<Product,Integer> product = new HashMap<>();
+                    product.put(new Product(newProductName, Double.valueOf(newProductWeight), Double.valueOf(newProductPrice)), Integer.valueOf(newProductAmount));
+                    inventory.addProducts(new Product(newProductName, Double.valueOf(newProductWeight), Double.valueOf(newProductPrice)), Integer.valueOf(newProductAmount));
+                    items.addAll(product.entrySet());
+                    inventory.getProducts().entrySet().stream().forEach(System.out::println);
+                    items.stream().forEach(System.out::println);
+                    addProductName.clear();
+                    addProductWeight.clear();
+                    addProductPrice.clear();
+                    addProductAmount.clear();
+                } catch (InventoryException e) {
+                    e.printStackTrace();
+                }
+            }
+        });
+        addProductBox.getChildren().addAll(addProductName, addProductWeight, addProductPrice, addProductAmount, addNewProductButton);
+        addProductBox.setSpacing(3);
+
+        return addProductBox;
     }
 
     public static void main(String[] args) {
