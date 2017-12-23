@@ -230,12 +230,12 @@ public class InventoryScene extends Application {
             final String newProductAmount = addProductAmount.getText();
             if (!newProductName.isEmpty() && !newProductWeight.isEmpty() && !newProductPrice.isEmpty() && ! newProductAmount.isEmpty()) {
                 try {
-                    final Map<Product,Integer> product = new HashMap<>();
-                    product.put(new Product(newProductName, Double.valueOf(newProductWeight), Double.valueOf(newProductPrice)), Integer.valueOf(newProductAmount));
+                    // Next 3 lines of code is huuuge hack - but can't think of another solution.
+                    // It works, but may give poor performance on big ObservableList
+                    items.removeAll(inventory.getProducts().entrySet());
                     inventory.addProducts(new Product(newProductName, Double.valueOf(newProductWeight), Double.valueOf(newProductPrice)), Integer.valueOf(newProductAmount));
-                    items.addAll(product.entrySet());
-                    inventory.getProducts().entrySet().stream().forEach(System.out::println);
-                    items.stream().forEach(System.out::println);
+                    items.addAll(inventory.getProducts().entrySet());
+
                     addProductName.clear();
                     addProductWeight.clear();
                     addProductPrice.clear();

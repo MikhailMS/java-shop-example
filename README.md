@@ -96,7 +96,7 @@ Also I am using TDD approach to complete this project as I found this really con
       - [ ] If product(-s) not available to order, notify user and administrator  
   
 ## Bug trace
-  - [ ] When adding new product via form, product is added, but then I cannot change its amount
+  - [x] When adding new product via form, product is added, but then I cannot change its amount
   - [ ] restoreBasketFromDB method shall be fixed, as currently it's hardcoded to use fixed weight and price for all restored products in Basket
     
 ## Build and tested on MacOS and Java 1.8 (_**required**_)
