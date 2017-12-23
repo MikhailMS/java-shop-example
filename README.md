@@ -77,7 +77,7 @@ Also I am using TDD approach to complete this project as I found this really con
       - [ ] Administrator GUI
           - [x] See all available products 
           - [x] See total cost of all products
-          - [ ] Add new product to inventory 
+          - [x] Add new product to inventory 
           - [x] Add products to inventory
           - [x] Remove products from inventory
           - [x] See orders completed by any user - **shall be tested, once full gui is built**
