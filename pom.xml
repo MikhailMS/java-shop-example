@@ -70,6 +70,12 @@
         <version>3.1.2</version>
         <scope>test</scope>
     </dependency>
+    <dependency>
+        <groupId>org.testfx</groupId>
+        <artifactId>openjfx-monocle</artifactId>
+        <version>8u76-b04</version> <!-- To run tests in Travis CI -->
+        <scope>test</scope>
+    </dependency>
   </dependencies>
   <build>
     <plugins>
