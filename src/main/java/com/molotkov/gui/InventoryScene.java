@@ -55,7 +55,7 @@ public class InventoryScene extends Application {
         stage.show();
     }
 
-    public VBox createInventoryTableView(final Inventory inventory, final User user) {
+    public static VBox createInventoryTableView(final Inventory inventory, final User user) {
         final ObservableList<Map.Entry<Product, Integer>> items = FXCollections.observableArrayList(inventory.getProducts().entrySet());
 
         final TableView<Map.Entry<Product, Integer>> table = new TableView<>(items);
@@ -111,7 +111,7 @@ public class InventoryScene extends Application {
         return inventoryTableView;
     }
 
-    private void addClientRowExpander(final TableView table, final User user) {
+    private static void addClientRowExpander(final TableView table, final User user) {
         TableRowExpanderColumn<Map.Entry<Product, Integer>> expander = new TableRowExpanderColumn<>(param -> {
             HBox editor = new HBox(10);
             Label detailsLabel = new Label();
@@ -129,7 +129,7 @@ public class InventoryScene extends Application {
         table.getColumns().add(expander);
     }
 
-    private void addAdminRowExpander(final TableView table, Inventory inventory) {
+    private static void addAdminRowExpander(final TableView table, Inventory inventory) {
         TableRowExpanderColumn<Map.Entry<Product, Integer>> expander =  new TableRowExpanderColumn<>(param -> {
             final HBox editor = new HBox(10);
             editor.getChildren().addAll(createAddButton("Add to inventory","Product has been added to inventory",
@@ -142,7 +142,7 @@ public class InventoryScene extends Application {
         table.getColumns().add(expander);
     }
 
-    private Button createAddButton(final String buttonText, final String notificationTextSuccess, final String notificationTextError, final ProductStorage storage, final HBox editor , final TableRowExpanderColumn.TableRowDataFeatures<Map.Entry<Product, Integer>> param) {
+    private static Button createAddButton(final String buttonText, final String notificationTextSuccess, final String notificationTextError, final ProductStorage storage, final HBox editor , final TableRowExpanderColumn.TableRowDataFeatures<Map.Entry<Product, Integer>> param) {
         Button addToBasket = new Button();
         addToBasket.setText(buttonText);
 
@@ -172,7 +172,7 @@ public class InventoryScene extends Application {
         return addToBasket;
     }
 
-    private Button createDeleteButton(final String buttonText, final String notificationTextSuccess, final String notificationTextError, final ProductStorage storage, final HBox editor , final TableRowExpanderColumn.TableRowDataFeatures<Map.Entry<Product, Integer>> param) {
+    private static Button createDeleteButton(final String buttonText, final String notificationTextSuccess, final String notificationTextError, final ProductStorage storage, final HBox editor , final TableRowExpanderColumn.TableRowDataFeatures<Map.Entry<Product, Integer>> param) {
         Button deleteFromBasket = new Button();
         deleteFromBasket.setText(buttonText);
 
@@ -203,7 +203,7 @@ public class InventoryScene extends Application {
         return deleteFromBasket;
     }
 
-    private HBox createAddProductBox(final TableColumn productNameColumn, final TableColumn productWeightColumn, final TableColumn productPriceColumn,
+    private static HBox createAddProductBox(final TableColumn productNameColumn, final TableColumn productWeightColumn, final TableColumn productPriceColumn,
                                      final TableColumn productAmountColumn, final Inventory inventory, final ObservableList items) {
         final HBox addProductBox = new HBox();
         final TextField addProductName = new TextField();
