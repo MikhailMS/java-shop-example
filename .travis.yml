@@ -33,11 +33,6 @@ before_cache:
   - rm -f  $HOME/.gradle/caches/*/fileHashes/fileHashes.bin
   - rm -f  $HOME/.gradle/caches/*/fileHashes/fileHashes.lock
 
-cache:
-  directories:
-    - $HOME/.gradle/caches/
-    - $HOME/.gradle/wrapper/
-
 notifications:
   slack:
     secure: XLI9vZQkaPSqxychm54I+u6dteSiDzp5aBcukX+CRpP8zF3QMLTYD4kEr0Mh45kWqbznB/Xb+tiDZNyDcU+O+nc+B2HrjU92ENrsWzpztbN6Nz/qGszjjhiU0JfD222qBeFATydJAutlU93PbX/hiIrCZCwSUKz9X0qpTV1XO/i5VvewONH4/yCE4lXo9XYZHKDCO9HxmxlLGxM7mdjlZMSywFYndmqK5Npz5SutPX9Ml7Ap0LpHwrRhuX1eNNkN4L16RKGbkSY1QGv+O7ab3l0Kwmfi4CT/4aeK46YZfb6yypNfQrxf2ZVesS2e11wFYiF4/rzDs/KMBX5fAN/vUv3ABEPj+5DnY29vMS2n3NwlxwD0eXdwdl+O5ScYRl20rZ9xQevlh07toxvOLttnifeocLxMM8M0LvRsaTXGiimjmWOR0yel3h5688I8diF8emUwF9XNfocaSQveU8vKCyYA+BVs2AVH3exGPOzYT66FtJEPAWp0Zu+zSwagPGnnjUUgubZOG2qAFPlnCnIDnPx4G6iEYi1BpjwkIGvSkyXEBVKLZqvMUeSYdEVOojUjSKJLPZ9zDoMEBHOWcY/lduPVotaYHy8C/pBAegqkX7dtM2p9BiHYjO44kYcFeTGgk4lr60DWJ2lpVM/KSyn9Lgtj03JWqoTXG+p2JjbkflY=
