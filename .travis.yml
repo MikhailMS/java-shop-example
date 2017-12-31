@@ -32,8 +32,6 @@ addons:
   apt:
     packages:
       - oracle-java8-installer
-jdk:
-  - oraclejdk8
 
 before_install:
   - if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then brew update; fi
