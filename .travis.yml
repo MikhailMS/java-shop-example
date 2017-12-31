@@ -7,12 +7,6 @@ services:
 
 matrix:
   include:
-    # Headed Linux
-    - os: linux
-      dist: trusty
-      jdk: oraclejdk8
-      env:
-          - CODACY_PROJECT_TOKEN=30ded88adc3944479b2de1780b26f01b
     # Headless Linux
     - os: linux
       dist: trusty
