@@ -8,16 +8,20 @@ matrix:
     - os: linux
       dist: trusty
       jdk: oraclejdk8
+      env:
+          - CODACY_PROJECT_TOKEN=30ded88adc3944479b2de1780b26f01b
     # Headless Linux
     - os: linux
       dist: trusty
       jdk: oraclejdk8
       env:
+        - CODACY_PROJECT_TOKEN=30ded88adc3944479b2de1780b26f01b
         - _JAVA_OPTIONS="-Djava.awt.headless=true -Dtestfx.robot=glass -Dtestfx.headless=true -Dprism.order=sw -Dprism.text=t2k -Dtestfx.setup.timeout=2500"
     # Headless macOS
     - os: osx
       osx_image: xcode9
       env:
+        - CODACY_PROJECT_TOKEN=30ded88adc3944479b2de1780b26f01b
         - _JAVA_OPTIONS="-Djava.awt.headless=true -Dtestfx.robot=glass -Dtestfx.headless=true -Dprism.order=sw -Dprism.text=t2k -Dtestfx.setup.timeout=2500"
     # Headed macOS is not currently possible on Travis.
 
@@ -25,6 +29,8 @@ addons:
   apt:
     packages:
       - oracle-java8-installer
+jdk:
+  - oraclejdk8
 
 before_install:
   - if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then brew update; fi
@@ -34,9 +40,6 @@ install: true
 
 before_script:
   - if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then export DISPLAY=:99.0; sh -e /etc/init.d/xvfb start; fi
-
-script:
-  - ./gradlew check
 
 before_cache:
   - rm -f  $HOME/.gradle/caches/modules-2/modules-2.lock
