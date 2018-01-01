@@ -38,8 +38,8 @@ public class InventoryAdminSceneTest extends ApplicationTest {
 
     @Test
     public void should_contain_data_in_rows_for_admin() {
-        verifyThat(".table-view", TableViewMatchersExtension.containsRow(new String[]{"apple", "0.151", "0.8", "2", "1.6", "false"}));
-        verifyThat(".table-view", TableViewMatchersExtension.containsRow(new String[]{"chicken", "1.0", "2.3", "3", "6.9", "false"}));
+        verifyThat(".table-view", TableViewMatchersExtension.containsRow(new String[]{"apple", "0.151", "0.8", "2", "1.60", "false"}));
+        verifyThat(".table-view", TableViewMatchersExtension.containsRow(new String[]{"chicken", "1.0", "2.3", "3", "6.90", "false"}));
     }
 
     @Test
