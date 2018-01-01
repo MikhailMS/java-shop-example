@@ -36,7 +36,10 @@ public class InventoryUserSceneTest extends ApplicationTest {
 
     @Test
     public void should_contain_user_specific_columns() {
-
+        verifyThat(".table-view", TableViewMatchersExtension.hasColumnWithID("Product Name"));
+        verifyThat(".table-view", TableViewMatchersExtension.hasColumnWithID("Product Weight"));
+        verifyThat(".table-view", TableViewMatchersExtension.hasColumnWithID("Product Price"));
+        verifyThat(".table-view", TableViewMatchersExtension.hasColumnWithID("Quantity available in Inventory"));
     }
 
     @Test
@@ -46,12 +49,12 @@ public class InventoryUserSceneTest extends ApplicationTest {
     }
 
     @Test
-    public void should_add_product_to_basket_if_user() {
+    public void can_add_product_to_basket_if_user() {
 
     }
 
     @Test
-    public void should_remove_product_from_basket_if_user() {
+    public void can_remove_product_from_basket_if_user() {
 
     }
 }

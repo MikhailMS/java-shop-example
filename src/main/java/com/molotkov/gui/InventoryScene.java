@@ -34,6 +34,12 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class InventoryScene extends Application {
+    private static final String PRODUCT_NAME_COLUMN = "Product Name";
+    private static final String PRODUCT_WEIGHT_COLUMN = "Product Weight";
+    private static final String PRODUCT_PRICE_COLUMN = "Product Price";
+    private static final String PRODUCT_AMOUNT_COLUMN = "Quantity available in Inventory";
+    private static final String PRODUCT_TOTAL_COLUMN = "Product Total Price";
+
     @Override
     public void start(Stage stage) {
 
@@ -51,7 +57,7 @@ public class InventoryScene extends Application {
 
         client.setBasket(userBasket);
 
-        stage.setScene(new Scene(createInventoryTableView(inventory, admin), 600, 400));
+        stage.setScene(new Scene(createInventoryTableView(inventory, client), 600, 400));
         stage.show();
     }
 
@@ -65,10 +71,12 @@ public class InventoryScene extends Application {
         inventoryTableView.setSpacing(5);
         inventoryTableView.setPadding(new Insets(5, 5, 5, 5));
 
-        final TableColumn<Map.Entry<Product, Integer>, String> productNameColumn = new TableColumn<>("Product Name");
+        final TableColumn<Map.Entry<Product, Integer>, String> productNameColumn = new TableColumn<>(PRODUCT_NAME_COLUMN);
+        productNameColumn.setId(PRODUCT_NAME_COLUMN);
         productNameColumn.setCellValueFactory(item -> new SimpleStringProperty(item.getValue().getKey().getName()));
 
-        final TableColumn<Map.Entry<Product, Integer>, Double> productWeightColumn = new TableColumn<>("Product Weight");
+        final TableColumn<Map.Entry<Product, Integer>, Double> productWeightColumn = new TableColumn<>(PRODUCT_WEIGHT_COLUMN);
+        productWeightColumn.setId(PRODUCT_WEIGHT_COLUMN);
         productWeightColumn.setCellValueFactory(item -> {
             double weight = item.getValue().getKey().getWeight();
             DecimalFormat df = new DecimalFormat("#.###");
@@ -76,7 +84,8 @@ public class InventoryScene extends Application {
             return new SimpleObjectProperty<>(weight);
         });
 
-        final TableColumn<Map.Entry<Product, Integer>, Double> productPriceColumn = new TableColumn<>("Product Price");
+        final TableColumn<Map.Entry<Product, Integer>, Double> productPriceColumn = new TableColumn<>(PRODUCT_PRICE_COLUMN);
+        productPriceColumn.setId(PRODUCT_PRICE_COLUMN);
         productPriceColumn.setCellValueFactory(item -> {
             double price = item.getValue().getKey().getPrice();
             DecimalFormat df = new DecimalFormat("#.##");
@@ -84,10 +93,12 @@ public class InventoryScene extends Application {
             return new SimpleObjectProperty<>(price);
         });
 
-        final TableColumn<Map.Entry<Product, Integer>, Integer> productAmountColumn = new TableColumn<>("Quantity available in Inventory");
+        final TableColumn<Map.Entry<Product, Integer>, Integer> productAmountColumn = new TableColumn<>(PRODUCT_AMOUNT_COLUMN);
+        productAmountColumn.setId(PRODUCT_AMOUNT_COLUMN);
         productAmountColumn.setCellValueFactory(item -> new SimpleObjectProperty<>(item.getValue().getValue()));
 
-        final TableColumn<Map.Entry<Product, Integer>, String> productTotalColumn = new TableColumn<>("Product Total");
+        final TableColumn<Map.Entry<Product, Integer>, String> productTotalColumn = new TableColumn<>(PRODUCT_TOTAL_COLUMN);
+        productTotalColumn.setId(PRODUCT_TOTAL_COLUMN);
         productTotalColumn.setCellValueFactory(item -> new SimpleStringProperty(String.format("%.2f", item.getValue().getKey().getPrice() * item.getValue().getValue())));
 
 

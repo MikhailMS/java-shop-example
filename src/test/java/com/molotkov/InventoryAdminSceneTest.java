@@ -33,7 +33,11 @@ public class InventoryAdminSceneTest extends ApplicationTest {
 
     @Test
     public void should_contain_admin_specific_columns() {
-
+        verifyThat(".table-view", TableViewMatchersExtension.hasColumnWithID("Product Name"));
+        verifyThat(".table-view", TableViewMatchersExtension.hasColumnWithID("Product Weight"));
+        verifyThat(".table-view", TableViewMatchersExtension.hasColumnWithID("Product Price"));
+        verifyThat(".table-view", TableViewMatchersExtension.hasColumnWithID("Quantity available in Inventory"));
+        verifyThat(".table-view", TableViewMatchersExtension.hasColumnWithID("Product Total Price"));
     }
 
     @Test
@@ -43,12 +47,12 @@ public class InventoryAdminSceneTest extends ApplicationTest {
     }
 
     @Test
-    public void should_add_new_product_to_inventory_if_admin() {
+    public void can_add_new_product_to_inventory_if_admin() {
 
     }
 
     @Test
-    public void should_remove_product_from_inventory_if_admin() {
+    public void can_remove_product_from_inventory_if_admin() {
 
     }
 
