@@ -17,7 +17,6 @@ import org.hamcrest.Matcher;
 import org.testfx.matcher.base.GeneralMatchers;
 
 public class TableViewMatchersExtension {
-    private static final String SELECTOR_TABLE_CELL = ".table-cell";
 
     private TableViewMatchersExtension() {
     }
@@ -57,7 +56,7 @@ public class TableViewMatchersExtension {
     @Factory
     public static Matcher<TableView> hasColumnWithID(String columnId) {
         String descriptionText = "has column title: " + columnId;
-        return GeneralMatchers.typeSafeMatcher(TableView.class, descriptionText, TableViewMatchersExtension::toText, (node) -> hasColumnWithID(node, columnId));
+        return GeneralMatchers.typeSafeMatcher(TableView.class, descriptionText, (node) -> hasColumnWithID(node, columnId));
     }
 
     private static <T> boolean hasColumnWithID(TableView<T> tableView, String columnId) {
@@ -65,6 +64,19 @@ public class TableViewMatchersExtension {
             if(column.getId().equals(columnId)) return true;
         }
         return false;
+    }
+
+    @Factory
+    public static Matcher<TableView> hasNoColumnWithID(String columnId) {
+        String descriptionText = "has column title: " + columnId;
+        return GeneralMatchers.typeSafeMatcher(TableView.class, descriptionText, (node) -> hasNoColumnWithID(node, columnId));
+    }
+
+    private static <T> boolean hasNoColumnWithID(TableView<T> tableView, String columnId) {
+        for(TableColumn<?,?> column : tableView.getColumns()) {
+            if(column.getId().equals(columnId)) return false;
+        }
+        return true;
     }
 
     private static List<ObservableValue<?>> getRowValues(TableView<?> tableView, int rowIndex) {

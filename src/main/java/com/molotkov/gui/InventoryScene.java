@@ -136,6 +136,7 @@ public class InventoryScene extends Application {
                             user.getBasket(), editor, param));
             return editor;
         });
+        expander.setId("client expander");
 
         table.getColumns().add(expander);
     }
@@ -149,6 +150,7 @@ public class InventoryScene extends Application {
                             "Something went wrong while removing product from inventory: Possibly you tried to delete more occurrences of a product than exist in inventory ", inventory, editor, param));
             return editor;
         });
+        expander.setId("admin expander");
 
         table.getColumns().add(expander);
     }

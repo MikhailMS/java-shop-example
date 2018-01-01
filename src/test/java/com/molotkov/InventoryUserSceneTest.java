@@ -40,6 +40,7 @@ public class InventoryUserSceneTest extends ApplicationTest {
         verifyThat(".table-view", TableViewMatchersExtension.hasColumnWithID("Product Weight"));
         verifyThat(".table-view", TableViewMatchersExtension.hasColumnWithID("Product Price"));
         verifyThat(".table-view", TableViewMatchersExtension.hasColumnWithID("Quantity available in Inventory"));
+        verifyThat(".table-view", TableViewMatchersExtension.hasNoColumnWithID("Product Total Price"));
     }
 
     @Test
