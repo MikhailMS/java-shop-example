@@ -8,7 +8,7 @@ import com.molotkov.products.Product;
 import java.util.*;
 import java.util.stream.Collectors;
 
-import static com.molotkov.Utils.iterateSimultaneously;
+import static com.molotkov.extras.Utils.iterateSimultaneously;
 
 public class Basket implements ProductStorage {
     private HashMap<Product, Integer> products;

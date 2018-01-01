@@ -76,6 +76,11 @@
         <version>8u76-b04</version> <!-- To run tests in Travis CI -->
         <scope>test</scope>
     </dependency>
+      <dependency>
+          <groupId>org.testfx</groupId>
+          <artifactId>testfx-core</artifactId>
+          <version>RELEASE</version>
+      </dependency>
   </dependencies>
   <build>
     <plugins>

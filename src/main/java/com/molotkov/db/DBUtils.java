@@ -5,7 +5,7 @@ import java.util.*;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-import static com.molotkov.Utils.iterateSimultaneously;
+import static com.molotkov.extras.Utils.iterateSimultaneously;
 
 public class DBUtils {
 
