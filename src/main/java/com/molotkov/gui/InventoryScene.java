@@ -54,7 +54,7 @@ public class InventoryScene extends Application {
 
         client.setBasket(userBasket);
 
-        stage.setScene(new Scene(createInventoryTableView(inventory, client), 600, 400));
+        stage.setScene(new Scene(createInventoryTableView(inventory, admin), 600, 400));
         stage.show();
     }
 
@@ -122,18 +122,18 @@ public class InventoryScene extends Application {
     private static void addClientRowExpander(final TableView table, final User user) {
         TableRowExpanderColumn<Map.Entry<Product, Integer>> expander = new TableRowExpanderColumn<>(param -> {
             HBox editor = new HBox(10);
-            Label detailsLabel = new Label();
+            Label detailsLabel = new Label("");
             detailsLabel.setText(String.format("Weight: %.3f | Price: %.2f", param.getValue().getKey().getWeight(), param.getValue().getKey().getPrice()));
 
 
             editor.getChildren().addAll(detailsLabel, createAddButton("Add to basket","Product has been added to basket",
-                    "Something went wrong while adding product to basket", user.getBasket(), editor, param),
+                    "Something went wro ng while adding product to basket", user.getBasket(), editor, param),
                     createDeleteButton("Remove from basket","Product has been deleted from basket",
                             "Something went wrong while deleting product from basket: Possibly you tried to delete more occurrences of a product, than exist in basket",
                             user.getBasket(), editor, param));
             return editor;
         });
-        expander.setId("client expander");
+        expander.setId("client-expander");
 
         table.getColumns().add(expander);
     }
@@ -144,10 +144,10 @@ public class InventoryScene extends Application {
             editor.getChildren().addAll(createAddButton("Add to inventory","Product has been added to inventory",
                     "Something went wrong while adding product to inventory", inventory, editor, param),
                     createDeleteButton("Remove from inventory", "Product has been removed from inventory",
-                            "Something went wrong while removing product from inventory: Possibly you tried to delete more occurrences of a product than exist in inventory ", inventory, editor, param));
+                            "Something went wrong while removing product from inventory: Possibly you tried to delete more occurrences of a product than exist in inventory", inventory, editor, param));
             return editor;
         });
-        expander.setId("admin expander");
+        expander.setId("admin-expander");
 
         table.getColumns().add(expander);
     }
@@ -185,7 +185,6 @@ public class InventoryScene extends Application {
     private static Button createDeleteButton(final String buttonText, final String notificationTextSuccess, final String notificationTextError, final ProductStorage storage, final HBox editor , final TableRowExpanderColumn.TableRowDataFeatures<Map.Entry<Product, Integer>> param) {
         Button deleteFromBasket = new Button();
         deleteFromBasket.setText(buttonText);
-
         deleteFromBasket.setOnMouseClicked(mouseEvent -> {
             try {
                 storage.removeProducts(param.getValue().getKey(), 1);
@@ -217,19 +216,23 @@ public class InventoryScene extends Application {
                                      final TableColumn productAmountColumn, final Inventory inventory, final ObservableList items) {
         final HBox addProductBox = new HBox();
         final TextField addProductName = new TextField();
-        addProductName.setPromptText("Product Name");
+        addProductName.setPromptText("Enter name");
+        addProductName.setId("name");
         addProductName.setMaxWidth(productNameColumn.getPrefWidth());
 
         final TextField addProductWeight = new TextField();
-        addProductWeight.setPromptText("Product Weight");
+        addProductWeight.setPromptText("Enter weight");
+        addProductWeight.setId("weight");
         addProductWeight.setMaxWidth(productWeightColumn.getPrefWidth());
 
         final TextField addProductPrice = new TextField();
-        addProductPrice.setPromptText("Product Price");
+        addProductPrice.setPromptText("Enter price");
+        addProductPrice.setId("price");
         addProductPrice.setMaxWidth(productPriceColumn.getPrefWidth());
 
         final TextField addProductAmount = new TextField();
-        addProductAmount.setPromptText("Quantity of product");
+        addProductAmount.setPromptText("Enter quantity");
+        addProductAmount.setId("amount");
         addProductAmount.setMaxWidth(productAmountColumn.getPrefWidth());
 
         final Button addNewProductButton = new Button("Add new product");
@@ -252,7 +255,24 @@ public class InventoryScene extends Application {
                     addProductAmount.clear();
                 } catch (InventoryException e) {
                     e.printStackTrace();
+                    Notifications.create()
+                            .darkStyle()
+                            .title("Error")
+                            .text(e.getMessage())
+                            .position(Pos.CENTER)
+                            .owner(Utils.getWindow(addProductBox))
+                            .hideAfter(Duration.seconds(2))
+                            .showConfirm();
                 }
+            } else {
+                Notifications.create()
+                        .darkStyle()
+                        .title("Error")
+                        .text("One of the fields is empty. Make sure all product descriptors are filled in")
+                        .position(Pos.CENTER)
+                        .owner(Utils.getWindow(addProductBox))
+                        .hideAfter(Duration.seconds(2))
+                        .showConfirm();
             }
         });
         addProductBox.getChildren().addAll(addProductName, addProductWeight, addProductPrice, addProductAmount, addNewProductButton);

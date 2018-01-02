@@ -6,9 +6,12 @@ import com.molotkov.gui.InventoryScene;
 import com.molotkov.products.Product;
 import com.molotkov.users.Administrator;
 import com.molotkov.users.User;
+import javafx.scene.Node;
 import javafx.scene.Scene;
+import javafx.scene.control.TextField;
 import javafx.stage.Stage;
 import org.junit.Test;
+import org.loadui.testfx.GuiTest;
 import org.testfx.framework.junit.ApplicationTest;
 
 import static org.testfx.api.FxAssert.verifyThat;
@@ -47,13 +50,57 @@ public class InventoryAdminSceneTest extends ApplicationTest {
     }
 
     @Test
-    public void can_add_new_product_to_inventory_if_admin() {
-
+    public void can_create_new_product_to_inventory_if_admin() {
+        ((TextField) GuiTest.find("#name")).setText("milk");
+        ((TextField) GuiTest.find("#weight")).setText("1.0");
+        ((TextField) GuiTest.find("#price")).setText("1.0");
+        ((TextField) GuiTest.find("#amount")).setText("5");
+        clickOn("Add new product");
+        sleep(2000);
+        verifyThat(".table-view", TableViewMatchersExtension.containsRow(new String[]{"milk", "1.0", "1.0", "5", "5.00", "false"}));
     }
 
     @Test
-    public void can_remove_product_from_inventory_if_admin() {
-
+    public void can_increase_amount_new_product_if_admin() {
+        ((TextField) GuiTest.find("#name")).setText("milk");
+        ((TextField) GuiTest.find("#weight")).setText("1.0");
+        ((TextField) GuiTest.find("#price")).setText("1.0");
+        ((TextField) GuiTest.find("#amount")).setText("5");
+        clickOn("Add new product");
+        sleep(1000);
+        clickOn("Product Name");
+        clickOn((Node)from(lookup(".expander-button")).nth(2).query());
+        clickOn("Add to inventory");
+        sleep(1000);
+        verifyThat(".table-view", TableViewMatchersExtension.containsRow(new String[]{"milk", "1.0", "1.0", "6", "6.00", "false"}));
     }
 
+    @Test
+    public void can_remove_new_product_from_inventory_if_admin() {
+        ((TextField) GuiTest.find("#name")).setText("milk");
+        ((TextField) GuiTest.find("#weight")).setText("1.0");
+        ((TextField) GuiTest.find("#price")).setText("1.0");
+        ((TextField) GuiTest.find("#amount")).setText("5");
+        clickOn("Add new product");
+        sleep(1000);
+        clickOn("Product Name");
+        clickOn((Node)from(lookup(".expander-button")).nth(2).query());
+        clickOn("Remove from inventory");
+        sleep(1000);
+        verifyThat(".table-view", TableViewMatchersExtension.containsRow(new String[]{"milk", "1.0", "1.0", "4", "4.00", "false"}));
+    }
+
+    @Test
+    public void cannot_decrease_product_amount_below_zero_if_admin() {
+        clickOn("Product Name")
+                .clickOn((Node)from(lookup(".expander-button")).nth(0).query())
+                .clickOn("Remove from inventory")
+                .sleep(2200)
+                .clickOn((Node)from(lookup(".expander-button")).nth(0).query())
+                .clickOn("Remove from inventory")
+                .sleep(2200)
+                .clickOn((Node)from(lookup(".expander-button")).nth(0).query())
+                .clickOn("Remove from inventory");
+        verifyThat(lookup("Something went wrong while removing product from inventory: Possibly you tried to delete more occurrences of a product than exist in inventory"), Node::isVisible);
+    }
 }
