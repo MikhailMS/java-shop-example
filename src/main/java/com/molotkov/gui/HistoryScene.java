@@ -1,36 +1,27 @@
 package com.molotkov.gui;
 
-import com.molotkov.Basket;
 import com.molotkov.Order;
-import com.molotkov.exceptions.BasketException;
-import com.molotkov.products.Product;
-import javafx.application.Application;
 import javafx.beans.property.ReadOnlyDoubleWrapper;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.geometry.Orientation;
-import javafx.scene.Group;
 import javafx.scene.Node;
-import javafx.scene.Scene;
 import javafx.scene.control.Label;
 import javafx.scene.control.ScrollBar;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
-import javafx.stage.Stage;
 import org.controlsfx.control.table.TableFilter;
 import org.controlsfx.control.table.TableRowExpanderColumn;
 
 import java.text.DecimalFormat;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
-import java.util.stream.Collectors;
 
-public class HistoryScene extends Application {
+public class HistoryScene {
     private static final String ORDER_ADDRESS_COLUMN = "Delivery address";
     private static final String ORDER_TOTAL_PRICE_COLUMN = "Total order price";
     private static final String TOTAL_ALL_ORDERS_COLUMN = "Total of all orders";
@@ -38,48 +29,6 @@ public class HistoryScene extends Application {
 
     public static final double WINDOW_WIDTH = 400;
     public static final double WINDOW_HEIGHT = 600;
-
-    @Override
-    public void start(Stage stage) {
-        Scene scene = new Scene(new Group());
-
-        stage.setWidth(WINDOW_WIDTH);
-        stage.setHeight(WINDOW_HEIGHT);
-
-        Basket testBasket = new Basket();
-        try {
-            testBasket.addProducts(new Product("apple", 0.150, 0.8),3);
-        } catch (BasketException e) {
-            e.printStackTrace();
-        }
-        testBasket.setStringFormatter(()-> {
-            final int basketSize = testBasket.getProducts().size();
-            final String allProductsString = testBasket.getProducts().entrySet().stream()
-                    .map(product -> {
-                        final DecimalFormat df = new DecimalFormat("#.##");
-                        final double price = Double.valueOf(df.format(product.getKey().getPrice()));
-                        return String.format("%d %s @ %.2f£", product.getValue(), product.getKey().getName(), price);
-                    })
-                    .collect(Collectors.joining(", "));
-            final String itemString = basketSize > 1 ? basketSize + " products" : basketSize + " product";
-            return String.format("Order contains %s: %s", itemString, allProductsString);
-        });
-        Order testOrder1 = new Order(testBasket, "London");
-        Order testOrder2 = new Order(testBasket, "Manchester");
-
-        List<Order> testOrders = new ArrayList<>();
-        testOrders.add(testOrder1);
-        testOrders.add(testOrder2);
-
-        TableView orderTable = createOrderTableView(testOrders);
-        TableView totalTable = createTotalOrderTableView(testOrders);
-        totalTable.setPrefHeight(100);
-
-        ((Group) scene.getRoot()).getChildren().addAll(syncTablesIntoOneTable(orderTable, totalTable));
-        stage.setScene(scene);
-        stage.show();
-        syncScrollbars(orderTable, totalTable);
-    }
 
     public static BorderPane syncTablesIntoOneTable(final TableView orderTable, final TableView totalTable) {
         BorderPane pane = new BorderPane();
@@ -198,9 +147,5 @@ public class HistoryScene extends Application {
             }
         }
         return null;
-    }
-
-    public static void main(String... args) {
-        launch(args);
     }
 }
