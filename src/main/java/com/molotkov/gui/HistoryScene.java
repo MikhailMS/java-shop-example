@@ -5,6 +5,7 @@ import com.molotkov.Order;
 import com.molotkov.exceptions.BasketException;
 import com.molotkov.products.Product;
 import javafx.application.Application;
+import javafx.beans.property.ReadOnlyDoubleWrapper;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
@@ -35,12 +36,15 @@ public class HistoryScene extends Application {
     private static final String TOTAL_ALL_ORDERS_COLUMN = "Total of all orders";
     private static final String EMPTY_COLUMN = "empty";
 
+    public static final double WINDOW_WIDTH = 400;
+    public static final double WINDOW_HEIGHT = 600;
+
     @Override
     public void start(Stage stage) {
         Scene scene = new Scene(new Group());
 
-        stage.setWidth(400);
-        stage.setHeight(600);
+        stage.setWidth(WINDOW_WIDTH);
+        stage.setHeight(WINDOW_HEIGHT);
 
         Basket testBasket = new Basket();
         try {
@@ -67,14 +71,17 @@ public class HistoryScene extends Application {
         testOrders.add(testOrder1);
         testOrders.add(testOrder2);
 
-        createFullOrderTableView(stage, scene, testOrders);
-    }
-
-    public static void createFullOrderTableView(final Stage stage, final Scene scene, final List<Order> orders) {
-        TableView orderTable = createOrderTableView(orders);
-        TableView totalTable = createTotalOrderTableView(orders);
+        TableView orderTable = createOrderTableView(testOrders);
+        TableView totalTable = createTotalOrderTableView(testOrders);
         totalTable.setPrefHeight(100);
 
+        ((Group) scene.getRoot()).getChildren().addAll(syncTablesIntoOneTable(orderTable, totalTable));
+        stage.setScene(scene);
+        stage.show();
+        syncScrollbars(orderTable, totalTable);
+    }
+
+    public static BorderPane syncTablesIntoOneTable(final TableView orderTable, final TableView totalTable) {
         BorderPane pane = new BorderPane();
 
         // bind/sync tables
@@ -95,21 +102,20 @@ public class HistoryScene extends Application {
         pane.setBottom(totalTable);
 
         // fit content
-        pane.prefWidthProperty().bind(scene.widthProperty());
-        pane.prefHeightProperty().bind(scene.heightProperty());
+        pane.prefWidthProperty().bind(new ReadOnlyDoubleWrapper(WINDOW_WIDTH));
+        pane.prefHeightProperty().bind(new ReadOnlyDoubleWrapper(WINDOW_HEIGHT));
 
-        ((Group) scene.getRoot()).getChildren().addAll(pane);
+        return pane;
+    }
 
-        stage.setScene(scene);
-        stage.show();
-
+    public static void syncScrollbars(final TableView orderTable, final TableView totalTable) {
         // synchronize scrollbars (must happen after table was made visible)
         ScrollBar mainTableHorizontalScrollBar = findScrollBar( orderTable, Orientation.HORIZONTAL);
         ScrollBar sumTableHorizontalScrollBar = findScrollBar( totalTable, Orientation.HORIZONTAL);
         mainTableHorizontalScrollBar.valueProperty().bindBidirectional( sumTableHorizontalScrollBar.valueProperty());
     }
 
-    private static TableView createOrderTableView(final List<Order> orders) {
+    public static TableView createOrderTableView(final List<Order> orders) {
         ObservableList<Order> items = FXCollections.observableList(orders);
         final TableView<Order> table = new TableView<>(items);
         table.setId("order-table");
@@ -132,7 +138,7 @@ public class HistoryScene extends Application {
         return table;
     }
 
-    private static TableView createTotalOrderTableView(final List<Order> orders) {
+    public static TableView createTotalOrderTableView(final List<Order> orders) {
         Double totalCost = orders.parallelStream()
                 .mapToDouble(price -> price.getBasket().calculateTotal())
                 .sum();
@@ -194,7 +200,7 @@ public class HistoryScene extends Application {
         return null;
     }
 
-    public static void main(String[] args) {
+    public static void main(String... args) {
         launch(args);
     }
 }

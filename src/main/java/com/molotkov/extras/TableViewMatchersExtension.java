@@ -82,7 +82,6 @@ public class TableViewMatchersExtension {
             TableColumn<?, ?> column = tableView.getColumns().get(i);
             CellDataFeatures cellDataFeatures = new CellDataFeatures(tableView, column, rowObject);
             try {
-                System.out.println(null == column.getCellValueFactory().call(cellDataFeatures));
                 rowValues.add(i, column.getCellValueFactory().call(cellDataFeatures));
             } catch (NullPointerException ex) {
                 final ObservableValue<Integer> replacement = new SimpleIntegerProperty(REPLACEMENT_VALUE).asObject();
