@@ -22,35 +22,33 @@ public class TableViewMatchersExtension {
     }
 
     @Factory
-    public static Matcher<TableView> containsRow(String[] row) {
+    public static Matcher<TableView> containsRow(Object... row) {
         String descriptionText = "has row: " + Arrays.toString(row);
         return GeneralMatchers.typeSafeMatcher(TableView.class, descriptionText, TableViewMatchersExtension::toText, (node) -> containsRow(node, row));
     }
-    private static <T> boolean containsRow(TableView<T> tableView, String[] row) {
+    private static <T> boolean containsRow(TableView<T> tableView, Object... row) {
         if (tableView.getItems().isEmpty()) {
             return false;
-        } else {
-            Map<Integer, List<ObservableValue<?>>> rowValuesMap = new HashMap<>(tableView.getColumns().size());
-
-            List rowValues;
-            for(int j = 0; j < tableView.getItems().size(); ++j) {
-                rowValues = getRowValues(tableView, j);
-                rowValuesMap.put(j, rowValues);
-            }
-
-            // Custom bit
-            List<List<String>> testList = new ArrayList<>();
-            for(Map.Entry<Integer, List<ObservableValue<?>>> value : rowValuesMap.entrySet()) {
-                List<String> entry = new ArrayList<>();
-                for(ObservableValue<?> actualValue : value.getValue()) {
-                    entry.add(actualValue.getValue().toString());
-                }
-                testList.add(entry);
-            }
-            List<String> entryRow = Arrays.asList(row);
-            return testList.contains(entryRow);
-            // End of custom bit
         }
+
+        Map<Integer, List<ObservableValue<?>>> rowValuesMap = new HashMap<>(tableView.getColumns().size());
+
+        List rowValues;
+        for(int j = 0; j < tableView.getItems().size(); ++j) {
+            rowValues = getRowValues(tableView, j);
+            rowValuesMap.put(j, rowValues);
+        }
+
+        List<List<Object>> testList = new ArrayList<>();
+        for(Map.Entry<Integer, List<ObservableValue<?>>> value : rowValuesMap.entrySet()) {
+            List<Object> entry = new ArrayList<>();
+            for(ObservableValue<?> actualValue : value.getValue()) {
+                entry.add(actualValue.getValue());
+            }
+            testList.add(entry);
+        }
+        List<Object> entryRow = Arrays.asList(row);
+        return testList.contains(entryRow);
     }
 
     @Factory

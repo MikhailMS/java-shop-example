@@ -13,6 +13,7 @@ import javafx.stage.Stage;
 import org.junit.Test;
 import org.loadui.testfx.GuiTest;
 import org.testfx.framework.junit.ApplicationTest;
+import org.testfx.matcher.control.TableViewMatchers;
 
 import static org.testfx.api.FxAssert.verifyThat;
 
@@ -45,8 +46,9 @@ public class InventoryAdminSceneTest extends ApplicationTest {
 
     @Test
     public void should_contain_data_in_rows_for_admin() {
-        verifyThat(".table-view", TableViewMatchersExtension.containsRow(new String[]{"apple", "0.151", "0.8", "2", "1.60", "false"}));
-        verifyThat(".table-view", TableViewMatchersExtension.containsRow(new String[]{"chicken", "1.0", "2.3", "3", "6.90", "false"}));
+        verifyThat(".table-view", TableViewMatchers.containsRow("apple", 0.151, 0.8, 2, "1.60", false));
+        //verifyThat(".table-view", TableViewMatchers.containsRow("chicken", "1.0", 2.3, 3, "6.90", false));                // will fail
+        verifyThat(".table-view", TableViewMatchers.containsRow("chicken", 1.0, 2.3, 3, "6.90", false));  //  will pass
     }
 
     @Test
@@ -57,7 +59,7 @@ public class InventoryAdminSceneTest extends ApplicationTest {
         ((TextField) GuiTest.find("#amount")).setText("5");
         clickOn("Add new product");
         sleep(2000);
-        verifyThat(".table-view", TableViewMatchersExtension.containsRow(new String[]{"milk", "1.0", "1.0", "5", "5.00", "false"}));
+        verifyThat(".table-view", TableViewMatchers.containsRow("milk", 1.0, 1.0, 5, "5.00", false));
     }
 
     @Test
@@ -72,7 +74,7 @@ public class InventoryAdminSceneTest extends ApplicationTest {
         clickOn((Node)from(lookup(".expander-button")).nth(2).query());
         clickOn("Add to inventory");
         sleep(1000);
-        verifyThat(".table-view", TableViewMatchersExtension.containsRow(new String[]{"milk", "1.0", "1.0", "6", "6.00", "false"}));
+        verifyThat(".table-view", TableViewMatchers.containsRow("milk", 1.0, 1.0, 6, "6.00", false));
     }
 
     @Test
@@ -87,7 +89,7 @@ public class InventoryAdminSceneTest extends ApplicationTest {
         clickOn((Node)from(lookup(".expander-button")).nth(2).query());
         clickOn("Remove from inventory");
         sleep(1000);
-        verifyThat(".table-view", TableViewMatchersExtension.containsRow(new String[]{"milk", "1.0", "1.0", "4", "4.00", "false"}));
+        verifyThat(".table-view", TableViewMatchers.containsRow("milk", 1.0, 1.0, 4, "4.00", false));
     }
 
     @Test

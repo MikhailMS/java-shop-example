@@ -11,6 +11,7 @@ import javafx.scene.Scene;
 import javafx.stage.Stage;
 import org.junit.Test;
 import org.testfx.framework.junit.ApplicationTest;
+import org.testfx.matcher.control.TableViewMatchers;
 
 import static org.testfx.api.FxAssert.verifyThat;
 
@@ -46,8 +47,8 @@ public class InventoryUserSceneTest extends ApplicationTest {
 
     @Test
     public void should_contain_data_in_rows_for_user() {
-        verifyThat(".table-view", TableViewMatchersExtension.containsRow(new String[]{"apple", "0.151", "0.8", "2", "false"}));
-        verifyThat(".table-view", TableViewMatchersExtension.containsRow(new String[]{"chicken", "1.0", "2.3", "3", "false"}));
+        verifyThat(".table-view", TableViewMatchers.containsRow("apple", 0.151, 0.8, 2, false));
+        verifyThat(".table-view", TableViewMatchers.containsRow("chicken", 1.0, 2.3, 3, false));
     }
 
     @Test
