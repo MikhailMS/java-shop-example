@@ -6,6 +6,7 @@ import com.molotkov.gui.InventoryScene;
 import com.molotkov.products.Product;
 import com.molotkov.users.Client;
 import com.molotkov.users.User;
+import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
 import org.junit.Test;
@@ -51,11 +52,15 @@ public class InventoryUserSceneTest extends ApplicationTest {
 
     @Test
     public void can_add_product_to_basket_if_user() {
-
+        clickOn(".table-view .table-cell .button").clickOn("Add to basket");
+        sleep(2000);
+        verifyThat(lookup("Product has been added to basket"), Node::isVisible);
     }
 
     @Test
     public void can_remove_product_from_basket_if_user() {
-
+        clickOn(".table-view .table-cell .button").clickOn("Add to basket").clickOn("Remove from basket");
+        sleep(2000);
+        verifyThat(lookup("Product has been deleted from basket"), Node::isVisible);
     }
 }
