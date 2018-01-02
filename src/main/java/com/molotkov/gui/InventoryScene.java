@@ -1,26 +1,21 @@
 package com.molotkov.gui;
 
-import com.molotkov.Basket;
 import com.molotkov.Inventory;
 import com.molotkov.exceptions.InventoryException;
 import com.molotkov.interfaces.ProductStorage;
 import com.molotkov.products.Product;
 
 import com.molotkov.users.Administrator;
-import com.molotkov.users.Client;
 import com.molotkov.users.User;
-import javafx.application.Application;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
-import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
-import javafx.stage.Stage;
 import javafx.util.Duration;
 import org.controlsfx.control.Notifications;
 import org.controlsfx.control.table.TableFilter;
@@ -30,33 +25,12 @@ import org.controlsfx.tools.Utils;
 import java.text.DecimalFormat;
 import java.util.Map;
 
-public class InventoryScene extends Application {
+public class InventoryScene {
     private static final String PRODUCT_NAME_COLUMN = "Product Name";
     private static final String PRODUCT_WEIGHT_COLUMN = "Product Weight";
     private static final String PRODUCT_PRICE_COLUMN = "Product Price";
     private static final String PRODUCT_AMOUNT_COLUMN = "Quantity available in Inventory";
     private static final String PRODUCT_TOTAL_COLUMN = "Product Total Price";
-
-    @Override
-    public void start(Stage stage) {
-
-        User admin = new Administrator("t", "t");
-        User client = new Client("t", "t");
-        Basket userBasket = new Basket();
-
-        Inventory inventory = new Inventory();
-        try {
-            inventory.addProducts(new Product("chicken", 1, 2.3),3);
-            inventory.addProducts(new Product("apple", 0.151, 0.8), 2);
-        } catch (InventoryException e) {
-            e.printStackTrace();
-        }
-
-        client.setBasket(userBasket);
-
-        stage.setScene(new Scene(createInventoryTableView(inventory, admin), 600, 400));
-        stage.show();
-    }
 
     public static VBox createInventoryTableView(final Inventory inventory, final User user) {
         final ObservableList<Map.Entry<Product, Integer>> items = FXCollections.observableArrayList(inventory.getProducts().entrySet());
@@ -279,9 +253,5 @@ public class InventoryScene extends Application {
         addProductBox.setSpacing(3);
 
         return addProductBox;
-    }
-
-    public static void main(String[] args) {
-        launch(args);
     }
 }

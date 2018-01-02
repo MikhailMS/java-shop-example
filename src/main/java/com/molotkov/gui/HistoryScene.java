@@ -29,7 +29,11 @@ import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 
-public class HisotryScene extends Application {
+public class HistoryScene extends Application {
+    private static final String ORDER_ADDRESS_COLUMN = "Delivery address";
+    private static final String ORDER_TOTAL_PRICE_COLUMN = "Total order price";
+    private static final String TOTAL_ALL_ORDERS_COLUMN = "Total of all orders";
+    private static final String EMPTY_COLUMN = "empty";
 
     @Override
     public void start(Stage stage) {
@@ -66,7 +70,7 @@ public class HisotryScene extends Application {
         createFullOrderTableView(stage, scene, testOrders);
     }
 
-    public void createFullOrderTableView(final Stage stage, final Scene scene, final List<Order> orders) {
+    public static void createFullOrderTableView(final Stage stage, final Scene scene, final List<Order> orders) {
         TableView orderTable = createOrderTableView(orders);
         TableView totalTable = createTotalOrderTableView(orders);
         totalTable.setPrefHeight(100);
@@ -105,10 +109,10 @@ public class HisotryScene extends Application {
         mainTableHorizontalScrollBar.valueProperty().bindBidirectional( sumTableHorizontalScrollBar.valueProperty());
     }
 
-    public TableView createOrderTableView(final List<Order> orders) {
+    private static TableView createOrderTableView(final List<Order> orders) {
         ObservableList<Order> items = FXCollections.observableList(orders);
         final TableView<Order> table = new TableView<>(items);
-
+        table.setId("order-table");
         addCommonColumns(table);
 
         TableRowExpanderColumn<Order> expander = new TableRowExpanderColumn<>(param -> {
@@ -128,7 +132,7 @@ public class HisotryScene extends Application {
         return table;
     }
 
-    public TableView createTotalOrderTableView(final List<Order> orders) {
+    private static TableView createTotalOrderTableView(final List<Order> orders) {
         Double totalCost = orders.parallelStream()
                 .mapToDouble(price -> price.getBasket().calculateTotal())
                 .sum();
@@ -137,11 +141,15 @@ public class HisotryScene extends Application {
         totalCostList.add(totalCost);
 
         final TableView<Double> table = new TableView<>(totalCostList);
+        table.setId("total-table");
 
         final TableColumn<Double, String> orderLeftBlank = new TableColumn<>("");
+        orderLeftBlank.setId(EMPTY_COLUMN);
         final TableColumn<Double, String> orderRightBlank = new TableColumn<>("");
+        orderRightBlank.setId(EMPTY_COLUMN);
 
-        final TableColumn<Double, Double> orderTotalPriceColumn = new TableColumn<>("Total of all orders");
+        final TableColumn<Double, Double> orderTotalPriceColumn = new TableColumn<>(TOTAL_ALL_ORDERS_COLUMN);
+        orderTotalPriceColumn.setId(TOTAL_ALL_ORDERS_COLUMN);
         orderTotalPriceColumn.setCellValueFactory(price -> {
             final DecimalFormat df = new DecimalFormat("#.##");
             final double totalPrice = Double.valueOf(df.format(price.getValue()));
@@ -153,11 +161,13 @@ public class HisotryScene extends Application {
         return table;
     }
 
-    private void addCommonColumns(TableView table) {
-        final TableColumn<Order, String> orderAddressColumn = new TableColumn<>("Delivery Address");
+    private static void addCommonColumns(TableView table) {
+        final TableColumn<Order, String> orderAddressColumn = new TableColumn<>(ORDER_ADDRESS_COLUMN);
+        orderAddressColumn.setId(ORDER_ADDRESS_COLUMN);
         orderAddressColumn.setCellValueFactory(item -> new SimpleStringProperty(item.getValue().getAddress()));
 
-        final TableColumn<Order, Double> orderTotalColumn = new TableColumn<>("Total price");
+        final TableColumn<Order, Double> orderTotalColumn = new TableColumn<>(ORDER_TOTAL_PRICE_COLUMN);
+        orderTotalColumn.setId(ORDER_TOTAL_PRICE_COLUMN);
         orderTotalColumn.setCellValueFactory(item -> {
             final DecimalFormat df = new DecimalFormat("#.##");
             final double totalPrice = Double.valueOf(df.format(item.getValue().getBasket().calculateTotal()));
@@ -167,7 +177,7 @@ public class HisotryScene extends Application {
         table.getColumns().setAll(orderAddressColumn, orderTotalColumn);
     }
 
-    private ScrollBar findScrollBar(TableView table, Orientation orientation) {
+    private static ScrollBar findScrollBar(TableView table, Orientation orientation) {
 
         // this would be the preferred solution, but it doesn't work. it always gives back the vertical scrollbar
         //		return (ScrollBar) table.lookup(".scroll-bar:horizontal");

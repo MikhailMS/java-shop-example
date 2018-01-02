@@ -1,13 +1,9 @@
 package com.molotkov.extras;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.StringJoiner;
+import java.util.*;
 import java.util.stream.Collectors;
 
+import javafx.beans.property.SimpleIntegerProperty;
 import javafx.beans.value.ObservableValue;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
@@ -17,6 +13,7 @@ import org.hamcrest.Matcher;
 import org.testfx.matcher.base.GeneralMatchers;
 
 public class TableViewMatchersExtension {
+    public static final int REPLACEMENT_VALUE = -1; // replaces NULL in getRowValues method
 
     private TableViewMatchersExtension() {
     }
@@ -53,7 +50,7 @@ public class TableViewMatchersExtension {
 
     @Factory
     public static Matcher<TableView> hasColumnWithID(String columnId) {
-        String descriptionText = "has column title: " + columnId;
+        String descriptionText = "has column title(id): " + columnId;
         return GeneralMatchers.typeSafeMatcher(TableView.class, descriptionText, (node) -> hasColumnWithID(node, columnId));
     }
 
@@ -82,9 +79,15 @@ public class TableViewMatchersExtension {
         List<ObservableValue<?>> rowValues = new ArrayList(tableView.getColumns().size());
 
         for(int i = 0; i < tableView.getColumns().size(); ++i) {
-            TableColumn<?, ?> column = (TableColumn)tableView.getColumns().get(i);
+            TableColumn<?, ?> column = tableView.getColumns().get(i);
             CellDataFeatures cellDataFeatures = new CellDataFeatures(tableView, column, rowObject);
-            rowValues.add(i, column.getCellValueFactory().call(cellDataFeatures));
+            try {
+                System.out.println(null == column.getCellValueFactory().call(cellDataFeatures));
+                rowValues.add(i, column.getCellValueFactory().call(cellDataFeatures));
+            } catch (NullPointerException ex) {
+                final ObservableValue<Integer> replacement = new SimpleIntegerProperty(REPLACEMENT_VALUE).asObject();
+                rowValues.add(i, replacement);
+            }
         }
 
         return rowValues;
