@@ -63,7 +63,7 @@ public class HistorySceneTest extends ApplicationTest {
         ((Group) scene.getRoot()).getChildren().addAll(syncTablesIntoOneTable(orderTable, totalTable));
         stage.setScene(scene);
         stage.show();
-        //syncScrollbars(orderTable, totalTable);
+        syncScrollbars(orderTable, totalTable);
     }
 
     @Test
