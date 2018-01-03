@@ -59,17 +59,13 @@ public class HistoryScene {
 
     public static void syncScrollbars(final TableView orderTable, final TableView totalTable) {
         // synchronize scrollbars (must happen after table was made visible)
-        while (!orderTable.isVisible()) {
-
-        }
-        while (!totalTable.isVisible()) {
-
-        }
         final ScrollBar mainTableHorizontalScrollBar = findScrollBar( orderTable, Orientation.HORIZONTAL);
         final ScrollBar sumTableHorizontalScrollBar = findScrollBar( totalTable, Orientation.HORIZONTAL);
-        mainTableHorizontalScrollBar.valueProperty();
-        sumTableHorizontalScrollBar.valueProperty();
-        mainTableHorizontalScrollBar.valueProperty().bindBidirectional( sumTableHorizontalScrollBar.valueProperty());
+        try {
+            mainTableHorizontalScrollBar.valueProperty().bindBidirectional(sumTableHorizontalScrollBar.valueProperty());
+        } catch (NullPointerException ex) {
+            ex.printStackTrace();
+        }
     }
 
     public static TableView createOrderTableView(final List<Order> orders) {
