@@ -15,7 +15,7 @@ import org.testfx.matcher.control.TableViewMatchers;
 
 import static org.testfx.api.FxAssert.verifyThat;
 
-public class InventoryUserSceneTest extends ApplicationTest {
+public class InventoryClientSceneTest extends ApplicationTest {
 
     @Override
     public void start(Stage stage) {
