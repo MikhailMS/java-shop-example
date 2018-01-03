@@ -21,14 +21,14 @@ import java.text.DecimalFormat;
 import java.util.List;
 import java.util.Set;
 
+import static com.molotkov.gui.GuiWindowConsts.WINDOW_HEIGHT;
+import static com.molotkov.gui.GuiWindowConsts.WINDOW_WIDTH;
+
 public class HistoryScene {
     private static final String ORDER_ADDRESS_COLUMN = "Delivery address";
     private static final String ORDER_TOTAL_PRICE_COLUMN = "Total order price";
     private static final String TOTAL_ALL_ORDERS_COLUMN = "Total of all orders";
     private static final String EMPTY_COLUMN = "empty";
-
-    public static final double WINDOW_WIDTH = 400;
-    public static final double WINDOW_HEIGHT = 600;
 
     public static BorderPane syncTablesIntoOneTable(final TableView orderTable, final TableView totalTable) {
         BorderPane pane = new BorderPane();

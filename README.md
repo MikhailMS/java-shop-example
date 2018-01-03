@@ -67,29 +67,33 @@ Also I am using TDD approach to complete this project as I found this really con
           - [ ] Complete order
           - [ ] Save order
           - [ ] Restore order
-          - [x] See all completed orders (client can see only his orders) - **shall be tested, once full gui is built**
+          - [x] See all completed orders (client can see only his orders) 
           - [x] See total cost of all completed orders
           - [x] Sort orders by date, total price
           - [x] Filter orders by date/total price
           - [x] Search for specific product by name
           - [x] Sort products by name, price
           - [x] Filter products by price, weight
-      - [ ] Administrator GUI
+      - [x] Administrator GUI
           - [x] See all available products 
           - [x] See total cost of all products
           - [x] Add new product to inventory 
           - [x] Add products to inventory
           - [x] Remove products from inventory
-          - [x] See orders completed by any user - **shall be tested, once full gui is built**
+          - [x] See orders completed by any user 
           - [x] See total cost of all completed orders
           - [x] Sort orders by date, total price
           - [x] Filter orders by date/total price
-          - [ ] Add user to the system
-          - [ ] Delete user from system
+          - [x] Add user to the system
+          - [x] Delete user from system
           - [x] Search for specific product by name
           - [x] Sort products by name, price
           - [x] Filter products by price, weight
-          
+      - [ ] Connect GUI to database
+          - [ ] Login GUI
+          - [ ] Client GUI
+          - [ ] Administrator GUI
+              
   - [ ] As an optional part, I'd like to write a service, which will keep shop's inventory in sync with DB and completed orders
       - [ ] Once order is completed, service will update inventory in the DB and update local copy of the inventory
       - [ ] It will also check, if order can be made, ie not enough products in the inventory

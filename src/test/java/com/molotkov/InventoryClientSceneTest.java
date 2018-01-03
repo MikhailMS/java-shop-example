@@ -13,6 +13,9 @@ import org.junit.Test;
 import org.testfx.framework.junit.ApplicationTest;
 import org.testfx.matcher.control.TableViewMatchers;
 
+import static com.molotkov.gui.GuiWindowConsts.WINDOW_HEIGHT;
+import static com.molotkov.gui.GuiWindowConsts.WINDOW_WIDTH;
+
 import static org.testfx.api.FxAssert.verifyThat;
 
 public class InventoryClientSceneTest extends ApplicationTest {
@@ -32,7 +35,7 @@ public class InventoryClientSceneTest extends ApplicationTest {
 
         client.setBasket(userBasket);
 
-        stage.setScene(new Scene(InventoryScene.createInventoryTableView(inventory, client), 600, 400));
+        stage.setScene(new Scene(InventoryScene.createInventoryTableView(inventory, client), WINDOW_WIDTH, WINDOW_HEIGHT));
         stage.show();
     }
 

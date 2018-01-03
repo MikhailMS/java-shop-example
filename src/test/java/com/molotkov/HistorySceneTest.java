@@ -19,7 +19,10 @@ import java.util.List;
 import java.util.concurrent.TimeoutException;
 import java.util.stream.Collectors;
 
+import static com.molotkov.gui.GuiWindowConsts.WINDOW_HEIGHT;
+import static com.molotkov.gui.GuiWindowConsts.WINDOW_WIDTH;
 import static com.molotkov.gui.HistoryScene.*;
+
 import static org.testfx.api.FxAssert.verifyThat;
 
 public class HistorySceneTest extends ApplicationTest {
@@ -28,8 +31,8 @@ public class HistorySceneTest extends ApplicationTest {
     public void start(Stage stage) {
         Scene scene = new Scene(new Group());
 
-        stage.setWidth(400);
-        stage.setHeight(600);
+        stage.setWidth(WINDOW_WIDTH);
+        stage.setHeight(WINDOW_HEIGHT);
 
         Basket testBasket = new Basket();
         try {

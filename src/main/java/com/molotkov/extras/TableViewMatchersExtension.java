@@ -1,21 +1,47 @@
 package com.molotkov.extras;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Objects;
+import java.util.StringJoiner;
 import java.util.stream.Collectors;
 
 import javafx.beans.property.SimpleIntegerProperty;
 import javafx.beans.value.ObservableValue;
+import javafx.scene.Node;
+import javafx.scene.control.Cell;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TableColumn.CellDataFeatures;
 import org.hamcrest.Factory;
 import org.hamcrest.Matcher;
+import org.testfx.api.FxAssert;
 import org.testfx.matcher.base.GeneralMatchers;
+import org.testfx.service.finder.NodeFinder;
+import org.testfx.service.query.NodeQuery;
+
 
 public class TableViewMatchersExtension {
     public static final int REPLACEMENT_VALUE = -1; // replaces NULL in getRowValues method
 
     private TableViewMatchersExtension() {
+    }
+
+    @Factory
+    public static Matcher<TableView> hasNoTableCell(Object value) {
+        String descriptionText = "has no table cell \"" + value + "\"";
+        return GeneralMatchers.typeSafeMatcher(TableView.class, descriptionText,
+                (tableView) -> toText(tableView) + "\nwhich does contain a cell with the given value",
+                (node) -> hasNoTableCell(node, value));
+    }
+
+    private static boolean hasNoTableCell(TableView tableView, Object value) {
+        NodeFinder nodeFinder = FxAssert.assertContext().getNodeFinder();
+        NodeQuery nodeQuery = nodeFinder.from(new Node[]{tableView});
+        return nodeQuery.lookup(".table-cell").match((cell) -> !hasCellValue((Cell) cell, value)).tryQuery().isPresent();
     }
 
     @Factory
@@ -90,6 +116,20 @@ public class TableViewMatchersExtension {
         }
 
         return rowValues;
+    }
+
+    private static boolean hasCellValue(Cell cell, Object value) {
+        return !cell.isEmpty() && hasItemValue(cell.getText(), value);
+    }
+
+    private static boolean hasItemValue(Object item, Object value) {
+        if (item == null && value == null) {
+            return true;
+        } else if (item != null && value != null) {
+            return Objects.equals(item, value) || Objects.equals(item.toString(), value) || value.toString() != null && Objects.equals(item.toString(), value.toString());
+        } else {
+            return false;
+        }
     }
 
     private static String toText(TableView<?> tableView) {
