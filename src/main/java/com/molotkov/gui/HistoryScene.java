@@ -67,6 +67,8 @@ public class HistoryScene {
         }
         final ScrollBar mainTableHorizontalScrollBar = findScrollBar( orderTable, Orientation.HORIZONTAL);
         final ScrollBar sumTableHorizontalScrollBar = findScrollBar( totalTable, Orientation.HORIZONTAL);
+        mainTableHorizontalScrollBar.valueProperty();
+        sumTableHorizontalScrollBar.valueProperty();
         mainTableHorizontalScrollBar.valueProperty().bindBidirectional( sumTableHorizontalScrollBar.valueProperty());
     }
 
