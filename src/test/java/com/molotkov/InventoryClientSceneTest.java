@@ -8,8 +8,10 @@ import com.molotkov.users.Client;
 import com.molotkov.users.User;
 import javafx.scene.Node;
 import javafx.scene.Scene;
+import javafx.scene.control.TextField;
 import javafx.stage.Stage;
 import org.junit.Test;
+import org.loadui.testfx.GuiTest;
 import org.testfx.framework.junit.ApplicationTest;
 import org.testfx.matcher.control.TableViewMatchers;
 
@@ -35,12 +37,12 @@ public class InventoryClientSceneTest extends ApplicationTest {
 
         client.setBasket(userBasket);
 
-        stage.setScene(new Scene(InventoryScene.createInventoryTableView(inventory, client), WINDOW_WIDTH, WINDOW_HEIGHT));
+        stage.setScene(new Scene(InventoryScene.createMainInventoryBox(inventory, client), WINDOW_WIDTH, WINDOW_HEIGHT));
         stage.show();
     }
 
     @Test
-    public void should_contain_user_specific_columns() {
+    public void should_contain_specific_inventory_columns_for_user() {
         verifyThat(".table-view", TableViewMatchersExtension.hasColumnWithID("Product Name"));
         verifyThat(".table-view", TableViewMatchersExtension.hasColumnWithID("Product Weight"));
         verifyThat(".table-view", TableViewMatchersExtension.hasColumnWithID("Product Price"));
@@ -56,15 +58,52 @@ public class InventoryClientSceneTest extends ApplicationTest {
 
     @Test
     public void can_add_product_to_basket_if_user() {
-        clickOn(".table-view .table-cell .button").clickOn("Add to basket");
-        sleep(2000);
+        clickOn((Node)from(lookup(".expander-button")).nth(0).query()).clickOn("Add to basket");
+        sleep(1000);
         verifyThat(lookup("Product has been added to basket"), Node::isVisible);
     }
 
     @Test
     public void can_remove_product_from_basket_if_user() {
-        clickOn(".table-view .table-cell .button").clickOn("Add to basket").clickOn("Remove from basket");
-        sleep(2000);
+        clickOn((Node)from(lookup(".expander-button")).nth(0).query()).clickOn("Add to basket").clickOn("Remove from basket");
+        sleep(1000);
         verifyThat(lookup("Product has been deleted from basket"), Node::isVisible);
+    }
+
+    @Test
+    public void should_see_columns_basket_table_if_user() {
+        verifyThat("#basket-table-view", TableViewMatchersExtension.hasColumnWithID("Basket Total"));
+        verifyThat("#basket-table-view", TableViewMatchersExtension.hasColumnWithID("Order Details"));
+    }
+
+    @Test
+    public void can_see_basket_total_if_user() {
+        verifyThat("#basket-table-view", TableViewMatchers.containsRow("0.00", false));
+    }
+
+    @Test
+    public void can_see_updated_basket_total_add_product() {
+        clickOn("Product Name")
+                .clickOn((Node)from(lookup(".expander-button")).nth(0).query())
+                .clickOn("Add to basket");
+        verifyThat("#basket-table-view", TableViewMatchers.containsRow("0.80", false));
+    }
+
+    @Test
+    public void can_see_updated_basket_total_remove_product() {
+        clickOn("Product Name")
+                .clickOn((Node)from(lookup(".expander-button")).nth(0).query())
+                .clickOn("Add to basket");
+        verifyThat("#basket-table-view", TableViewMatchers.containsRow("0.80", false));
+        clickOn("Remove from basket");
+        verifyThat("#basket-table-view", TableViewMatchers.containsRow("0.00", false));
+    }
+
+    @Test
+    public void can_complete_order() {
+        clickOn((Node)from(lookup(".expander-button")).nth(2).query());
+        ((TextField) GuiTest.find("#delivery-address")).setText("London");
+        clickOn("Complete order");
+        verifyThat(lookup("Order has been made"), Node::isVisible);
     }
 }

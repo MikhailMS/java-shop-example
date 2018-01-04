@@ -1,21 +1,29 @@
 package com.molotkov.gui;
 
+import com.molotkov.Basket;
 import com.molotkov.Inventory;
 import com.molotkov.exceptions.InventoryException;
 import com.molotkov.interfaces.ProductStorage;
 import com.molotkov.products.Product;
 
 import com.molotkov.users.Administrator;
+import com.molotkov.users.Client;
 import com.molotkov.users.User;
+import javafx.application.Application;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
+import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
+import javafx.scene.paint.Color;
+import javafx.scene.text.Font;
+import javafx.scene.text.FontWeight;
+import javafx.stage.Stage;
 import javafx.util.Duration;
 import org.controlsfx.control.Notifications;
 import org.controlsfx.control.table.TableFilter;
@@ -25,22 +33,54 @@ import org.controlsfx.tools.Utils;
 import java.text.DecimalFormat;
 import java.util.Map;
 
-public class InventoryScene {
+import static com.molotkov.gui.GuiWindowConsts.WINDOW_HEIGHT;
+import static com.molotkov.gui.GuiWindowConsts.WINDOW_WIDTH;
+
+public class InventoryScene extends Application {
     private static final String PRODUCT_NAME_COLUMN = "Product Name";
     private static final String PRODUCT_WEIGHT_COLUMN = "Product Weight";
     private static final String PRODUCT_PRICE_COLUMN = "Product Price";
     private static final String PRODUCT_AMOUNT_COLUMN = "Quantity available in Inventory";
     private static final String PRODUCT_TOTAL_COLUMN = "Product Total Price";
+    private static final String INVENTORY_DETAILS = "Details";
 
-    public static VBox createInventoryTableView(final Inventory inventory, final User user) {
+    private static final String BASKET_TOTAL_COLUMN = "Basket Total";
+    private static final String ORDER_DETAILS = "Order Details";
+
+    @Override
+    public void start(Stage stage) {
+        User client = new Client("t", "t");
+        User admin = new Administrator("t", "t");
+
+        Basket userBasket = new Basket();
+
+        Inventory inventory = new Inventory();
+        try {
+            inventory.addProducts(new Product("chicken", 1, 2.3),3);
+            inventory.addProducts(new Product("apple", 0.151, 0.8), 2);
+        } catch (InventoryException e) {
+            e.printStackTrace();
+        }
+
+        client.setBasket(userBasket);
+
+        stage.setScene(new Scene(InventoryScene.createMainInventoryBox(inventory, client), WINDOW_WIDTH, WINDOW_HEIGHT));
+        stage.show();
+    }
+
+    public static VBox createMainInventoryBox(final Inventory inventory, final User user) {
         final ObservableList<Map.Entry<Product, Integer>> items = FXCollections.observableArrayList(inventory.getProducts().entrySet());
 
         final TableView<Map.Entry<Product, Integer>> table = new TableView<>(items);
         table.setEditable(true);
+        table.setId("inventory-table-view");
 
         final VBox inventoryTableView = new VBox();
         inventoryTableView.setSpacing(5);
         inventoryTableView.setPadding(new Insets(5, 5, 5, 5));
+        inventoryTableView.setAlignment(Pos.TOP_CENTER);
+
+        inventoryTableView.getChildren().add(createTitleLabel("Inventory", Color.DARKBLUE, "Calibri", FontWeight.BOLD, 16));
 
         final TableColumn<Map.Entry<Product, Integer>, String> productNameColumn = new TableColumn<>(PRODUCT_NAME_COLUMN);
         productNameColumn.setId(PRODUCT_NAME_COLUMN);
@@ -82,8 +122,9 @@ public class InventoryScene {
         }
         else {
             table.getColumns().setAll(productNameColumn, productWeightColumn, productPriceColumn, productAmountColumn);
-            addClientRowExpander(table, user);
-            inventoryTableView.getChildren().addAll(table);
+            addClientDetailRowExpander(table, user);
+            inventoryTableView.getChildren().addAll(table, createTitleLabel("Basket", Color.DARKBLUE,
+                    "Calibri", FontWeight.BOLD, 16), createBasketTableView(user.getBasket()));
         }
 
         table.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
@@ -93,21 +134,22 @@ public class InventoryScene {
         return inventoryTableView;
     }
 
-    private static void addClientRowExpander(final TableView table, final User user) {
+    private static void addClientDetailRowExpander(final TableView table, final User user) {
         TableRowExpanderColumn<Map.Entry<Product, Integer>> expander = new TableRowExpanderColumn<>(param -> {
             HBox editor = new HBox(10);
             Label detailsLabel = new Label("");
             detailsLabel.setText(String.format("Weight: %.3f | Price: %.2f", param.getValue().getKey().getWeight(), param.getValue().getKey().getPrice()));
 
 
-            editor.getChildren().addAll(detailsLabel, createAddButton("Add to basket","Product has been added to basket",
-                    "Something went wro ng while adding product to basket", user.getBasket(), editor, param),
+            editor. getChildren().addAll(detailsLabel, createAddButton("Add to basket","Product has been added to basket",
+                    "Something went wrong while adding product to basket", user.getBasket(), editor, param),
                     createDeleteButton("Remove from basket","Product has been deleted from basket",
                             "Something went wrong while deleting product from basket: Possibly you tried to delete more occurrences of a product, than exist in basket",
                             user.getBasket(), editor, param));
             return editor;
         });
-        expander.setId("client-expander");
+        expander.setText(INVENTORY_DETAILS);
+        expander.setId(INVENTORY_DETAILS);
 
         table.getColumns().add(expander);
     }
@@ -121,7 +163,8 @@ public class InventoryScene {
                             "Something went wrong while removing product from inventory: Possibly you tried to delete more occurrences of a product than exist in inventory", inventory, editor, param));
             return editor;
         });
-        expander.setId("admin-expander");
+        expander.setText(INVENTORY_DETAILS);
+        expander.setId(INVENTORY_DETAILS);
 
         table.getColumns().add(expander);
     }
@@ -184,6 +227,74 @@ public class InventoryScene {
             }
         });
         return deleteFromBasket;
+    }
+
+    private static Label createTitleLabel(final String title, final Color colorConst, final String fontFamily,
+                                          final FontWeight fontWeight, final int fontSize) {
+        final Label titleLabel = new Label(title);
+        titleLabel.setTextFill(colorConst);
+        titleLabel.setFont(Font.font(fontFamily, fontWeight, fontSize));
+
+        return titleLabel;
+    }
+
+    private static TableView createBasketTableView(final Basket basket) {
+        final ObservableList<Basket> items = FXCollections.observableArrayList(basket);
+
+        final TableView<Basket> table = new TableView<>(items);
+        table.setEditable(true);
+        table.setId("basket-table-view");
+
+        final TableColumn<Basket, String> basketTotalColumn = new TableColumn<>(BASKET_TOTAL_COLUMN);
+        basketTotalColumn.setId(BASKET_TOTAL_COLUMN);
+        basketTotalColumn.setCellValueFactory(item -> new SimpleStringProperty(String.format("%.2f", item.getValue().calculateTotal())));
+
+        final TextField address = new TextField();
+        address.setPromptText("Enter delivery address");
+        address.setId("delivery-address");
+
+        final Button completeOrder = new Button();
+        completeOrder.setText("Complete order");
+
+        final TableRowExpanderColumn<Basket> expander = new TableRowExpanderColumn<>(param -> {
+            HBox editor = new HBox(10);
+            Label detailsLabel = new Label("");
+            detailsLabel.setText(String.format("There are: %d items in the basket @ total price of %.2f", param.getValue().getProducts()
+                    .entrySet().parallelStream().mapToInt(Map.Entry::getValue).sum(), param.getValue().calculateTotal()));
+
+            completeOrder.setOnMouseClicked(mouseEvent -> {
+                try {
+                    // Here should be a call to a DB, which saves order to DB as "completed"
+                    Notifications.create()
+                            .darkStyle()
+                            .title("Info")
+                            .text("Order has been made")
+                            .position(Pos.CENTER)
+                            .owner(Utils.getWindow(editor))
+                            .hideAfter(Duration.seconds(2))
+                            .showConfirm();
+                } catch (Exception e) {
+                    Notifications.create()
+                            .darkStyle()
+                            .title("Error")
+                            .text("Order has not been completed. Try again")
+                            .position(Pos.CENTER)
+                            .owner(Utils.getWindow(editor))
+                            .hideAfter(Duration.seconds(2))
+                            .showError();
+                    e.printStackTrace();
+                }
+            });
+
+            editor. getChildren().addAll(detailsLabel, address, completeOrder);
+
+            return editor;
+        });
+        expander.setText(ORDER_DETAILS);
+        expander.setId(ORDER_DETAILS);
+
+        table.getColumns().addAll(basketTotalColumn, expander);
+        return table;
     }
 
     private static HBox createAddProductBox(final TableColumn productNameColumn, final TableColumn productWeightColumn, final TableColumn productPriceColumn,
@@ -253,5 +364,9 @@ public class InventoryScene {
         addProductBox.setSpacing(3);
 
         return addProductBox;
+    }
+
+    public static void main(String... args) {
+        launch(args);
     }
 }

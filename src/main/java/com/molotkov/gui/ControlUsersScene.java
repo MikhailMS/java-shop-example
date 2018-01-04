@@ -3,47 +3,28 @@ package com.molotkov.gui;
 import com.molotkov.users.Administrator;
 import com.molotkov.users.Client;
 import com.molotkov.users.User;
-import javafx.application.Application;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
-import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
-import javafx.stage.Stage;
 import javafx.util.Duration;
 import org.controlsfx.control.Notifications;
 import org.controlsfx.control.table.TableFilter;
 import org.controlsfx.control.table.TableRowExpanderColumn;
 import org.controlsfx.tools.Utils;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import static com.molotkov.gui.GuiWindowConsts.WINDOW_HEIGHT;
 import static com.molotkov.gui.GuiWindowConsts.WINDOW_WIDTH;
 
-public class ControlUsersScene extends Application {
+public class ControlUsersScene {
     private static final String USER_NAME_COLUMN = "User name";
     private static final String USER_PRIVILEGE_COLUMN = "User privilege";
-
-    @Override
-    public void start(Stage stage) {
-        Client testClient1 = new Client("testClient1", "testClient1");
-        Client testClient2 = new Client("testClient2", "testClient2");
-        Administrator admin = new Administrator("admin", "admin");
-
-        List<User> userList = new ArrayList<>();
-        userList.add(testClient1);
-        userList.add(testClient2);
-        userList.add(admin);
-
-        stage.setScene(new Scene(createControlTable(userList), WINDOW_WIDTH, WINDOW_HEIGHT));
-        stage.show();
-    }
 
     public static VBox createControlTable(List<User> users) {
         final ObservableList<User> observableUserList = FXCollections.observableArrayList(users);
@@ -74,18 +55,6 @@ public class ControlUsersScene extends Application {
         final TableFilter<User> filter = TableFilter.forTableView(userTableView).lazy(false).apply();
 
         return controlTableBox;
-    }
-
-    private static void addAdminRowExpander(final TableView table, final List<User> users, final ObservableList<User> observableUsers) {
-        TableRowExpanderColumn<User> expander =  new TableRowExpanderColumn<>(param -> {
-            final HBox editor = new HBox(10);
-            editor.getChildren().addAll(createDeleteButton("Remove user", "User has been removed successfully",
-                            "Something went wrong while removing user", users, observableUsers, editor, param));
-            return editor;
-        });
-        expander.setId("admin-expander");
-
-        table.getColumns().add(expander);
     }
 
     private static Button createDeleteButton(final String buttonText, final String notificationTextSuccess, final String notificationTextError, final List<User> users, final ObservableList<User> observableUsers, final HBox editor , final TableRowExpanderColumn.TableRowDataFeatures<User> param) {
@@ -177,7 +146,15 @@ public class ControlUsersScene extends Application {
         return addProductBox;
     }
 
-    public static void main(String... args){
-        launch(args);
+    private static void addAdminRowExpander(final TableView table, final List<User> users, final ObservableList<User> observableUsers) {
+        TableRowExpanderColumn<User> expander =  new TableRowExpanderColumn<>(param -> {
+            final HBox editor = new HBox(10);
+            editor.getChildren().addAll(createDeleteButton("Remove user", "User has been removed successfully",
+                    "Something went wrong while removing user", users, observableUsers, editor, param));
+            return editor;
+        });
+        expander.setId("admin-expander");
+
+        table.getColumns().add(expander);
     }
 }

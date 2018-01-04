@@ -61,12 +61,9 @@ Also I am using TDD approach to complete this project as I found this really con
           - [x] See all available products
           - [x] Add to basket
           - [x] Remove from basket
-          - [ ] Save basket
-          - [ ] Restore basket 
-          - [ ] Make order
-          - [ ] Complete order
-          - [ ] Save order
-          - [ ] Restore order
+          - [ ] Save basket - **save basket when client closes application**
+          - [ ] Restore basket - **restore basket when client reopens application, if basket was previously saved**
+          - [x] Complete order - **needs to be connected to DB**
           - [x] See all completed orders (client can see only his orders) 
           - [x] See total cost of all completed orders
           - [x] Sort orders by date, total price
@@ -77,22 +74,25 @@ Also I am using TDD approach to complete this project as I found this really con
       - [x] Administrator GUI
           - [x] See all available products 
           - [x] See total cost of all products
-          - [x] Add new product to inventory 
-          - [x] Add products to inventory
-          - [x] Remove products from inventory
+          - [x] Add new product to inventory - **needs to be connected to DB**
+          - [x] Add products to inventory - **needs to be connected to DB**
+          - [x] Remove products from inventory - **needs to be connected to DB**
           - [x] See orders completed by any user 
           - [x] See total cost of all completed orders
           - [x] Sort orders by date, total price
           - [x] Filter orders by date/total price
-          - [x] Add user to the system
-          - [x] Delete user from system
+          - [x] Add user to the system - **needs to be connected to DB**
+          - [x] Delete user from system - **needs to be connected to DB**
           - [x] Search for specific product by name
           - [x] Sort products by name, price
           - [x] Filter products by price, weight
       - [ ] Connect GUI to database
           - [ ] Login GUI
           - [ ] Client GUI
+              - [ ] Restore order
+              - [ ] Rest, that outlined
           - [ ] Administrator GUI
+              - [ ] Outlined parts
               
   - [ ] As an optional part, I'd like to write a service, which will keep shop's inventory in sync with DB and completed orders
       - [ ] Once order is completed, service will update inventory in the DB and update local copy of the inventory

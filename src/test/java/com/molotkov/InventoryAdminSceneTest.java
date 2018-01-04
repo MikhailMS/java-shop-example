@@ -34,12 +34,12 @@ public class InventoryAdminSceneTest extends ApplicationTest {
             e.printStackTrace();
         }
 
-        stage.setScene(new Scene(InventoryScene.createInventoryTableView(inventory, admin), WINDOW_WIDTH, WINDOW_HEIGHT));
+        stage.setScene(new Scene(InventoryScene.createMainInventoryBox(inventory, admin), WINDOW_WIDTH, WINDOW_HEIGHT));
         stage.show();
     }
 
     @Test
-    public void should_contain_admin_specific_columns() {
+    public void should_contain_specific_inventory_columns_for_admin() {
         verifyThat(".table-view", TableViewMatchersExtension.hasColumnWithID("Product Name"));
         verifyThat(".table-view", TableViewMatchersExtension.hasColumnWithID("Product Weight"));
         verifyThat(".table-view", TableViewMatchersExtension.hasColumnWithID("Product Price"));

@@ -28,12 +28,12 @@ class ShakeTransition extends Transition {
     private final Interpolator WEB_EASE = Interpolator.SPLINE(0.25, 0.1, 0.25, 1);
     private final Timeline timeline;
     private final Node node;
-    private boolean oldCache = false;
-    private CacheHint oldCacheHint = CacheHint.DEFAULT;
     private final boolean useCache=true;
     private final double xIni;
-
     private final DoubleProperty x = new SimpleDoubleProperty();
+
+    private boolean oldCache = false;
+    private CacheHint oldCacheHint = CacheHint.DEFAULT;
 
     /**
      * Create new ShakeTransition
