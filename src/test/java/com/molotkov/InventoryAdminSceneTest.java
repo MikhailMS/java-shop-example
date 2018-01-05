@@ -105,6 +105,6 @@ public class InventoryAdminSceneTest extends ApplicationTest {
                 .sleep(2200)
                 .clickOn((Node)from(lookup(".expander-button")).nth(0).query())
                 .clickOn("Remove from inventory");
-        verifyThat(lookup("Something went wrong while removing product from inventory: Possibly you tried to delete more occurrences of a product than exist in inventory"), Node::isVisible);
+        verifyThat(lookup("Something went wrong while removing product from inventory: Possibly you tried to remove more occurrences of a product than exist in inventory"), Node::isVisible);
     }
 }

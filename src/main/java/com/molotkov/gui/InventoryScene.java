@@ -47,6 +47,22 @@ public class InventoryScene extends Application {
     private static final String BASKET_TOTAL_COLUMN = "Basket Total";
     private static final String ORDER_DETAILS = "Order Details";
 
+    private static final String CLIENT_ADD_PRODUCT_BUTTON = "Add to basket";
+    private static final String CLIENT_REMOVE_PRODUCT_BUTTON = "Remove from basket";
+    private static final String CLIENT_ADD_PRODUCT_NOTIFICATION_SUCCESS = "Product has been added to basket";
+    private static final String CLIENT_ADD_PRODUCT_NOTIFICATION_ERROR = "Something went wrong while adding product to basket";
+    private static final String CLIENT_REMOVE_PRODUCT_NOTIFICATION_SUCCESS = "Product has been removed from basket";
+    private static final String CLIENT_REMOVE_PRODUCT_NOTIFICATION_ERROR = "Something went wrong while removing product from basket: Possibly you tried to remove more occurrences of a product, than exist in basket";
+
+    private static final String ADMIN_ADD_PRODUCT_BUTTON = "Add to inventory";
+    private static final String ADMIN_REMOVE_PRODUCT_BUTTON = "Remove from inventory";
+    private static final String ADMIN_ADD_PRODUCT_NOTIFICATION_SUCCESS = "Product has been added to inventory";
+    private static final String ADMIN_ADD_PRODUCT_NOTIFICATION_ERROR = "Something went wrong while adding product to inventory";
+    private static final String ADMIN_REMOVE_PRODUCT_NOTIFICATION_SUCCESS = "Product has been removed from inventory";
+    private static final String ADMIN_REMOVE_PRODUCT_NOTIFICATION_ERROR = "Something went wrong while removing product from inventory: Possibly you tried to remove more occurrences of a product than exist in inventory";
+
+    private static HBox addProductBox;
+
     @Override
     public void start(Stage stage) {
         User client = new Client("t", "t");
@@ -69,11 +85,11 @@ public class InventoryScene extends Application {
     }
 
     public static VBox createMainInventoryBox(final Inventory inventory, final User user) {
-        final ObservableList<Map.Entry<Product, Integer>> items = FXCollections.observableArrayList(inventory.getProducts().entrySet());
+        //final ObservableList<Map.Entry<Product, Integer>> items = FXCollections.observableArrayList(inventory.getProducts().entrySet());
 
-        final TableView<Map.Entry<Product, Integer>> table = new TableView<>(items);
-        table.setEditable(true);
-        table.setId("inventory-table-view");
+        //final TableView<Map.Entry<Product, Integer>> table = new TableView<>(items);
+        //table.setEditable(true);
+        //table.setId("inventory-table-view");
 
         final VBox inventoryTableView = new VBox();
         inventoryTableView.setSpacing(5);
@@ -82,7 +98,7 @@ public class InventoryScene extends Application {
 
         inventoryTableView.getChildren().add(createTitleLabel("Inventory", Color.DARKBLUE, "Calibri", FontWeight.BOLD, 16));
 
-        final TableColumn<Map.Entry<Product, Integer>, String> productNameColumn = new TableColumn<>(PRODUCT_NAME_COLUMN);
+/*        final TableColumn<Map.Entry<Product, Integer>, String> productNameColumn = new TableColumn<>(PRODUCT_NAME_COLUMN);
         productNameColumn.setId(PRODUCT_NAME_COLUMN);
         productNameColumn.setCellValueFactory(item -> new SimpleStringProperty(item.getValue().getKey().getName()));
 
@@ -110,42 +126,39 @@ public class InventoryScene extends Application {
 
         final TableColumn<Map.Entry<Product, Integer>, String> productTotalColumn = new TableColumn<>(PRODUCT_TOTAL_COLUMN);
         productTotalColumn.setId(PRODUCT_TOTAL_COLUMN);
-        productTotalColumn.setCellValueFactory(item -> new SimpleStringProperty(String.format("%.2f", item.getValue().getKey().getPrice() * item.getValue().getValue())));
+        productTotalColumn.setCellValueFactory(item -> new SimpleStringProperty(String.format("%.2f", item.getValue().getKey().getPrice() * item.getValue().getValue())));*/
 
 
         if (user instanceof Administrator) {
-            table.getColumns().setAll(productNameColumn, productWeightColumn, productPriceColumn, productAmountColumn, productTotalColumn);
-            addAdminRowExpander(table, inventory);
-            final HBox addProductBox = createAddProductBox(productNameColumn, productWeightColumn, productPriceColumn, productAmountColumn, inventory, items);
+            //table.getColumns().setAll(productNameColumn, productWeightColumn, productPriceColumn, productAmountColumn, productTotalColumn);
+            //addDetailsRowExpander(table, inventory, ADMIN_ADD_PRODUCT_BUTTON, ADMIN_REMOVE_PRODUCT_BUTTON, ADMIN_ADD_PRODUCT_NOTIFICATION_SUCCESS,
+            //        ADMIN_ADD_PRODUCT_NOTIFICATION_ERROR, ADMIN_REMOVE_PRODUCT_NOTIFICATION_SUCCESS, ADMIN_REMOVE_PRODUCT_NOTIFICATION_ERROR);
+            //final HBox addProductBox = createAddProductBox(productNameColumn, productWeightColumn, productPriceColumn, productAmountColumn, inventory, items);
 
-            inventoryTableView.getChildren().addAll(table, addProductBox);
+            inventoryTableView.getChildren().addAll(createInventoryTableView(inventory, user), addProductBox);
         }
         else {
-            table.getColumns().setAll(productNameColumn, productWeightColumn, productPriceColumn, productAmountColumn);
-            addClientDetailRowExpander(table, user);
-            inventoryTableView.getChildren().addAll(table, createTitleLabel("Basket", Color.DARKBLUE,
+            //table.getColumns().setAll(productNameColumn, productWeightColumn, productPriceColumn, productAmountColumn);
+            //addDetailsRowExpander(table, user.getBasket(), CLIENT_ADD_PRODUCT_BUTTON, CLIENT_REMOVE_PRODUCT_BUTTON, CLIENT_ADD_PRODUCT_NOTIFICATION_SUCCESS,
+            //        CLIENT_ADD_PRODUCT_NOTIFICATION_ERROR, CLIENT_REMOVE_PRODUCT_NOTIFICATION_SUCCESS, CLIENT_REMOVE_PRODUCT_NOTIFICATION_ERROR);
+            inventoryTableView.getChildren().addAll(createInventoryTableView(inventory, user), createTitleLabel("Basket", Color.DARKBLUE,
                     "Calibri", FontWeight.BOLD, 16), createBasketTableView(user.getBasket()));
         }
 
-        table.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
+        //table.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
 
-        final TableFilter<Map.Entry<Product,Integer>> filter = TableFilter.forTableView(table).lazy(false).apply();
+        //final TableFilter<Map.Entry<Product,Integer>> filter = TableFilter.forTableView(table).lazy(false).apply();
 
         return inventoryTableView;
     }
 
-    private static void addClientDetailRowExpander(final TableView table, final User user) {
+    private static void addDetailsRowExpander(final TableView table, final ProductStorage storage, final String addButtonText,
+                                              final String removeButtonText, final String addNotificationTextSuccess, final String addNotificationTextError,
+                                              final String removeNotificationTextSuccess, final String removeNotificationTextError) {
         TableRowExpanderColumn<Map.Entry<Product, Integer>> expander = new TableRowExpanderColumn<>(param -> {
-            HBox editor = new HBox(10);
-            Label detailsLabel = new Label("");
-            detailsLabel.setText(String.format("Weight: %.3f | Price: %.2f", param.getValue().getKey().getWeight(), param.getValue().getKey().getPrice()));
-
-
-            editor. getChildren().addAll(detailsLabel, createAddButton("Add to basket","Product has been added to basket",
-                    "Something went wrong while adding product to basket", user.getBasket(), editor, param),
-                    createDeleteButton("Remove from basket","Product has been deleted from basket",
-                            "Something went wrong while deleting product from basket: Possibly you tried to delete more occurrences of a product, than exist in basket",
-                            user.getBasket(), editor, param));
+            final HBox editor = new HBox(10);
+            editor.getChildren().addAll(createAddButton(addButtonText, addNotificationTextSuccess, addNotificationTextError, storage, editor, param),
+                    createDeleteButton(removeButtonText, removeNotificationTextSuccess, removeNotificationTextError, storage, editor, param));
             return editor;
         });
         expander.setText(INVENTORY_DETAILS);
@@ -154,17 +167,50 @@ public class InventoryScene extends Application {
         table.getColumns().add(expander);
     }
 
-    private static void addAdminRowExpander(final TableView table, Inventory inventory) {
-        TableRowExpanderColumn<Map.Entry<Product, Integer>> expander =  new TableRowExpanderColumn<>(param -> {
-            final HBox editor = new HBox(10);
-            editor.getChildren().addAll(createAddButton("Add to inventory","Product has been added to inventory",
-                    "Something went wrong while adding product to inventory", inventory, editor, param),
-                    createDeleteButton("Remove from inventory", "Product has been removed from inventory",
-                            "Something went wrong while removing product from inventory: Possibly you tried to delete more occurrences of a product than exist in inventory", inventory, editor, param));
+    private static void addClientBasketRowExpander(final TableView table) {
+        final TextField address = new TextField();
+        address.setPromptText("Enter delivery address");
+        address.setId("delivery-address");
+
+        final Button completeOrder = new Button();
+        completeOrder.setText("Complete order");
+
+        final TableRowExpanderColumn<Basket> expander = new TableRowExpanderColumn<>(param -> {
+            HBox editor = new HBox(10);
+            Label detailsLabel = new Label("");
+            detailsLabel.setText(String.format("There are: %d items in the basket @ total price of %.2f", param.getValue().getProducts()
+                    .entrySet().parallelStream().mapToInt(Map.Entry::getValue).sum(), param.getValue().calculateTotal()));
+
+            completeOrder.setOnMouseClicked(mouseEvent -> {
+                try {
+                    // Here should be a call to a DB, which saves order to DB as "completed"
+                    Notifications.create()
+                            .darkStyle()
+                            .title("Info")
+                            .text("Order has been made")
+                            .position(Pos.CENTER)
+                            .owner(Utils.getWindow(editor))
+                            .hideAfter(Duration.seconds(2))
+                            .showConfirm();
+                } catch (Exception e) {
+                    Notifications.create()
+                            .darkStyle()
+                            .title("Error")
+                            .text("Order has not been completed. Try again")
+                            .position(Pos.CENTER)
+                            .owner(Utils.getWindow(editor))
+                            .hideAfter(Duration.seconds(2))
+                            .showError();
+                    e.printStackTrace();
+                }
+            });
+
+            editor. getChildren().addAll(detailsLabel, address, completeOrder);
+
             return editor;
         });
-        expander.setText(INVENTORY_DETAILS);
-        expander.setId(INVENTORY_DETAILS);
+        expander.setText(ORDER_DETAILS);
+        expander.setId(ORDER_DETAILS);
 
         table.getColumns().add(expander);
     }
@@ -238,6 +284,62 @@ public class InventoryScene extends Application {
         return titleLabel;
     }
 
+    private static TableView createInventoryTableView(final Inventory inventory, final User user) {
+        final ObservableList<Map.Entry<Product, Integer>> items = FXCollections.observableArrayList(inventory.getProducts().entrySet());
+
+        final TableView<Map.Entry<Product, Integer>> table = new TableView<>(items);
+        table.setEditable(true);
+        table.setId("inventory-table-view");
+
+        final TableColumn<Map.Entry<Product, Integer>, String> productNameColumn = new TableColumn<>(PRODUCT_NAME_COLUMN);
+        productNameColumn.setId(PRODUCT_NAME_COLUMN);
+        productNameColumn.setCellValueFactory(item -> new SimpleStringProperty(item.getValue().getKey().getName()));
+
+        final TableColumn<Map.Entry<Product, Integer>, Double> productWeightColumn = new TableColumn<>(PRODUCT_WEIGHT_COLUMN);
+        productWeightColumn.setId(PRODUCT_WEIGHT_COLUMN);
+        productWeightColumn.setCellValueFactory(item -> {
+            double weight = item.getValue().getKey().getWeight();
+            DecimalFormat df = new DecimalFormat("#.###");
+            weight = Double.valueOf(df.format(weight));
+            return new SimpleObjectProperty<>(weight);
+        });
+
+        final TableColumn<Map.Entry<Product, Integer>, Double> productPriceColumn = new TableColumn<>(PRODUCT_PRICE_COLUMN);
+        productPriceColumn.setId(PRODUCT_PRICE_COLUMN);
+        productPriceColumn.setCellValueFactory(item -> {
+            double price = item.getValue().getKey().getPrice();
+            DecimalFormat df = new DecimalFormat("#.##");
+            price = Double.valueOf(df.format(price));
+            return new SimpleObjectProperty<>(price);
+        });
+
+        final TableColumn<Map.Entry<Product, Integer>, Integer> productAmountColumn = new TableColumn<>(PRODUCT_AMOUNT_COLUMN);
+        productAmountColumn.setId(PRODUCT_AMOUNT_COLUMN);
+        productAmountColumn.setCellValueFactory(item -> new SimpleObjectProperty<>(item.getValue().getValue()));
+
+        final TableColumn<Map.Entry<Product, Integer>, String> productTotalColumn = new TableColumn<>(PRODUCT_TOTAL_COLUMN);
+        productTotalColumn.setId(PRODUCT_TOTAL_COLUMN);
+        productTotalColumn.setCellValueFactory(item -> new SimpleStringProperty(String.format("%.2f", item.getValue().getKey().getPrice() * item.getValue().getValue())));
+
+        if (user instanceof Administrator) {
+            table.getColumns().setAll(productNameColumn, productWeightColumn, productPriceColumn, productAmountColumn, productTotalColumn);
+            addDetailsRowExpander(table, inventory, ADMIN_ADD_PRODUCT_BUTTON, ADMIN_REMOVE_PRODUCT_BUTTON, ADMIN_ADD_PRODUCT_NOTIFICATION_SUCCESS,
+                    ADMIN_ADD_PRODUCT_NOTIFICATION_ERROR, ADMIN_REMOVE_PRODUCT_NOTIFICATION_SUCCESS, ADMIN_REMOVE_PRODUCT_NOTIFICATION_ERROR);
+            addProductBox = createAddProductBox(productNameColumn, productWeightColumn, productPriceColumn, productAmountColumn, inventory, items);
+        }
+        else {
+            table.getColumns().setAll(productNameColumn, productWeightColumn, productPriceColumn, productAmountColumn);
+            addDetailsRowExpander(table, user.getBasket(), CLIENT_ADD_PRODUCT_BUTTON, CLIENT_REMOVE_PRODUCT_BUTTON, CLIENT_ADD_PRODUCT_NOTIFICATION_SUCCESS,
+                    CLIENT_ADD_PRODUCT_NOTIFICATION_ERROR, CLIENT_REMOVE_PRODUCT_NOTIFICATION_SUCCESS, CLIENT_REMOVE_PRODUCT_NOTIFICATION_ERROR);
+        }
+
+        table.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
+
+        final TableFilter<Map.Entry<Product,Integer>> filter = TableFilter.forTableView(table).lazy(false).apply();
+
+        return table;
+    }
+
     private static TableView createBasketTableView(final Basket basket) {
         final ObservableList<Basket> items = FXCollections.observableArrayList(basket);
 
@@ -249,51 +351,9 @@ public class InventoryScene extends Application {
         basketTotalColumn.setId(BASKET_TOTAL_COLUMN);
         basketTotalColumn.setCellValueFactory(item -> new SimpleStringProperty(String.format("%.2f", item.getValue().calculateTotal())));
 
-        final TextField address = new TextField();
-        address.setPromptText("Enter delivery address");
-        address.setId("delivery-address");
+        table.getColumns().add(basketTotalColumn);
+        addClientBasketRowExpander(table);
 
-        final Button completeOrder = new Button();
-        completeOrder.setText("Complete order");
-
-        final TableRowExpanderColumn<Basket> expander = new TableRowExpanderColumn<>(param -> {
-            HBox editor = new HBox(10);
-            Label detailsLabel = new Label("");
-            detailsLabel.setText(String.format("There are: %d items in the basket @ total price of %.2f", param.getValue().getProducts()
-                    .entrySet().parallelStream().mapToInt(Map.Entry::getValue).sum(), param.getValue().calculateTotal()));
-
-            completeOrder.setOnMouseClicked(mouseEvent -> {
-                try {
-                    // Here should be a call to a DB, which saves order to DB as "completed"
-                    Notifications.create()
-                            .darkStyle()
-                            .title("Info")
-                            .text("Order has been made")
-                            .position(Pos.CENTER)
-                            .owner(Utils.getWindow(editor))
-                            .hideAfter(Duration.seconds(2))
-                            .showConfirm();
-                } catch (Exception e) {
-                    Notifications.create()
-                            .darkStyle()
-                            .title("Error")
-                            .text("Order has not been completed. Try again")
-                            .position(Pos.CENTER)
-                            .owner(Utils.getWindow(editor))
-                            .hideAfter(Duration.seconds(2))
-                            .showError();
-                    e.printStackTrace();
-                }
-            });
-
-            editor. getChildren().addAll(detailsLabel, address, completeOrder);
-
-            return editor;
-        });
-        expander.setText(ORDER_DETAILS);
-        expander.setId(ORDER_DETAILS);
-
-        table.getColumns().addAll(basketTotalColumn, expander);
         return table;
     }
 

@@ -67,7 +67,7 @@ public class InventoryClientSceneTest extends ApplicationTest {
     public void can_remove_product_from_basket_if_user() {
         clickOn((Node)from(lookup(".expander-button")).nth(0).query()).clickOn("Add to basket").clickOn("Remove from basket");
         sleep(1000);
-        verifyThat(lookup("Product has been deleted from basket"), Node::isVisible);
+        verifyThat(lookup("Product has been removed from basket"), Node::isVisible);
     }
 
     @Test
