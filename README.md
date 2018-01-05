@@ -57,12 +57,10 @@ Also I am using TDD approach to complete this project as I found this really con
   - [ ] As an optional part, I'd like to introduce GUI, which will make it easier to fill basket, see orders and etc
       - [x] Login screen
       - [x] Can login into system and gain appropriate rights **IN DEVELOPMENT/TESTING**
-      - [ ] Client GUI
+      - [x] Client GUI
           - [x] See all available products
           - [x] Add to basket
           - [x] Remove from basket
-          - [ ] Save basket - **save basket when client closes application**
-          - [ ] Restore basket - **restore basket when client reopens application, if basket was previously saved**
           - [x] Complete order - **needs to be connected to DB**
           - [x] See all completed orders (client can see only his orders) 
           - [x] See total cost of all completed orders
@@ -86,13 +84,16 @@ Also I am using TDD approach to complete this project as I found this really con
           - [x] Search for specific product by name
           - [x] Sort products by name, price
           - [x] Filter products by price, weight
-      - [ ] Connect GUI to database
-          - [ ] Login GUI
-          - [ ] Client GUI
-              - [ ] Restore order
-              - [ ] Rest, that outlined
-          - [ ] Administrator GUI
-              - [ ] Outlined parts
+      - [ ] Bring all GUI components into one Stage
+          - [ ] Create main stage with TabPane(tab panel, that contains scenes) 
+              - [ ] Save basket - **save basket when client closes application**
+              - [ ] Restore basket - **restore basket when client reopens application, if basket was previously saved**
+          - [ ] Connect GUI to database
+              - [ ] Login GUI
+              - [ ] Client GUI
+                  - [ ] Highlighted parts
+              - [ ] Administrator GUI
+                  - [ ] Highlighted parts
               
   - [ ] As an optional part, I'd like to write a service, which will keep shop's inventory in sync with DB and completed orders
       - [ ] Once order is completed, service will update inventory in the DB and update local copy of the inventory
@@ -102,5 +103,10 @@ Also I am using TDD approach to complete this project as I found this really con
 ## Bug trace
   - [x] When adding new product via form, product is added, but then I cannot change its amount
   - [ ] restoreBasketFromDB method shall be fixed, as currently it's hardcoded to use fixed weight and price for all restored products in Basket
+
+## Improvements, that could be done later
+  - [ ] At the moment user can add more products into basket than there exist in inventory -> make them talk to one another
+  - [ ] At the moment data in rows doesn't update straight after product has been added/removed to/from basket/inventory, but rather after row been clicked, table been sorted or Details button been clicked
+  - [ ] At the moment, when new product added to basket/inventory, in order to display it, I delete all entries from observable list + its underlying list
     
 ## Build and tested on MacOS and Java 1.8 (_**required**_)

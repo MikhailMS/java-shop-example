@@ -85,12 +85,6 @@ public class InventoryScene extends Application {
     }
 
     public static VBox createMainInventoryBox(final Inventory inventory, final User user) {
-        //final ObservableList<Map.Entry<Product, Integer>> items = FXCollections.observableArrayList(inventory.getProducts().entrySet());
-
-        //final TableView<Map.Entry<Product, Integer>> table = new TableView<>(items);
-        //table.setEditable(true);
-        //table.setId("inventory-table-view");
-
         final VBox inventoryTableView = new VBox();
         inventoryTableView.setSpacing(5);
         inventoryTableView.setPadding(new Insets(5, 5, 5, 5));
@@ -98,56 +92,13 @@ public class InventoryScene extends Application {
 
         inventoryTableView.getChildren().add(createTitleLabel("Inventory", Color.DARKBLUE, "Calibri", FontWeight.BOLD, 16));
 
-/*        final TableColumn<Map.Entry<Product, Integer>, String> productNameColumn = new TableColumn<>(PRODUCT_NAME_COLUMN);
-        productNameColumn.setId(PRODUCT_NAME_COLUMN);
-        productNameColumn.setCellValueFactory(item -> new SimpleStringProperty(item.getValue().getKey().getName()));
-
-        final TableColumn<Map.Entry<Product, Integer>, Double> productWeightColumn = new TableColumn<>(PRODUCT_WEIGHT_COLUMN);
-        productWeightColumn.setId(PRODUCT_WEIGHT_COLUMN);
-        productWeightColumn.setCellValueFactory(item -> {
-            double weight = item.getValue().getKey().getWeight();
-            DecimalFormat df = new DecimalFormat("#.###");
-            weight = Double.valueOf(df.format(weight));
-            return new SimpleObjectProperty<>(weight);
-        });
-
-        final TableColumn<Map.Entry<Product, Integer>, Double> productPriceColumn = new TableColumn<>(PRODUCT_PRICE_COLUMN);
-        productPriceColumn.setId(PRODUCT_PRICE_COLUMN);
-        productPriceColumn.setCellValueFactory(item -> {
-            double price = item.getValue().getKey().getPrice();
-            DecimalFormat df = new DecimalFormat("#.##");
-            price = Double.valueOf(df.format(price));
-            return new SimpleObjectProperty<>(price);
-        });
-
-        final TableColumn<Map.Entry<Product, Integer>, Integer> productAmountColumn = new TableColumn<>(PRODUCT_AMOUNT_COLUMN);
-        productAmountColumn.setId(PRODUCT_AMOUNT_COLUMN);
-        productAmountColumn.setCellValueFactory(item -> new SimpleObjectProperty<>(item.getValue().getValue()));
-
-        final TableColumn<Map.Entry<Product, Integer>, String> productTotalColumn = new TableColumn<>(PRODUCT_TOTAL_COLUMN);
-        productTotalColumn.setId(PRODUCT_TOTAL_COLUMN);
-        productTotalColumn.setCellValueFactory(item -> new SimpleStringProperty(String.format("%.2f", item.getValue().getKey().getPrice() * item.getValue().getValue())));*/
-
-
         if (user instanceof Administrator) {
-            //table.getColumns().setAll(productNameColumn, productWeightColumn, productPriceColumn, productAmountColumn, productTotalColumn);
-            //addDetailsRowExpander(table, inventory, ADMIN_ADD_PRODUCT_BUTTON, ADMIN_REMOVE_PRODUCT_BUTTON, ADMIN_ADD_PRODUCT_NOTIFICATION_SUCCESS,
-            //        ADMIN_ADD_PRODUCT_NOTIFICATION_ERROR, ADMIN_REMOVE_PRODUCT_NOTIFICATION_SUCCESS, ADMIN_REMOVE_PRODUCT_NOTIFICATION_ERROR);
-            //final HBox addProductBox = createAddProductBox(productNameColumn, productWeightColumn, productPriceColumn, productAmountColumn, inventory, items);
-
             inventoryTableView.getChildren().addAll(createInventoryTableView(inventory, user), addProductBox);
         }
         else {
-            //table.getColumns().setAll(productNameColumn, productWeightColumn, productPriceColumn, productAmountColumn);
-            //addDetailsRowExpander(table, user.getBasket(), CLIENT_ADD_PRODUCT_BUTTON, CLIENT_REMOVE_PRODUCT_BUTTON, CLIENT_ADD_PRODUCT_NOTIFICATION_SUCCESS,
-            //        CLIENT_ADD_PRODUCT_NOTIFICATION_ERROR, CLIENT_REMOVE_PRODUCT_NOTIFICATION_SUCCESS, CLIENT_REMOVE_PRODUCT_NOTIFICATION_ERROR);
             inventoryTableView.getChildren().addAll(createInventoryTableView(inventory, user), createTitleLabel("Basket", Color.DARKBLUE,
                     "Calibri", FontWeight.BOLD, 16), createBasketTableView(user.getBasket()));
         }
-
-        //table.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
-
-        //final TableFilter<Map.Entry<Product,Integer>> filter = TableFilter.forTableView(table).lazy(false).apply();
 
         return inventoryTableView;
     }
@@ -216,7 +167,7 @@ public class InventoryScene extends Application {
     }
 
     private static Button createAddButton(final String buttonText, final String notificationTextSuccess, final String notificationTextError, final ProductStorage storage, final HBox editor , final TableRowExpanderColumn.TableRowDataFeatures<Map.Entry<Product, Integer>> param) {
-        Button addToBasket = new Button();
+        final Button addToBasket = new Button();
         addToBasket.setText(buttonText);
 
         addToBasket.setOnMouseClicked(mouseEvent -> {
@@ -246,7 +197,7 @@ public class InventoryScene extends Application {
     }
 
     private static Button createDeleteButton(final String buttonText, final String notificationTextSuccess, final String notificationTextError, final ProductStorage storage, final HBox editor , final TableRowExpanderColumn.TableRowDataFeatures<Map.Entry<Product, Integer>> param) {
-        Button deleteFromBasket = new Button();
+        final Button deleteFromBasket = new Button();
         deleteFromBasket.setText(buttonText);
         deleteFromBasket.setOnMouseClicked(mouseEvent -> {
             try {
