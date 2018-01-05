@@ -1,54 +1,180 @@
 package com.molotkov.gui;
 
+import com.molotkov.db.DBConnector;
+import com.molotkov.db.DBCursorHolder;
+import com.molotkov.db.DBUtils;
+import com.molotkov.users.Administrator;
+import com.molotkov.users.Client;
+import com.molotkov.users.User;
 import javafx.application.Application;
+import javafx.application.Platform;
 import javafx.event.ActionEvent;
+import javafx.event.Event;
+import javafx.event.EventType;
+import javafx.geometry.Insets;
+import javafx.geometry.Pos;
+import javafx.scene.Group;
+import javafx.scene.Node;
 import javafx.scene.Scene;
-import javafx.scene.control.Button;
-import javafx.scene.layout.StackPane;
+import javafx.scene.layout.BorderPane;
+import javafx.scene.layout.GridPane;
+import javafx.scene.layout.HBox;
+import javafx.scene.paint.Color;
+import javafx.stage.Modality;
 import javafx.stage.Stage;
-import javafx.collections.*;
 import javafx.scene.control.*;
+import javafx.util.Pair;
+
+import java.sql.Connection;
+import java.sql.SQLException;
+
+import static com.molotkov.gui.GuiWindowConsts.WINDOW_HEIGHT;
+import static com.molotkov.gui.GuiWindowConsts.WINDOW_WIDTH;
 
 public class MainScreen extends Application {
+    private static final String PRIMARY_STAGE_TITLE = "Java Super Shop";
+    private static final Color PRIMARY_STAGE_DEFAULT_BACKGROUND_COLOR = Color.WHITE;
+    private User user;
 
     @Override
-    public void start(Stage stage) {
-        ObservableList<Word> wordsList = FXCollections.observableArrayList();
-        wordsList.add(new Word("First Word", "Definition of First Word"));
-        wordsList.add(new Word("Second Word", "Definition of Second Word"));
-        wordsList.add(new Word("Third Word", "Definition of Third Word"));
-        ListView<Word> listViewOfWords = new ListView<>(wordsList);
-        listViewOfWords.setCellFactory(param -> new ListCell<Word>() {
-            @Override
-            protected void updateItem(Word item, boolean empty) {
-                super.updateItem(item, empty);
+    public void start(Stage primaryStage) {
+        primaryStage.setTitle(PRIMARY_STAGE_TITLE);
 
-                if (empty || item == null || item.getWord() == null) {
-                    setText(null);
-                } else {
-                    setText(item.getWord());
-                }
-            }
-        });
-        stage.setScene(new Scene(listViewOfWords));
-        stage.show();
+        final DBConnector connector = new DBConnector("jdbc:postgresql:test_db");
+
+        final Group root = new Group();
+        final Scene scene = new Scene(root, WINDOW_WIDTH, WINDOW_HEIGHT, PRIMARY_STAGE_DEFAULT_BACKGROUND_COLOR);
+
+        final TabPane tabPane = new TabPane();
+
+        final BorderPane borderPane = new BorderPane();
+
+        final Tab loginTab = new Tab();
+        loginTab.setText("Login");
+        final HBox loginBox = new HBox(10);
+        loginBox.setAlignment(Pos.CENTER);
+        loginBox.getChildren().add(loginButton(connector.getConnection()));
+        loginTab.setContent(loginBox);
+
+        tabPane.getTabs().add(loginTab);
+        tabPane.setTabClosingPolicy(TabPane.TabClosingPolicy.UNAVAILABLE);
+
+        // bind to take available space
+        borderPane.prefHeightProperty().bind(scene.heightProperty());
+        borderPane.prefWidthProperty().bind(scene.widthProperty());
+
+        borderPane.setCenter(tabPane);
+        scene.setRoot(borderPane);
+        primaryStage.setScene(scene);
+        primaryStage.show();
     }
 
-    public static class Word {
-        private final String word;
-        private final String definition;
+    private Button loginButton(final Connection connection) {
+        Button btn = new Button();
+        btn.setText("Gain access to the Shop");
 
-        public Word(String word, String definition) {
-            this.word = word;
-            this.definition = definition;
+        btn.setOnAction(mainEvent -> loginAction(connection));
+        return btn;
+    }
+
+    private void loginAction(final Connection connection) {
+        // Create the custom dialog.
+        Alert alert = new Alert(Alert.AlertType.INFORMATION);
+        alert.setTitle("Login");
+        alert.setHeaderText("Login Dialog");
+        Dialog<Pair<String, String>> dialog = new Dialog<>();
+        dialog.setTitle("Login into Super Java Shop");
+        dialog.setContentText("Enter your username and password : ");
+        dialog.initModality(Modality.NONE);
+
+        // Set login button
+        ButtonType loginButtonType = new ButtonType("Login", ButtonBar.ButtonData.OK_DONE);
+        dialog.getDialogPane().getButtonTypes().addAll(loginButtonType, ButtonType.CANCEL);
+
+        // Create the username and password labels and fields.
+        GridPane grid = new GridPane();
+        grid.setHgap(10);
+        grid.setVgap(10);
+        grid.setPadding(new Insets(20, 150, 10, 10));
+
+        TextField userName = new TextField();
+        userName.setPromptText("e.g. m03j");
+        PasswordField userPasswd = new PasswordField();
+        userPasswd.setPromptText("xxxx");
+
+
+        grid.add(new Label("Usermame: "), 0, 0);
+        grid.add(userName, 1, 0);
+        grid.add(new Label("Password: "), 0, 1);
+        grid.add(userPasswd, 1, 1);
+
+        // Enable/Disable login button depending on whether a username was entered.
+        Node loginButton = dialog.getDialogPane().lookupButton(loginButtonType);
+        loginButton.setDisable(true);
+
+        // Do some validation (using the Java 8 lambda syntax).
+        userName.textProperty().addListener((observable, oldValue, newValue) -> loginButton.setDisable(newValue.trim().isEmpty()));
+
+        dialog.getDialogPane().setContent(grid);
+
+        // Request focus on the player name field by default.
+        Platform.runLater(() -> userName.requestFocus());
+
+        dialog.initModality(Modality.APPLICATION_MODAL);
+        dialog.show();
+
+        loginButton.addEventFilter(EventType.ROOT, e -> {
+            try {
+                userAuthentication(e, dialog, userName.getText(), userPasswd.getText(), connection);
+            } catch (SQLException ex) {
+                ex.printStackTrace();
+            }
+        });
+    }
+
+    private void userAuthentication(Event e, Dialog dialog, String userName, String userPasswd, Connection connection) throws SQLException {
+        if(e.getEventType().equals(ActionEvent.ACTION)){
+            e.consume();
+            if (isUserAllowed(userName, userPasswd, connection)) {
+                if (isUserAdmin(userName, userPasswd, connection)) {
+                    user = new Administrator(userName,userPasswd);
+                } else {
+                    user = new Client(userName, userPasswd);
+                }
+                dialog.close();
+            }
+            else {
+                ShakeTransition animation = new ShakeTransition(dialog.getDialogPane(), t->dialog.show());
+                animation.playFromStart();
+            }
         }
+    }
 
-        public String getWord() {
-            return word;
+    private boolean isUserAllowed(String userName, String userPasswd, Connection connection) throws SQLException {
+        DBCursorHolder cursor = DBUtils.filterFromTable(connection, "users", new String[]{"user_name"},
+                new String[]{String.format("user_name = '%s'", userName), "AND", String.format("user_password = '%s'",userPasswd)});
+        while(cursor.getResults().next()) {
+            if (cursor.getResults().getString(1).equals(userName)) {
+                cursor.closeCursor();
+                return true;
+            } else {
+                cursor.closeCursor();
+                return false;
+            }
         }
+        return false;
+    }
 
-        public String getDefinition() {
-            return definition;
+    private boolean isUserAdmin(String userName, String userPasswd, Connection connection) throws SQLException {
+        DBCursorHolder cursor = DBUtils.filterFromTable(connection, "users", new String[]{"privileges"},
+                new String[]{String.format("user_name = '%s'", userName), "AND", String.format("user_password = '%s'",userPasswd)});
+        cursor.getResults().next();
+        if (cursor.getResults().getBoolean(1)) {
+            cursor.closeCursor();
+            return true;
+        } else {
+            cursor.closeCursor();
+            return false;
         }
     }
 

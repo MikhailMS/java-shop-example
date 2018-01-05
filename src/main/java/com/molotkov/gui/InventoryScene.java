@@ -7,23 +7,19 @@ import com.molotkov.interfaces.ProductStorage;
 import com.molotkov.products.Product;
 
 import com.molotkov.users.Administrator;
-import com.molotkov.users.Client;
 import com.molotkov.users.User;
-import javafx.application.Application;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
-import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
-import javafx.stage.Stage;
 import javafx.util.Duration;
 import org.controlsfx.control.Notifications;
 import org.controlsfx.control.table.TableFilter;
@@ -33,10 +29,7 @@ import org.controlsfx.tools.Utils;
 import java.text.DecimalFormat;
 import java.util.Map;
 
-import static com.molotkov.gui.GuiWindowConsts.WINDOW_HEIGHT;
-import static com.molotkov.gui.GuiWindowConsts.WINDOW_WIDTH;
-
-public class InventoryScene extends Application {
+public class InventoryScene {
     private static final String PRODUCT_NAME_COLUMN = "Product Name";
     private static final String PRODUCT_WEIGHT_COLUMN = "Product Weight";
     private static final String PRODUCT_PRICE_COLUMN = "Product Price";
@@ -62,27 +55,6 @@ public class InventoryScene extends Application {
     private static final String ADMIN_REMOVE_PRODUCT_NOTIFICATION_ERROR = "Something went wrong while removing product from inventory: Possibly you tried to remove more occurrences of a product than exist in inventory";
 
     private static HBox addProductBox;
-
-    @Override
-    public void start(Stage stage) {
-        User client = new Client("t", "t");
-        User admin = new Administrator("t", "t");
-
-        Basket userBasket = new Basket();
-
-        Inventory inventory = new Inventory();
-        try {
-            inventory.addProducts(new Product("chicken", 1, 2.3),3);
-            inventory.addProducts(new Product("apple", 0.151, 0.8), 2);
-        } catch (InventoryException e) {
-            e.printStackTrace();
-        }
-
-        client.setBasket(userBasket);
-
-        stage.setScene(new Scene(InventoryScene.createMainInventoryBox(inventory, client), WINDOW_WIDTH, WINDOW_HEIGHT));
-        stage.show();
-    }
 
     public static VBox createMainInventoryBox(final Inventory inventory, final User user) {
         final VBox inventoryTableView = new VBox();
@@ -375,9 +347,5 @@ public class InventoryScene extends Application {
         addProductBox.setSpacing(3);
 
         return addProductBox;
-    }
-
-    public static void main(String... args) {
-        launch(args);
     }
 }

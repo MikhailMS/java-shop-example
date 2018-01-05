@@ -9,16 +9,22 @@ public class DBConnector {
     private User user;
     private Connection connection;
 
+    public DBConnector(final String dbUrl) {
+        this.dbUrl = dbUrl;
+        try {
+            Class.forName("org.postgresql.Driver");
+            this.connection = DriverManager.getConnection(this.dbUrl);
+        } catch (ClassNotFoundException | SQLException ex) {
+            ex.printStackTrace();
+        }
+    }
+
     public DBConnector(final String dbUrl, final User user) {
         this.dbUrl = dbUrl;
         try {
             Class.forName("org.postgresql.Driver");
-            if (user == null) {
-                this.connection = DriverManager.getConnection(this.dbUrl);
-            } else {
-                this.user = user;
-                this.connection = DriverManager.getConnection(this.dbUrl, this.user.getUserName(), this.user.getUserPasswd());
-            }
+            this.user = user;
+            this.connection = DriverManager.getConnection(this.dbUrl, this.user.getUserName(), this.user.getUserPasswd());
         } catch (ClassNotFoundException | SQLException ex) {
             ex.printStackTrace();
         }
