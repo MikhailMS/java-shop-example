@@ -89,7 +89,7 @@ Also I am using TDD approach to complete this project as I found this really con
               - [ ] Save basket - **save basket when client closes application**
               - [ ] Restore basket - **restore basket when client reopens application, if basket was previously saved**
           - [ ] Connect GUI to database
-              - [ ] Login GUI
+              - [x] Login GUI
               - [ ] Client GUI
                   - [ ] Highlighted parts
               - [ ] Administrator GUI
