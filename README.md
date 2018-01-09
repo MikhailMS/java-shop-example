@@ -56,12 +56,12 @@ Also I am using TDD approach to complete this project as I found this really con
       
   - [ ] As an optional part, I'd like to introduce GUI, which will make it easier to fill basket, see orders and etc
       - [x] Login screen
-      - [x] Can login into system and gain appropriate rights **IN DEVELOPMENT/TESTING**
+      - [x] Can login into system and gain appropriate rights
       - [x] Client GUI
           - [x] See all available products
           - [x] Add to basket
           - [x] Remove from basket
-          - [x] Complete order - **needs to be connected to DB**
+          - [x] Complete order
           - [x] See all completed orders (client can see only his orders) 
           - [x] See total cost of all completed orders
           - [x] Sort orders by date, total price

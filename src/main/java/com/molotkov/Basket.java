@@ -66,7 +66,7 @@ public class Basket implements ProductStorage {
         final ArrayList<String> result = new ArrayList<>();
         final String names = this.products.entrySet().
                 parallelStream().
-                map(p -> String.format("'%s'",p.getKey().getName())).
+                map(p -> p.getKey().getName()).
                 collect(Collectors.joining(","));
         final String amounts = this.products.entrySet().
                 parallelStream().

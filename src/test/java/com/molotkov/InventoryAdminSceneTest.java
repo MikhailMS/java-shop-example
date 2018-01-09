@@ -34,7 +34,7 @@ public class InventoryAdminSceneTest extends ApplicationTest {
             e.printStackTrace();
         }
 
-        stage.setScene(new Scene(InventoryScene.createMainInventoryBox(inventory, admin), WINDOW_WIDTH, WINDOW_HEIGHT));
+        stage.setScene(new Scene(InventoryScene.createMainInventoryBox(inventory, admin, null), WINDOW_WIDTH, WINDOW_HEIGHT));
         stage.show();
     }
 

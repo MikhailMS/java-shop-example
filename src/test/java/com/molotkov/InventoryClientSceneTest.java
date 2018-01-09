@@ -37,7 +37,7 @@ public class InventoryClientSceneTest extends ApplicationTest {
 
         client.setBasket(userBasket);
 
-        stage.setScene(new Scene(InventoryScene.createMainInventoryBox(inventory, client), WINDOW_WIDTH, WINDOW_HEIGHT));
+        stage.setScene(new Scene(InventoryScene.createMainInventoryBox(inventory, client, null), WINDOW_WIDTH, WINDOW_HEIGHT));
         stage.show();
     }
 

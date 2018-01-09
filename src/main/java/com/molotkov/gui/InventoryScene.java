@@ -2,6 +2,9 @@ package com.molotkov.gui;
 
 import com.molotkov.Basket;
 import com.molotkov.Inventory;
+import com.molotkov.db.DBConnector;
+import com.molotkov.db.DBCursorHolder;
+import com.molotkov.db.DBUtils;
 import com.molotkov.exceptions.InventoryException;
 import com.molotkov.interfaces.ProductStorage;
 import com.molotkov.products.Product;
@@ -27,6 +30,7 @@ import org.controlsfx.control.table.TableRowExpanderColumn;
 import org.controlsfx.tools.Utils;
 
 import java.text.DecimalFormat;
+import java.util.List;
 import java.util.Map;
 
 public class InventoryScene {
@@ -56,7 +60,7 @@ public class InventoryScene {
 
     private static HBox addProductBox;
 
-    public static VBox createMainInventoryBox(final Inventory inventory, final User user) {
+    public static VBox createMainInventoryBox(final Inventory inventory, final User user, final DBConnector connector) {
         final VBox inventoryTableView = new VBox();
         inventoryTableView.setSpacing(5);
         inventoryTableView.setPadding(new Insets(5, 5, 5, 5));
@@ -69,7 +73,7 @@ public class InventoryScene {
         }
         else {
             inventoryTableView.getChildren().addAll(createInventoryTableView(inventory, user), createTitleLabel("Basket", Color.DARKBLUE,
-                    "Calibri", FontWeight.BOLD, 16), createBasketTableView(user.getBasket()));
+                    "Calibri", FontWeight.BOLD, 16), createBasketTableView(user.getBasket(), connector, user));
         }
 
         return inventoryTableView;
@@ -90,7 +94,7 @@ public class InventoryScene {
         table.getColumns().add(expander);
     }
 
-    private static void addClientBasketRowExpander(final TableView table) {
+    private static void addClientBasketRowExpander(final TableView table, final DBConnector connector, final User user) {
         final TextField address = new TextField();
         address.setPromptText("Enter delivery address");
         address.setId("delivery-address");
@@ -106,7 +110,43 @@ public class InventoryScene {
 
             completeOrder.setOnMouseClicked(mouseEvent -> {
                 try {
+
                     // Here should be a call to a DB, which saves order to DB as "completed"
+                    final List<String> basketDetails = param.getValue().toDBFormat();
+                    final String names = basketDetails.get(0);
+                    final String amounts = basketDetails.get(1);
+
+                    if (user.retrievedBasketId() >= 0) {
+                        DBUtils.insertSpecificIntoTable(connector.getConnection(), "orders", new String[]{"basket_id", "order_owner",
+                                        "address"}, new String[]{String.valueOf(user.retrievedBasketId()), user.getUserName(), address.getText()});
+
+                        DBUtils.updateTable(connector.getConnection(), "baskets", new String[]{"processed"}, new String[]{"'t'"},
+                                new String[]{"processed='f'", "AND", String.format("basket_owner='%s'", user.getUserName()), "AND",
+                                String.format("basket_id=%d",user.retrievedBasketId())});
+                    } else {
+                        DBUtils.insertSpecificIntoTable(connector.getConnection(), "baskets", new String[]{"basket_owner", "products_name",
+                        "products_amount"}, new String[]{String.format("'%s'",user.getUserName()), String.format("'%s'",names), String.format("'%s'",amounts)});
+
+                        final DBCursorHolder cursor = DBUtils.filterFromTable(connector.getConnection(), "baskets",
+                                new String[]{"basket_id"}, new String[]{String.format("basket_owner='%s'",user.getUserName()),
+                                "AND", "processed='f'"});
+
+                        while(cursor.getResults().next()) {
+                            user.setRetrievedBasketId(cursor.getResults().getInt(1));
+                        }
+                        cursor.closeCursor();
+
+                        DBUtils.insertSpecificIntoTable(connector.getConnection(), "orders", new String[]{"basket_id", "order_owner",
+                                "address"}, new String[]{String.valueOf(user.retrievedBasketId()), String.format("'%s'",user.getUserName()),
+                                String.format("'%s'",address.getText())});
+
+                        DBUtils.updateTable(connector.getConnection(), "baskets", new String[]{"processed"}, new String[]{"'t'"},
+                                new String[]{"processed='f'", "AND", String.format("basket_owner='%s'", user.getUserName()), "AND",
+                                        String.format("basket_id=%d",user.retrievedBasketId())});
+                    }
+
+                    address.clear();
+
                     Notifications.create()
                             .darkStyle()
                             .title("Info")
@@ -115,6 +155,7 @@ public class InventoryScene {
                             .owner(Utils.getWindow(editor))
                             .hideAfter(Duration.seconds(2))
                             .showConfirm();
+
                 } catch (Exception e) {
                     Notifications.create()
                             .darkStyle()
@@ -263,7 +304,7 @@ public class InventoryScene {
         return table;
     }
 
-    private static TableView createBasketTableView(final Basket basket) {
+    private static TableView createBasketTableView(final Basket basket, final DBConnector connector, final User user) {
         final ObservableList<Basket> items = FXCollections.observableArrayList(basket);
 
         final TableView<Basket> table = new TableView<>(items);
@@ -275,7 +316,7 @@ public class InventoryScene {
         basketTotalColumn.setCellValueFactory(item -> new SimpleStringProperty(String.format("%.2f", item.getValue().calculateTotal())));
 
         table.getColumns().add(basketTotalColumn);
-        addClientBasketRowExpander(table);
+        addClientBasketRowExpander(table, connector, user);
 
         return table;
     }
@@ -316,6 +357,8 @@ public class InventoryScene {
                     items.removeAll(inventory.getProducts().entrySet());
                     inventory.addProducts(new Product(newProductName, Double.valueOf(newProductWeight), Double.valueOf(newProductPrice)), Integer.valueOf(newProductAmount));
                     items.addAll(inventory.getProducts().entrySet());
+
+                    // Here should also be a call to save new product to DB
 
                     addProductName.clear();
                     addProductWeight.clear();

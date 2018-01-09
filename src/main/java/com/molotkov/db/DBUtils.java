@@ -55,9 +55,8 @@ public class DBUtils {
             final List<String> columnsList = Arrays.asList(columnsToUpdate);
             final List<String> valuesList = Arrays.asList(newValues);
             final List<String> columnValueList = new ArrayList<>();
-            iterateSimultaneously(columnsList, valuesList, (String column, String value) -> {
-                columnValueList.add(String.format("%s = %s",column, value));
-            });
+            iterateSimultaneously(columnsList, valuesList, (String column, String value) ->
+                    columnValueList.add(String.format("%s = %s",column, value)));
             final String columnValueString = Stream.of(columnValueList.toArray(new String[0])).collect(Collectors.joining(" "));
             final String filterArgumentsString = Stream.of(filterArguments).collect(Collectors.joining(" "));
             final String query = String.format("UPDATE %s SET %s WHERE %s", tableName, columnValueString, filterArgumentsString);
