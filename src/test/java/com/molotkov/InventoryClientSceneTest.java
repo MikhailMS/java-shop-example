@@ -33,7 +33,7 @@ public class InventoryClientSceneTest extends ApplicationTest {
     @ClassRule
     public static PostgreSQLContainer postgres = new PostgreSQLContainer();
 
-    @Before
+/*    @Before
     public void setUp() {
         final HikariConfig hikariConfig = new HikariConfig();
         hikariConfig.setJdbcUrl(postgres.getJdbcUrl());
@@ -41,12 +41,20 @@ public class InventoryClientSceneTest extends ApplicationTest {
         hikariConfig.setPassword(postgres.getPassword());
 
         dataSource = new HikariDataSource(hikariConfig);
-    }
+    }*/
 
     @Override
     public void start(Stage stage) {
         User client = new Client("t", "t");
         Basket userBasket = new Basket();
+
+        // TestContainers bit
+        final HikariConfig hikariConfig = new HikariConfig();
+        hikariConfig.setJdbcUrl(postgres.getJdbcUrl());
+        hikariConfig.setUsername(postgres.getUsername());
+        hikariConfig.setPassword(postgres.getPassword());
+
+        dataSource = new HikariDataSource(hikariConfig);
 
         Inventory inventory = new Inventory();
         try {
