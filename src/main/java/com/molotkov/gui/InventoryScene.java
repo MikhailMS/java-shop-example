@@ -29,6 +29,7 @@ import org.controlsfx.control.table.TableFilter;
 import org.controlsfx.control.table.TableRowExpanderColumn;
 import org.controlsfx.tools.Utils;
 
+import java.sql.Connection;
 import java.text.DecimalFormat;
 import java.util.List;
 import java.util.Map;
@@ -60,7 +61,7 @@ public class InventoryScene {
 
     private static HBox addProductBox;
 
-    public static VBox createMainInventoryBox(final Inventory inventory, final User user, final DBConnector connector) {
+    public static VBox createMainInventoryBox(final Inventory inventory, final User user, final Connection connection) {
         final VBox inventoryTableView = new VBox();
         inventoryTableView.setSpacing(5);
         inventoryTableView.setPadding(new Insets(5, 5, 5, 5));
@@ -73,7 +74,7 @@ public class InventoryScene {
         }
         else {
             inventoryTableView.getChildren().addAll(createInventoryTableView(inventory, user), createTitleLabel("Basket", Color.DARKBLUE,
-                    "Calibri", FontWeight.BOLD, 16), createBasketTableView(user.getBasket(), connector, user));
+                    "Calibri", FontWeight.BOLD, 16), createBasketTableView(user.getBasket(), connection, user));
         }
 
         return inventoryTableView;
@@ -94,7 +95,7 @@ public class InventoryScene {
         table.getColumns().add(expander);
     }
 
-    private static void addClientBasketRowExpander(final TableView table, final DBConnector connector, final User user) {
+    private static void addClientBasketRowExpander(final TableView table, final Connection connection, final User user) {
         final TextField address = new TextField();
         address.setPromptText("Enter delivery address");
         address.setId("delivery-address");
@@ -117,17 +118,17 @@ public class InventoryScene {
                     final String amounts = basketDetails.get(1);
 
                     if (user.retrievedBasketId() >= 0) {
-                        DBUtils.insertSpecificIntoTable(connector.getConnection(), "orders", new String[]{"basket_id", "order_owner",
+                        DBUtils.insertSpecificIntoTable(connection, "orders", new String[]{"basket_id", "order_owner",
                                         "address"}, new String[]{String.valueOf(user.retrievedBasketId()), user.getUserName(), address.getText()});
 
-                        DBUtils.updateTable(connector.getConnection(), "baskets", new String[]{"processed"}, new String[]{"'t'"},
+                        DBUtils.updateTable(connection, "baskets", new String[]{"processed"}, new String[]{"'t'"},
                                 new String[]{"processed='f'", "AND", String.format("basket_owner='%s'", user.getUserName()), "AND",
                                 String.format("basket_id=%d",user.retrievedBasketId())});
                     } else {
-                        DBUtils.insertSpecificIntoTable(connector.getConnection(), "baskets", new String[]{"basket_owner", "products_name",
+                        DBUtils.insertSpecificIntoTable(connection, "baskets", new String[]{"basket_owner", "products_name",
                         "products_amount"}, new String[]{String.format("'%s'",user.getUserName()), String.format("'%s'",names), String.format("'%s'",amounts)});
 
-                        final DBCursorHolder cursor = DBUtils.filterFromTable(connector.getConnection(), "baskets",
+                        final DBCursorHolder cursor = DBUtils.filterFromTable(connection, "baskets",
                                 new String[]{"basket_id"}, new String[]{String.format("basket_owner='%s'",user.getUserName()),
                                 "AND", "processed='f'"});
 
@@ -136,11 +137,11 @@ public class InventoryScene {
                         }
                         cursor.closeCursor();
 
-                        DBUtils.insertSpecificIntoTable(connector.getConnection(), "orders", new String[]{"basket_id", "order_owner",
+                        DBUtils.insertSpecificIntoTable(connection, "orders", new String[]{"basket_id", "order_owner",
                                 "address"}, new String[]{String.valueOf(user.retrievedBasketId()), String.format("'%s'",user.getUserName()),
                                 String.format("'%s'",address.getText())});
 
-                        DBUtils.updateTable(connector.getConnection(), "baskets", new String[]{"processed"}, new String[]{"'t'"},
+                        DBUtils.updateTable(connection, "baskets", new String[]{"processed"}, new String[]{"'t'"},
                                 new String[]{"processed='f'", "AND", String.format("basket_owner='%s'", user.getUserName()), "AND",
                                         String.format("basket_id=%d",user.retrievedBasketId())});
                     }
@@ -304,7 +305,7 @@ public class InventoryScene {
         return table;
     }
 
-    private static TableView createBasketTableView(final Basket basket, final DBConnector connector, final User user) {
+    private static TableView createBasketTableView(final Basket basket, final Connection connection, final User user) {
         final ObservableList<Basket> items = FXCollections.observableArrayList(basket);
 
         final TableView<Basket> table = new TableView<>(items);
@@ -316,7 +317,7 @@ public class InventoryScene {
         basketTotalColumn.setCellValueFactory(item -> new SimpleStringProperty(String.format("%.2f", item.getValue().calculateTotal())));
 
         table.getColumns().add(basketTotalColumn);
-        addClientBasketRowExpander(table, connector, user);
+        addClientBasketRowExpander(table, connection, user);
 
         return table;
     }

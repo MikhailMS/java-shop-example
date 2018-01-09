@@ -218,7 +218,7 @@ public class MainScreen extends Application {
         inventoryTab.setText("Inventory");
         final HBox inventoryBox = new HBox(10);
         inventoryBox.setAlignment(Pos.CENTER);
-        inventoryBox.getChildren().add(InventoryScene.createMainInventoryBox(shopInventory, user, connector));
+        inventoryBox.getChildren().add(InventoryScene.createMainInventoryBox(shopInventory, user, connector.getConnection()));
         inventoryTab.setContent(inventoryBox);
 
         final Tab orderHistoryTab = new Tab();
@@ -254,7 +254,7 @@ public class MainScreen extends Application {
         inventoryTab.setText("Inventory");
         final HBox inventoryBox = new HBox(10);
         inventoryBox.setAlignment(Pos.CENTER);
-        inventoryBox.getChildren().add(InventoryScene.createMainInventoryBox(shopInventory, user, connector));
+        inventoryBox.getChildren().add(InventoryScene.createMainInventoryBox(shopInventory, user, connector.getConnection()));
         inventoryTab.setContent(inventoryBox);
 
         final Tab orderHistoryTab = new Tab();

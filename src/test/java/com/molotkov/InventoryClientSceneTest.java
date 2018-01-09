@@ -6,14 +6,21 @@ import com.molotkov.gui.InventoryScene;
 import com.molotkov.products.Product;
 import com.molotkov.users.Client;
 import com.molotkov.users.User;
+import com.zaxxer.hikari.HikariConfig;
+import com.zaxxer.hikari.HikariDataSource;
 import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.control.TextField;
 import javafx.stage.Stage;
+import org.junit.Before;
+import org.junit.ClassRule;
 import org.junit.Test;
 import org.loadui.testfx.GuiTest;
+import org.testcontainers.containers.PostgreSQLContainer;
 import org.testfx.framework.junit.ApplicationTest;
 import org.testfx.matcher.control.TableViewMatchers;
+
+import java.sql.SQLException;
 
 import static com.molotkov.gui.GuiWindowConsts.WINDOW_HEIGHT;
 import static com.molotkov.gui.GuiWindowConsts.WINDOW_WIDTH;
@@ -21,6 +28,20 @@ import static com.molotkov.gui.GuiWindowConsts.WINDOW_WIDTH;
 import static org.testfx.api.FxAssert.verifyThat;
 
 public class InventoryClientSceneTest extends ApplicationTest {
+    private HikariDataSource dataSource;
+
+    @ClassRule
+    public static PostgreSQLContainer postgres = new PostgreSQLContainer();
+
+    @Before
+    public void setUp() {
+        final HikariConfig hikariConfig = new HikariConfig();
+        hikariConfig.setJdbcUrl(postgres.getJdbcUrl());
+        hikariConfig.setUsername(postgres.getUsername());
+        hikariConfig.setPassword(postgres.getPassword());
+
+        dataSource = new HikariDataSource(hikariConfig);
+    }
 
     @Override
     public void start(Stage stage) {
@@ -37,7 +58,11 @@ public class InventoryClientSceneTest extends ApplicationTest {
 
         client.setBasket(userBasket);
 
-        stage.setScene(new Scene(InventoryScene.createMainInventoryBox(inventory, client, null), WINDOW_WIDTH, WINDOW_HEIGHT));
+        try {
+            stage.setScene(new Scene(InventoryScene.createMainInventoryBox(inventory, client, dataSource.getConnection()), WINDOW_WIDTH, WINDOW_HEIGHT));
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
         stage.show();
     }
 
