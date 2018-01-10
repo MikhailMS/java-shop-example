@@ -29,7 +29,7 @@ import static org.testfx.api.FxAssert.verifyThat;
 
 public class InventoryClientSceneTest extends ApplicationTest {
     private HikariDataSource dataSource;
-    private boolean setupIsDone = false;
+    private static boolean setupIsDone = false;
 
 
     @ClassRule
@@ -49,6 +49,7 @@ public class InventoryClientSceneTest extends ApplicationTest {
         dataSource = new HikariDataSource(hikariConfig);
 
         if(!setupIsDone) {
+            System.out.println("Hallo ee");
             final Statement statement = dataSource.getConnection().createStatement();
 
             statement.addBatch("CREATE TABLE IF NOT EXISTS users ( user_name text PRIMARY KEY, user_passwd text NOT NULL," +
