@@ -60,6 +60,10 @@ public class InventoryClientSceneTest extends ApplicationTest {
         statement.executeBatch();
         statement.close();
         dataSource.close();
+        while (dataSource.isClosed()) {
+            
+        }
+        dataSource = null;
     }
 
     @Override
