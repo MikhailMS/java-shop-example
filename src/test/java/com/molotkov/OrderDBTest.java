@@ -14,6 +14,7 @@ import org.testcontainers.containers.PostgreSQLContainer;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
+import java.util.List;
 
 import static org.rnorth.visibleassertions.VisibleAssertions.assertEquals;
 
@@ -60,8 +61,14 @@ public class OrderDBTest {
 
         // Save basket
         final ArrayList<String> valuesList = new ArrayList<>();
+        final List<String> basketDetails = testBasket.toDBFormat();
+        final String names = basketDetails.get(0);
+        final String amounts = basketDetails.get(1);
+
         valuesList.add("'testUser'");
-        valuesList.addAll(testBasket.toDBFormat());
+        valuesList.add(String.format("'%s'",names));
+        valuesList.add(String.format("%s", amounts));
+
         DBUtils.insertSpecificIntoTable(dataSource.getConnection(),"baskets",
                 new String[] {"basket_owner", "products_name", "products_amount"}, valuesList.toArray(new String[0]));
 

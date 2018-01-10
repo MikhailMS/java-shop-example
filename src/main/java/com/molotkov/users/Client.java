@@ -10,6 +10,7 @@ import com.molotkov.products.Product;
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.List;
 
 public class Client extends User {
 
@@ -27,8 +28,13 @@ public class Client extends User {
 
     public void saveBasket(final Connection connection, final Basket basket) {
         final ArrayList<String> valuesList = new ArrayList<>();
+        final List<String> basketDetails = basket.toDBFormat();
+        final String names = basketDetails.get(0);
+        final String amounts = basketDetails.get(1);
+
         valuesList.add(String.format("'%s'", super.getUserName()));
-        valuesList.addAll(basket.toDBFormat());
+        valuesList.add(String.format("'%s'",names));
+        valuesList.add(String.format("%s", amounts));
 
         DBUtils.insertSpecificIntoTable(connection,"baskets",
                 new String[] {"basket_owner", "products_name", "products_amount"}, valuesList.toArray(new String[0]));
