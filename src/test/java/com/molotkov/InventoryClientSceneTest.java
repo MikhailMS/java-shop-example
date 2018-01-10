@@ -12,7 +12,6 @@ import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.control.TextField;
 import javafx.stage.Stage;
-import org.junit.Before;
 import org.junit.ClassRule;
 import org.junit.Test;
 import org.loadui.testfx.GuiTest;
@@ -21,6 +20,7 @@ import org.testfx.framework.junit.ApplicationTest;
 import org.testfx.matcher.control.TableViewMatchers;
 
 import java.sql.SQLException;
+import java.sql.Statement;
 
 import static com.molotkov.gui.GuiWindowConsts.WINDOW_HEIGHT;
 import static com.molotkov.gui.GuiWindowConsts.WINDOW_WIDTH;
@@ -33,18 +33,8 @@ public class InventoryClientSceneTest extends ApplicationTest {
     @ClassRule
     public static PostgreSQLContainer postgres = new PostgreSQLContainer();
 
-/*    @Before
-    public void setUp() {
-        final HikariConfig hikariConfig = new HikariConfig();
-        hikariConfig.setJdbcUrl(postgres.getJdbcUrl());
-        hikariConfig.setUsername(postgres.getUsername());
-        hikariConfig.setPassword(postgres.getPassword());
-
-        dataSource = new HikariDataSource(hikariConfig);
-    }*/
-
     @Override
-    public void start(Stage stage) {
+    public void start(Stage stage) throws SQLException {
         User client = new Client("t", "t");
         Basket userBasket = new Basket();
 
@@ -55,6 +45,24 @@ public class InventoryClientSceneTest extends ApplicationTest {
         hikariConfig.setPassword(postgres.getPassword());
 
         dataSource = new HikariDataSource(hikariConfig);
+
+        final Statement statement = dataSource.getConnection().createStatement();
+
+        statement.addBatch("CREATE TABLE IF NOT EXISTS users ( user_name text PRIMARY KEY, user_passwd text NOT NULL," +
+                " privileges boolean DEFAULT FALSE )");
+        statement.addBatch("INSERT INTO users VALUES ( 't', 't', FALSE )");
+
+        statement.addBatch(" CREATE TABLE IF NOT EXISTS baskets ( basket_id serial PRIMARY KEY," +
+                " basket_owner text REFERENCES users(user_name) ON DELETE CASCADE, products_name text NOT NULL," +
+                " products_amount text NOT NULL, processed boolean DEFAULT FALSE, created_at timestamp DEFAULT CURRENT_TIMESTAMP )");
+
+        statement.addBatch("CREATE TABLE IF NOT EXISTS orders ( order_id serial, basket_id int4 REFERENCES baskets(basket_id) ON DELETE CASCADE," +
+                " order_owner text REFERENCES users(user_name) ON DELETE CASCADE, address text NOT NULL, total_price numeric (8,2) NOT NULL," +
+                " completed boolean DEFAULT FALSE, created_at timestamp DEFAULT CURRENT_TIMESTAMP )");
+
+        statement.executeBatch();
+        statement.close();
+        // TestContainers ends
 
         Inventory inventory = new Inventory();
         try {
