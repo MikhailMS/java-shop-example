@@ -12,6 +12,7 @@ import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.control.TextField;
 import javafx.stage.Stage;
+import org.junit.Before;
 import org.junit.ClassRule;
 import org.junit.Test;
 import org.loadui.testfx.GuiTest;
@@ -33,12 +34,8 @@ public class InventoryClientSceneTest extends ApplicationTest {
     @ClassRule
     public static PostgreSQLContainer postgres = new PostgreSQLContainer();
 
-    @Override
-    public void start(Stage stage) throws SQLException {
-        User client = new Client("t", "t");
-        Basket userBasket = new Basket();
-
-        // TestContainers bit
+    @Before
+    public void setUp() throws SQLException {
         final HikariConfig hikariConfig = new HikariConfig();
         hikariConfig.setJdbcUrl(postgres.getJdbcUrl());
         hikariConfig.setUsername(postgres.getUsername());
@@ -62,6 +59,21 @@ public class InventoryClientSceneTest extends ApplicationTest {
 
         statement.executeBatch();
         statement.close();
+        dataSource.close();
+    }
+
+    @Override
+    public void start(Stage stage) {
+        User client = new Client("t", "t");
+        Basket userBasket = new Basket();
+
+        // TestContainers bit
+        final HikariConfig hikariConfig = new HikariConfig();
+        hikariConfig.setJdbcUrl(postgres.getJdbcUrl());
+        hikariConfig.setUsername(postgres.getUsername());
+        hikariConfig.setPassword(postgres.getPassword());
+
+        dataSource = new HikariDataSource(hikariConfig);
         // TestContainers ends
 
         Inventory inventory = new Inventory();
