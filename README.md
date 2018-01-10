@@ -64,11 +64,11 @@ Also I am using TDD approach to complete this project as I found this really con
           - [x] Complete order
           - [x] See all completed orders (client can see only his orders) 
           - [x] See total cost of all completed orders
-          - [x] Sort orders by date, total price
-          - [x] Filter orders by date/total price
+          - [x] Sort orders by total price
+          - [x] Filter orders by total price
           - [x] Search for specific product by name
-          - [x] Sort products by name, price
-          - [x] Filter products by price, weight
+          - [x] Sort products by name, price and weight
+          - [x] Filter products by name, price and weight
       - [x] Administrator GUI
           - [x] See all available products 
           - [x] See total cost of all products
@@ -90,8 +90,8 @@ Also I am using TDD approach to complete this project as I found this really con
               - [ ] Restore basket - **restore basket when client reopens application, if basket was previously saved**
           - [ ] Connect GUI to database
               - [x] Login GUI
-              - [ ] Client GUI
-                  - [ ] Highlighted parts
+              - [x] Client GUI
+                  - [x] Highlighted parts
               - [ ] Administrator GUI
                   - [ ] Highlighted parts
               
@@ -106,7 +106,8 @@ Also I am using TDD approach to complete this project as I found this really con
 
 ## Improvements, that could be done later
   - [ ] At the moment user can add more products into basket than there exist in inventory -> make them talk to one another
-  - [ ] At the moment data in rows doesn't update straight after product has been added/removed to/from basket/inventory, but rather after row been clicked, table been sorted or Details button been clicked
+  - [ ] At the moment there is no column to sort orders by date, but could be added. Will require extra column in GUI and extra filed in Order class
+  - [ ] At the moment data in rows does not update straight after product has been added/removed to/from basket/inventory, but rather after row been clicked, table been sorted or Details button been clicked
   - [ ] At the moment, when new product added to basket/inventory, in order to display it, I delete all entries from observable list + its underlying list
     
 ## Build and tested on MacOS and Java 1.8 (_**required**_)

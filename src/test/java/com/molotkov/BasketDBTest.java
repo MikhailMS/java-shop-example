@@ -57,7 +57,7 @@ public class BasketDBTest {
         final List<String> basketDetails = savedBasket.toDBFormat();
         final String names = basketDetails.get(0);
         final String amounts = basketDetails.get(1);
-        
+
         valuesList.add("'testUser'");
         valuesList.add(String.format("'%s'",names));
         valuesList.add(String.format("%s", amounts));
