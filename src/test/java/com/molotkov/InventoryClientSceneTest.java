@@ -61,7 +61,7 @@ public class InventoryClientSceneTest extends ApplicationTest {
                     " products_amount text NOT NULL, processed boolean DEFAULT FALSE, created_at timestamp DEFAULT CURRENT_TIMESTAMP )");
 
             statement.addBatch("CREATE TABLE IF NOT EXISTS orders ( order_id serial, basket_id int4 REFERENCES baskets(basket_id) ON DELETE CASCADE," +
-                    " order_owner text REFERENCES users(user_name) ON DELETE CASCADE, address text NOT NULL, total_price numeric (8,2) NOT NULL," +
+                    " order_owner text REFERENCES users(user_name) ON DELETE CASCADE, address text NOT NULL," +
                     " completed boolean DEFAULT FALSE, created_at timestamp DEFAULT CURRENT_TIMESTAMP )");
 
             statement.executeBatch();
