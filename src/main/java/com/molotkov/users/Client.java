@@ -73,6 +73,7 @@ public class Client extends User {
         orderValuesList.add(String.format("'%s'", order.getAddress()));
         orderValuesList.add(String.format("'%s'", getUserName()));
         orderValuesList.add(Double.toString(order.getBasket().calculateTotal()));
+
         DBUtils.insertSpecificIntoTable(connection, "orders", new String[]{"basket_id", "address", "order_owner", "total_price"},
                 orderValuesList.toArray(new String[0]));
     }
@@ -103,8 +104,8 @@ public class Client extends User {
         return new Order(restoredBasket, orderRetrieveAddress);
     }
 
-    public void completeOrder(final Connection connection) throws SQLException {
-        // Retrieve order
+    public void completeOrder(final Connection connection, final String address) throws SQLException {
+/*        // Retrieve order
         final DBCursorHolder cursor = DBUtils.filterFromTable(connection, "orders", new String[]{"basket_id"},
                 new String[]{String.format("order_owner = '%s'", getUserName()), "AND", "completed = FALSE"});
         cursor.getResults().next();
@@ -116,5 +117,16 @@ public class Client extends User {
                 new String[]{String.format("basket_id = %s", orderRetrieveBasketId), "AND", String.format("order_owner = '%s'", getUserName())});
         DBUtils.updateTable(connection, "baskets", new String[]{"processed"}, new String[]{"TRUE"},
                 new String[]{String.format("basket_id = %s", orderRetrieveBasketId), "AND", String.format("basket_owner = '%s'", getUserName())});
+*/
+
+
+        DBUtils.insertSpecificIntoTable(connection, "orders", new String[]{"basket_id", "order_owner",
+        "address"}, new String[]{String.valueOf(idRetrievedBasket), String.format("'%s'", super.getUserName()),
+        String.format("'%s'", address)});
+
+        DBUtils.updateTable(connection, "baskets", new String[]{"processed"}, new String[]{"'t'"},
+            new String[]{"processed='f'", "AND", String.format("basket_owner='%s'", super.getUserName()), "AND",
+            String.format("basket_id=%d", idRetrievedBasket)});
+
     }
 }

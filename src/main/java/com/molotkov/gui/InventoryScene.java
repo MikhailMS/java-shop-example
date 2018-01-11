@@ -112,7 +112,25 @@ public class InventoryScene {
 
             completeOrder.setOnMouseClicked(mouseEvent -> {
                 try {
+                    final Client client = (Client)user;
 
+                    if (client.retrievedBasketId() >= 0) {
+                        client.completeOrder(connection, address.getText());
+                    } else {
+                        client.saveBasket(connection, client.getBasket());
+
+                        // Get "basket_id" of newly created basket entry
+                        final DBCursorHolder cursor = DBUtils.filterFromTable(connection, "baskets",
+                                new String[]{"basket_id"}, new String[]{String.format("basket_owner='%s'",user.getUserName()),
+                                        "AND", "processed='f'"});
+
+                        while(cursor.getResults().next()) {
+                            client.setRetrievedBasketId(cursor.getResults().getInt(1));
+                        }
+                        cursor.closeCursor();
+
+                        client.completeOrder(connection, address.getText());
+                    }
                     // Here should be a call to a DB, which saves order to DB as "completed"
                     /*final List<String> basketDetails = param.getValue().toDBFormat();
                     final String names = basketDetails.get(0);
