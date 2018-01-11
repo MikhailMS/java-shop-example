@@ -112,66 +112,17 @@ public class InventoryScene {
 
             completeOrder.setOnMouseClicked(mouseEvent -> {
                 try {
+                    
                     final Client client = (Client)user;
 
                     if (client.retrievedBasketId() >= 0) {
                         client.completeOrder(connection, address.getText());
                     } else {
                         client.saveBasket(connection, client.getBasket());
-
-                        // Get "basket_id" of newly created basket entry
-                        final DBCursorHolder cursor = DBUtils.filterFromTable(connection, "baskets",
-                                new String[]{"basket_id"}, new String[]{String.format("basket_owner='%s'",user.getUserName()),
-                                        "AND", "processed='f'"});
-
-                        while(cursor.getResults().next()) {
-                            client.setRetrievedBasketId(cursor.getResults().getInt(1));
-                        }
-                        cursor.closeCursor();
-
+                        client.setRetrievedBasketId(connection);
                         client.completeOrder(connection, address.getText());
                     }
-                    // Here should be a call to a DB, which saves order to DB as "completed"
-                    /*final List<String> basketDetails = param.getValue().toDBFormat();
-                    final String names = basketDetails.get(0);
-                    final String amounts = basketDetails.get(1);
 
-                    if (user.retrievedBasketId() >= 0) {
-                        // If basket being retrieved, complete order
-                        //((Client) user).completeOrder(connection);
-                        DBUtils.insertSpecificIntoTable(connection, "orders", new String[]{"basket_id", "order_owner",
-                                        "address"}, new String[]{String.valueOf(user.retrievedBasketId()), user.getUserName(), address.getText()});
-
-                        DBUtils.updateTable(connection, "baskets", new String[]{"processed"}, new String[]{"'t'"},
-                                new String[]{"processed='f'", "AND", String.format("basket_owner='%s'", user.getUserName()), "AND",
-                                String.format("basket_id=%d",user.retrievedBasketId())});
-                    } else {
-                        // Otherwise create entry in "baskets"
-                        //((Client) user).saveBasket(connection, user.getBasket());
-                        DBUtils.insertSpecificIntoTable(connection, "baskets", new String[]{"basket_owner", "products_name",
-                        "products_amount"}, new String[]{String.format("'%s'",user.getUserName()), String.format("'%s'",names), String.format("'%s'",amounts)});
-
-                        // Get "basket_id" of newly created basket entry
-                        final DBCursorHolder cursor = DBUtils.filterFromTable(connection, "baskets",
-                                new String[]{"basket_id"}, new String[]{String.format("basket_owner='%s'",user.getUserName()),
-                                "AND", "processed='f'"});
-
-                        while(cursor.getResults().next()) {
-                            user.setRetrievedBasketId(cursor.getResults().getInt(1));
-                        }
-                        cursor.closeCursor();
-
-                        // Complete order
-                        //((Client) user).completeOrder(connection);
-                        DBUtils.insertSpecificIntoTable(connection, "orders", new String[]{"basket_id", "order_owner",
-                                "address"}, new String[]{String.valueOf(user.retrievedBasketId()), String.format("'%s'",user.getUserName()),
-                                String.format("'%s'",address.getText())});
-
-                        DBUtils.updateTable(connection, "baskets", new String[]{"processed"}, new String[]{"'t'"},
-                                new String[]{"processed='f'", "AND", String.format("basket_owner='%s'", user.getUserName()), "AND",
-                                        String.format("basket_id=%d",user.retrievedBasketId())});
-                    }
-*/
                     address.clear();
 
                     Notifications.create()

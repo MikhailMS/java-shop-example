@@ -29,8 +29,30 @@ public class Client extends User {
         return this.idRetrievedBasket;
     }
 
-    public void setRetrievedBasketId(int retrievedBasketId) {
-        this.idRetrievedBasket = retrievedBasketId;
+    public void setRetrievedBasketId(final Connection connection) {
+        this.idRetrievedBasket = getCurrentBasketId(connection);
+    }
+
+    private int getCurrentBasketId(final Connection connection) {
+        final DBCursorHolder cursor;
+        int id = -1;
+
+        try {
+            cursor = DBUtils.filterFromTable(connection, "baskets",
+                    new String[]{"basket_id"}, new String[]{String.format("basket_owner='%s'", super.getUserName()),
+                            "AND", "processed='f'"});
+
+            while(cursor.getResults().next()) {
+                id = cursor.getResults().getInt(1);
+            }
+
+            cursor.closeCursor();
+            return id;
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return -1;
     }
 
     public void saveBasket(final Connection connection, final Basket basket) {

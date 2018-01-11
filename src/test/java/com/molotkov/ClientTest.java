@@ -78,10 +78,8 @@ public class ClientTest {
         final Basket restoredBasket = client.restoreBasket(dataSource.getConnection());
         assertEquals("restoreBasket succeeds", basket.toString(), restoredBasket.toString());
 
-    // TESTING saveOrder
-        final Order order = new Order(basket, "London");
-
     // TESTING completeOrder
+        client.setRetrievedBasketId(dataSource.getConnection());
         client.completeOrder(dataSource.getConnection(), "London");
         cursor = DBUtils.filterFromTable(dataSource.getConnection(), "orders", new String[]{"order_id"},
                 new String[]{String.format("order_owner = '%s'", client.getUserName())});
