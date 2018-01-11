@@ -81,10 +81,6 @@ public class ClientTest {
     // TESTING saveOrder
         final Order order = new Order(basket, "London");
 
-    // TESTING restoreOrder
-        final Order restoredOrder = client.restoreOrder(dataSource.getConnection());
-        assertEquals("restoreOrder succeeds", order.toString(), restoredOrder.toString());
-
     // TESTING completeOrder
         client.completeOrder(dataSource.getConnection(), "London");
         cursor = DBUtils.filterFromTable(dataSource.getConnection(), "orders", new String[]{"order_id"},
