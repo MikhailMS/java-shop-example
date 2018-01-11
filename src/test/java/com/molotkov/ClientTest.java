@@ -43,8 +43,7 @@ public class ClientTest {
                 " products_amount text NOT NULL, processed boolean DEFAULT FALSE, created_at timestamp DEFAULT CURRENT_TIMESTAMP )");
 
         statement.addBatch("CREATE TABLE IF NOT EXISTS orders ( order_id serial, basket_id int4 REFERENCES baskets(basket_id) ON DELETE CASCADE," +
-                " order_owner text REFERENCES users(user_name) ON DELETE CASCADE, address text NOT NULL, total_price numeric (8,2) NOT NULL," +
-                " created_at timestamp DEFAULT CURRENT_TIMESTAMP )");
+                " order_owner text REFERENCES users(user_name) ON DELETE CASCADE, address text NOT NULL, created_at timestamp DEFAULT CURRENT_TIMESTAMP )");
 
         statement.executeBatch();
         statement.close();
@@ -55,6 +54,7 @@ public class ClientTest {
         final Client client = new Client("client", "client");
         final Basket basket = new Basket();
         final Product apple = new Product("apple", 0.150, 0.8);
+
     // TESTING addProductToBasket
         client.addProductToBasket(basket, apple, 2);
         assertEquals("addProductToBasket succeeds", true, basket.getProducts().containsKey(apple));
@@ -71,8 +71,8 @@ public class ClientTest {
         cursor.getResults().next();
 
         final String resultSaveBasket = cursor.getResults().getString(1);
-        assertEquals("saveBasket succeeds", "1", resultSaveBasket);
         cursor.closeCursor();
+        assertEquals("saveBasket succeeds", "1", resultSaveBasket);
 
     // TESTING restoreBasket
         final Basket restoredBasket = client.restoreBasket(dataSource.getConnection());
@@ -80,14 +80,6 @@ public class ClientTest {
 
     // TESTING saveOrder
         final Order order = new Order(basket, "London");
-        client.saveOrder(dataSource.getConnection(), order);
-        cursor = DBUtils.filterFromTable(dataSource.getConnection(), "orders", new String[]{"order_id"},
-                new String[]{String.format("order_owner = '%s'", client.getUserName())});
-        cursor.getResults().next();
-
-        final String resultSaveOrder = cursor.getResults().getString(1);
-        assertEquals("saveOrder succeeds", "1", resultSaveOrder);
-        cursor.closeCursor();
 
     // TESTING restoreOrder
         final Order restoredOrder = client.restoreOrder(dataSource.getConnection());
@@ -100,15 +92,15 @@ public class ClientTest {
         cursor.getResults().next();
 
         final String resultCompleteOrder = cursor.getResults().getString(1);
-        assertEquals("completeOrder - order update - succeeds", "1", resultCompleteOrder);
         cursor.closeCursor();
+        assertEquals("completeOrder - order update - succeeds", "1", resultCompleteOrder);
 
         cursor = DBUtils.filterFromTable(dataSource.getConnection(), "baskets", new String[]{"basket_id"},
                 new String[]{String.format("basket_owner = '%s'", client.getUserName()), "AND", "processed = TRUE"});
         cursor.getResults().next();
 
         final String resultCompleteBasket = cursor.getResults().getString(1);
-        assertEquals("completeOrder - basket update - succeeds", "1", resultCompleteBasket);
         cursor.closeCursor();
+        assertEquals("completeOrder - basket update - succeeds", "1", resultCompleteBasket);
     }
 }
