@@ -10,6 +10,7 @@ import com.molotkov.interfaces.ProductStorage;
 import com.molotkov.products.Product;
 
 import com.molotkov.users.Administrator;
+import com.molotkov.users.Client;
 import com.molotkov.users.User;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.property.SimpleStringProperty;
@@ -113,11 +114,13 @@ public class InventoryScene {
                 try {
 
                     // Here should be a call to a DB, which saves order to DB as "completed"
-                    final List<String> basketDetails = param.getValue().toDBFormat();
+                    /*final List<String> basketDetails = param.getValue().toDBFormat();
                     final String names = basketDetails.get(0);
                     final String amounts = basketDetails.get(1);
 
                     if (user.retrievedBasketId() >= 0) {
+                        // If basket being retrieved, complete order
+                        //((Client) user).completeOrder(connection);
                         DBUtils.insertSpecificIntoTable(connection, "orders", new String[]{"basket_id", "order_owner",
                                         "address"}, new String[]{String.valueOf(user.retrievedBasketId()), user.getUserName(), address.getText()});
 
@@ -125,9 +128,12 @@ public class InventoryScene {
                                 new String[]{"processed='f'", "AND", String.format("basket_owner='%s'", user.getUserName()), "AND",
                                 String.format("basket_id=%d",user.retrievedBasketId())});
                     } else {
+                        // Otherwise create entry in "baskets"
+                        //((Client) user).saveBasket(connection, user.getBasket());
                         DBUtils.insertSpecificIntoTable(connection, "baskets", new String[]{"basket_owner", "products_name",
                         "products_amount"}, new String[]{String.format("'%s'",user.getUserName()), String.format("'%s'",names), String.format("'%s'",amounts)});
 
+                        // Get "basket_id" of newly created basket entry
                         final DBCursorHolder cursor = DBUtils.filterFromTable(connection, "baskets",
                                 new String[]{"basket_id"}, new String[]{String.format("basket_owner='%s'",user.getUserName()),
                                 "AND", "processed='f'"});
@@ -137,6 +143,8 @@ public class InventoryScene {
                         }
                         cursor.closeCursor();
 
+                        // Complete order
+                        //((Client) user).completeOrder(connection);
                         DBUtils.insertSpecificIntoTable(connection, "orders", new String[]{"basket_id", "order_owner",
                                 "address"}, new String[]{String.valueOf(user.retrievedBasketId()), String.format("'%s'",user.getUserName()),
                                 String.format("'%s'",address.getText())});
@@ -145,7 +153,7 @@ public class InventoryScene {
                                 new String[]{"processed='f'", "AND", String.format("basket_owner='%s'", user.getUserName()), "AND",
                                         String.format("basket_id=%d",user.retrievedBasketId())});
                     }
-
+*/
                     address.clear();
 
                     Notifications.create()

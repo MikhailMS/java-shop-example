@@ -13,6 +13,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class Client extends User {
+    private int idRetrievedBasket = -1;
 
     public Client(final String name, final String passwd) {
         super(name, passwd);
@@ -26,18 +27,22 @@ public class Client extends User {
         basket.removeProducts(product, amount);
     }
 
+    public int retrievedBasketId() {
+        return this.idRetrievedBasket;
+    }
+
+    public void setRetrievedBasketId(int retrievedBasketId) {
+        this.idRetrievedBasket = retrievedBasketId;
+    }
+
     public void saveBasket(final Connection connection, final Basket basket) {
-        final ArrayList<String> valuesList = new ArrayList<>();
         final List<String> basketDetails = basket.toDBFormat();
         final String names = basketDetails.get(0);
         final String amounts = basketDetails.get(1);
 
-        valuesList.add(String.format("'%s'", super.getUserName()));
-        valuesList.add(String.format("'%s'",names));
-        valuesList.add(String.format("%s", amounts));
-
         DBUtils.insertSpecificIntoTable(connection,"baskets",
-                new String[] {"basket_owner", "products_name", "products_amount"}, valuesList.toArray(new String[0]));
+                new String[] {"basket_owner", "products_name", "products_amount"}, new String[]{String.format("'%s'", super.getUserName()),
+                        String.format("'%s'",names), String.format("%s", amounts)});
     }
 
     public Basket restoreBasket(final Connection connection) throws SQLException {
@@ -112,5 +117,4 @@ public class Client extends User {
         DBUtils.updateTable(connection, "baskets", new String[]{"processed"}, new String[]{"TRUE"},
                 new String[]{String.format("basket_id = %s", orderRetrieveBasketId), "AND", String.format("basket_owner = '%s'", getUserName())});
     }
-
 }

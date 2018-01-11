@@ -85,9 +85,10 @@ Also I am using TDD approach to complete this project as I found this really con
           - [x] Sort products by name, price
           - [x] Filter products by price, weight
       - [ ] Bring all GUI components into one Stage
-          - [ ] Create main stage with TabPane(tab panel, that contains scenes) 
-              - [ ] Save basket - **save basket when client closes application**
-              - [ ] Restore basket - **restore basket when client reopens application, if basket was previously saved**
+          - [x] Create main stage with TabPane(tab panel, that contains scenes) 
+              - [x] Main stage, which creates tab panels depending on the privilege level of the logged user
+              - [x] Save basket 
+              - [x] Restore basket
           - [ ] Connect GUI to database
               - [x] Login GUI
               - [x] Client GUI

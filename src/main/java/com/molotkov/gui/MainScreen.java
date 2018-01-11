@@ -84,6 +84,22 @@ public class MainScreen extends Application {
         this.primaryStage.show();
     }
 
+    @Override
+    public void stop() {
+        // Handle basket save here only if it's not empty
+        System.out.println("Caught application closure");
+        if (clientBasket.getProducts().size() > 0) {
+            if (((Client)user).retrievedBasketId() < 0) {
+                ((Client)user).saveBasket(connector.getConnection(), clientBasket);
+            }
+        }
+        try {
+            connector.getConnection().close();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
     private Button loginButton(final Connection connection) {
         Button btn = new Button();
         btn.setText("Gain access to the Shop");
@@ -205,7 +221,7 @@ public class MainScreen extends Application {
         // Need to load userOrders
         GuiDbUtils.loadDataToOrders(user, connector, userOrders);
         // Need to load client basket, if it's been saved
-        GuiDbUtils.loadSavedBasket(user, connector, clientBasket);
+        GuiDbUtils.loadSavedBasket((Client)user, connector, clientBasket);
 
         // Create Client scene
         user.setBasket(clientBasket);

@@ -10,6 +10,7 @@ import com.molotkov.exceptions.BasketException;
 import com.molotkov.exceptions.InventoryException;
 import com.molotkov.products.Product;
 import com.molotkov.users.Administrator;
+import com.molotkov.users.Client;
 import com.molotkov.users.User;
 
 import java.sql.ResultSet;
@@ -54,12 +55,13 @@ public class GuiDbUtils {
         }
     }
 
-    public static void loadSavedBasket(final User user, final DBConnector connector, final Basket basket) {
+    public static void loadSavedBasket(final Client client, final DBConnector connector, final Basket basket) {
         DBCursorHolder cursor;
         try {
-            cursor = DBUtils.filterFromTable(connector.getConnection(), "baskets", new String[]{"products_name", "products_amount"},
-                    new String[]{String.format("basket_owner='%s'", user.getUserName()), "AND", "processed='f'"});
+            cursor = DBUtils.filterFromTable(connector.getConnection(), "baskets", new String[]{"basket_id", "products_name", "products_amount"},
+                    new String[]{String.format("basket_owner='%s'", client.getUserName()), "AND", "processed='f'"});
             while (cursor.getResults().next()) {
+                client.setRetrievedBasketId(cursor.getResults().getInt(1));
                 constructBasketFromDB(connector, cursor.getResults(), basket);
             }
             cursor.closeCursor();
@@ -68,12 +70,14 @@ public class GuiDbUtils {
         }
     }
 
-    private static void constructBasketFromDB(final DBConnector connector, ResultSet products, final Basket basketToConstruct) {
+    private static void constructBasketFromDB(final DBConnector connector, final ResultSet products, final Basket basketToConstruct) {
         try {
-            final List<String> names = Arrays.asList(products.getString(1).split(","));
-            final List<String> amounts = Arrays.asList(products.getString(2).split(","));
+            final List<String> names = Arrays.asList(products.getString(2).split(","));
+            final List<String> amounts = Arrays.asList(products.getString(3).split(","));
+
             Product restoredProduct;
             int counter = 0;
+
             for(String productName : names) {
                 final DBCursorHolder productDetails = DBUtils.filterFromTable(connector.getConnection(), "products",
                         new String[]{"product_weight", "product_price"}, new String[]{String.format("product_name='%s'", productName)});

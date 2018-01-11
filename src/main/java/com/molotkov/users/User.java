@@ -15,7 +15,6 @@ public class User implements UserInterface {
     private String userName;
     private String userPasswd;
     private Basket bakset;
-    private int idRetrievedBasket = -1;
 
     public User(final String name, final String passwd) {
         this.userName = name;
@@ -65,14 +64,6 @@ public class User implements UserInterface {
 
     public void setBasket(Basket basket) {
         this.bakset = basket;
-    }
-
-    public int retrievedBasketId() {
-        return this.idRetrievedBasket;
-    }
-
-    public void setRetrievedBasketId(int retrievedBasketId) {
-        this.idRetrievedBasket = retrievedBasketId;
     }
 
     public Basket getBasket() {
