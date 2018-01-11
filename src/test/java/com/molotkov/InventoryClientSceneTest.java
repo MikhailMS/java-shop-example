@@ -148,9 +148,30 @@ public class InventoryClientSceneTest extends ApplicationTest {
 
     @Test
     public void can_complete_order() {
-        clickOn((Node)from(lookup(".expander-button")).nth(2).query());
+        clickOn("Product Name")
+                .clickOn((Node)from(lookup(".expander-button")).nth(0).query())
+                .clickOn("Add to basket")
+                .clickOn((Node)from(lookup(".expander-button")).nth(2).query());
         ((TextField) GuiTest.find("#delivery-address")).setText("London");
         clickOn("Complete order");
         verifyThat(lookup("Order has been made"), Node::isVisible);
+    }
+
+    @Test
+    public void cannot_complete_order_wo_products() {
+        clickOn((Node)from(lookup(".expander-button")).nth(2).query());
+        ((TextField) GuiTest.find("#delivery-address")).setText("London");
+        clickOn("Complete order");
+        verifyThat(lookup("Cannot process the order: Add products to basket to complete order"), Node::isVisible);
+    }
+
+    @Test
+    public void cannot_complete_order_wo_address() {
+        clickOn("Product Name")
+                .clickOn((Node)from(lookup(".expander-button")).nth(0).query())
+                .clickOn("Add to basket")
+                .clickOn((Node)from(lookup(".expander-button")).nth(2).query())
+                .clickOn("Complete order");
+        verifyThat(lookup("Cannot process the order: Enter the delivery address"), Node::isVisible);
     }
 }
