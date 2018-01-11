@@ -9,6 +9,7 @@ import com.molotkov.users.Administrator;
 import com.molotkov.users.Client;
 import com.molotkov.users.User;
 
+import javafx.beans.property.ReadOnlyDoubleWrapper;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
@@ -27,10 +28,14 @@ import org.controlsfx.control.Notifications;
 import org.controlsfx.control.table.TableFilter;
 import org.controlsfx.control.table.TableRowExpanderColumn;
 import org.controlsfx.tools.Utils;
+import sun.tools.jconsole.inspector.TableSorter;
 
 import java.sql.Connection;
 import java.text.DecimalFormat;
 import java.util.Map;
+
+import static com.molotkov.gui.GuiWindowConsts.WINDOW_HEIGHT;
+import static com.molotkov.gui.GuiWindowConsts.WINDOW_WIDTH;
 
 public class InventoryScene {
     private static final String PRODUCT_NAME_COLUMN = "Product Name";
@@ -75,6 +80,10 @@ public class InventoryScene {
                     "Calibri", FontWeight.BOLD, 16), createBasketTableView(user.getBasket(), connection, user));
         }
 
+        // fit content
+        inventoryTableView.prefWidthProperty().bind(new ReadOnlyDoubleWrapper(WINDOW_WIDTH));
+        inventoryTableView.prefHeightProperty().bind(new ReadOnlyDoubleWrapper(WINDOW_HEIGHT));
+
         return inventoryTableView;
     }
 
@@ -89,6 +98,7 @@ public class InventoryScene {
         });
         expander.setText(INVENTORY_DETAILS);
         expander.setId(INVENTORY_DETAILS);
+        expander.setSortable(false);
 
         table.getColumns().add(expander);
     }
@@ -173,6 +183,7 @@ public class InventoryScene {
         });
         expander.setText(ORDER_DETAILS);
         expander.setId(ORDER_DETAILS);
+        expander.setSortable(false);
 
         table.getColumns().add(expander);
     }
@@ -312,6 +323,7 @@ public class InventoryScene {
         final TableColumn<Basket, String> basketTotalColumn = new TableColumn<>(BASKET_TOTAL_COLUMN);
         basketTotalColumn.setId(BASKET_TOTAL_COLUMN);
         basketTotalColumn.setCellValueFactory(item -> new SimpleStringProperty(String.format("%.2f", item.getValue().calculateTotal())));
+        basketTotalColumn.setSortable(false);
 
         table.getColumns().add(basketTotalColumn);
         addClientBasketRowExpander(table, connection, user);
