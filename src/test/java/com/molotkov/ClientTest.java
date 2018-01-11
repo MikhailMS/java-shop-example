@@ -44,7 +44,7 @@ public class ClientTest {
 
         statement.addBatch("CREATE TABLE IF NOT EXISTS orders ( order_id serial, basket_id int4 REFERENCES baskets(basket_id) ON DELETE CASCADE," +
                 " order_owner text REFERENCES users(user_name) ON DELETE CASCADE, address text NOT NULL, total_price numeric (8,2) NOT NULL," +
-                " completed boolean DEFAULT FALSE, created_at timestamp DEFAULT CURRENT_TIMESTAMP )");
+                " created_at timestamp DEFAULT CURRENT_TIMESTAMP )");
 
         statement.executeBatch();
         statement.close();
@@ -94,9 +94,9 @@ public class ClientTest {
         assertEquals("restoreOrder succeeds", order.toString(), restoredOrder.toString());
 
     // TESTING completeOrder
-        client.completeOrder(dataSource.getConnection());
+        client.completeOrder(dataSource.getConnection(), "London");
         cursor = DBUtils.filterFromTable(dataSource.getConnection(), "orders", new String[]{"order_id"},
-                new String[]{String.format("order_owner = '%s'", client.getUserName()), "AND", "completed = TRUE"});
+                new String[]{String.format("order_owner = '%s'", client.getUserName())});
         cursor.getResults().next();
 
         final String resultCompleteOrder = cursor.getResults().getString(1);
