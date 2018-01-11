@@ -42,7 +42,7 @@ public class InventoryClientSceneTest extends ApplicationTest {
 
         // TestContainers bit
         final HikariConfig hikariConfig = new HikariConfig();
-        hikariConfig.setMaximumPoolSize(20);
+        hikariConfig.setMaximumPoolSize(35);
         hikariConfig.setJdbcUrl(postgres.getJdbcUrl());
         hikariConfig.setUsername(postgres.getUsername());
         hikariConfig.setPassword(postgres.getPassword());
@@ -96,12 +96,14 @@ public class InventoryClientSceneTest extends ApplicationTest {
         verifyThat(".table-view", TableViewMatchersExtension.hasColumnWithID("Product Price"));
         verifyThat(".table-view", TableViewMatchersExtension.hasColumnWithID("Quantity available in Inventory"));
         verifyThat(".table-view", TableViewMatchersExtension.hasNoColumnWithID("Product Total Price"));
+        dataSource.close();
     }
 
     @Test
     public void should_contain_data_in_rows_for_user() {
         verifyThat(".table-view", TableViewMatchers.containsRow("apple", 0.151, 0.8, 2, false));
         verifyThat(".table-view", TableViewMatchers.containsRow("chicken", 1.0, 2.3, 3, false));
+        dataSource.close();
     }
 
     @Test
@@ -109,6 +111,7 @@ public class InventoryClientSceneTest extends ApplicationTest {
         clickOn((Node)from(lookup(".expander-button")).nth(0).query()).clickOn("Add to basket");
         sleep(1000);
         verifyThat(lookup("Product has been added to basket"), Node::isVisible);
+        dataSource.close();
     }
 
     @Test
@@ -116,17 +119,20 @@ public class InventoryClientSceneTest extends ApplicationTest {
         clickOn((Node)from(lookup(".expander-button")).nth(0).query()).clickOn("Add to basket").clickOn("Remove from basket");
         sleep(1000);
         verifyThat(lookup("Product has been removed from basket"), Node::isVisible);
+        dataSource.close();
     }
 
     @Test
     public void should_see_columns_basket_table_if_user() {
         verifyThat("#basket-table-view", TableViewMatchersExtension.hasColumnWithID("Basket Total"));
         verifyThat("#basket-table-view", TableViewMatchersExtension.hasColumnWithID("Order Details"));
+        dataSource.close();
     }
 
     @Test
     public void can_see_basket_total_if_user() {
         verifyThat("#basket-table-view", TableViewMatchers.containsRow("0.00", false));
+        dataSource.close();
     }
 
     @Test
@@ -135,6 +141,7 @@ public class InventoryClientSceneTest extends ApplicationTest {
                 .clickOn((Node)from(lookup(".expander-button")).nth(0).query())
                 .clickOn("Add to basket");
         verifyThat("#basket-table-view", TableViewMatchers.containsRow("0.80", false));
+        dataSource.close();
     }
 
     @Test
@@ -145,6 +152,7 @@ public class InventoryClientSceneTest extends ApplicationTest {
         verifyThat("#basket-table-view", TableViewMatchers.containsRow("0.80", false));
         clickOn("Remove from basket");
         verifyThat("#basket-table-view", TableViewMatchers.containsRow("0.00", false));
+        dataSource.close();
     }
 
     @Test
@@ -156,6 +164,7 @@ public class InventoryClientSceneTest extends ApplicationTest {
         ((TextField) GuiTest.find("#delivery-address")).setText("London");
         clickOn("Complete order");
         verifyThat(lookup("Order has been made"), Node::isVisible);
+        dataSource.close();
     }
 
     @Test
@@ -164,6 +173,7 @@ public class InventoryClientSceneTest extends ApplicationTest {
         ((TextField) GuiTest.find("#delivery-address")).setText("London");
         clickOn("Complete order");
         verifyThat(lookup("Cannot process the order: Add products to basket to complete order"), Node::isVisible);
+        dataSource.close();
     }
 
     @Test
@@ -174,5 +184,6 @@ public class InventoryClientSceneTest extends ApplicationTest {
                 .clickOn((Node)from(lookup(".expander-button")).nth(2).query())
                 .clickOn("Complete order");
         verifyThat(lookup("Cannot process the order: Enter the delivery address"), Node::isVisible);
+        dataSource.close();
     }
 }
