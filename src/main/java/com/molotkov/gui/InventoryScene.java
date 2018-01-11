@@ -28,7 +28,6 @@ import org.controlsfx.control.Notifications;
 import org.controlsfx.control.table.TableFilter;
 import org.controlsfx.control.table.TableRowExpanderColumn;
 import org.controlsfx.tools.Utils;
-import sun.tools.jconsole.inspector.TableSorter;
 
 import java.sql.Connection;
 import java.text.DecimalFormat;
