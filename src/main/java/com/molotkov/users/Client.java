@@ -29,6 +29,10 @@ public class Client extends User {
         return this.idRetrievedBasket;
     }
 
+    public void setRetrievedBasketId(final int id) {
+        this.idRetrievedBasket = id;
+    }
+
     public void setRetrievedBasketId(final Connection connection) {
         this.idRetrievedBasket = getCurrentBasketId(connection);
     }

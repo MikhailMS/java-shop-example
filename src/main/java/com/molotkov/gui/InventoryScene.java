@@ -112,7 +112,7 @@ public class InventoryScene {
 
             completeOrder.setOnMouseClicked(mouseEvent -> {
                 try {
-                    
+
                     final Client client = (Client)user;
 
                     if (client.retrievedBasketId() >= 0) {
