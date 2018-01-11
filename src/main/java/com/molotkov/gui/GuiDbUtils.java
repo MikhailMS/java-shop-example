@@ -58,10 +58,10 @@ public class GuiDbUtils {
     public static void loadSavedBasket(final Client client, final DBConnector connector, final Basket basket) {
         DBCursorHolder cursor;
         try {
-            cursor = DBUtils.filterFromTable(connector.getConnection(), "baskets", new String[]{"basket_id", "products_name", "products_amount"},
+            cursor = DBUtils.filterFromTable(connector.getConnection(), "baskets", new String[]{"products_name", "products_amount", "basket_id"},
                     new String[]{String.format("basket_owner='%s'", client.getUserName()), "AND", "processed='f'"});
             while (cursor.getResults().next()) {
-                client.setRetrievedBasketId(cursor.getResults().getInt(1));
+                client.setRetrievedBasketId(cursor.getResults().getInt(3));
                 constructBasketFromDB(connector, cursor.getResults(), basket);
             }
             cursor.closeCursor();
@@ -72,8 +72,8 @@ public class GuiDbUtils {
 
     private static void constructBasketFromDB(final DBConnector connector, final ResultSet products, final Basket basketToConstruct) {
         try {
-            final List<String> names = Arrays.asList(products.getString(2).split(","));
-            final List<String> amounts = Arrays.asList(products.getString(3).split(","));
+            final List<String> names = Arrays.asList(products.getString(1).split(","));
+            final List<String> amounts = Arrays.asList(products.getString(2).split(","));
 
             Product restoredProduct;
             int counter = 0;

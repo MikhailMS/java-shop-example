@@ -2,16 +2,13 @@ package com.molotkov.gui;
 
 import com.molotkov.Basket;
 import com.molotkov.Inventory;
-import com.molotkov.db.DBConnector;
-import com.molotkov.db.DBCursorHolder;
-import com.molotkov.db.DBUtils;
 import com.molotkov.exceptions.InventoryException;
 import com.molotkov.interfaces.ProductStorage;
 import com.molotkov.products.Product;
-
 import com.molotkov.users.Administrator;
 import com.molotkov.users.Client;
 import com.molotkov.users.User;
+
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
@@ -25,6 +22,7 @@ import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
 import javafx.util.Duration;
+
 import org.controlsfx.control.Notifications;
 import org.controlsfx.control.table.TableFilter;
 import org.controlsfx.control.table.TableRowExpanderColumn;
@@ -32,7 +30,6 @@ import org.controlsfx.tools.Utils;
 
 import java.sql.Connection;
 import java.text.DecimalFormat;
-import java.util.List;
 import java.util.Map;
 
 public class InventoryScene {
@@ -111,39 +108,62 @@ public class InventoryScene {
                     .entrySet().parallelStream().mapToInt(Map.Entry::getValue).sum(), param.getValue().calculateTotal()));
 
             completeOrder.setOnMouseClicked(mouseEvent -> {
-                try {
+                if(param.getValue().getProducts().size() > 0) {
+                    if(!address.getText().isEmpty()) {
+                        try {
 
-                    final Client client = (Client)user;
+                            final Client client = (Client)user;
 
-                    if (client.retrievedBasketId() >= 0) {
-                        client.completeOrder(connection, address.getText());
+                            if (client.retrievedBasketId() >= 0) {
+                                client.completeOrder(connection, address.getText());
+                            } else {
+                                client.saveBasket(connection, client.getBasket());
+                                client.setRetrievedBasketId(connection);
+                                client.completeOrder(connection, address.getText());
+                                client.setRetrievedBasketId(-1);
+                            }
+
+                            address.clear();
+
+                            Notifications.create()
+                                    .darkStyle()
+                                    .title("Info")
+                                    .text("Order has been made")
+                                    .position(Pos.CENTER)
+                                    .owner(Utils.getWindow(editor))
+                                    .hideAfter(Duration.seconds(2))
+                                    .showConfirm();
+
+                        } catch (Exception e) {
+                            Notifications.create()
+                                    .darkStyle()
+                                    .title("Error")
+                                    .text("Order has not been completed. Try again")
+                                    .position(Pos.CENTER)
+                                    .owner(Utils.getWindow(editor))
+                                    .hideAfter(Duration.seconds(2))
+                                    .showError();
+                            e.printStackTrace();
+                        }
                     } else {
-                        client.saveBasket(connection, client.getBasket());
-                        client.setRetrievedBasketId(connection);
-                        client.completeOrder(connection, address.getText());
+                        Notifications.create()
+                                .darkStyle()
+                                .title("Error")
+                                .text("Enter the delivery address")
+                                .position(Pos.CENTER)
+                                .owner(Utils.getWindow(editor))
+                                .hideAfter(Duration.seconds(2))
+                                .showError();
                     }
-
-                    address.clear();
-
-                    Notifications.create()
-                            .darkStyle()
-                            .title("Info")
-                            .text("Order has been made")
-                            .position(Pos.CENTER)
-                            .owner(Utils.getWindow(editor))
-                            .hideAfter(Duration.seconds(2))
-                            .showConfirm();
-
-                } catch (Exception e) {
+                } else {
                     Notifications.create()
                             .darkStyle()
                             .title("Error")
-                            .text("Order has not been completed. Try again")
+                            .text("Cannot process empty basket: Add products to basket to complete order")
                             .position(Pos.CENTER)
                             .owner(Utils.getWindow(editor))
                             .hideAfter(Duration.seconds(2))
                             .showError();
-                    e.printStackTrace();
                 }
             });
 
