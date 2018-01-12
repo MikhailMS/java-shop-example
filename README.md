@@ -72,7 +72,7 @@ Also I am using TDD approach to complete this project as I found this really con
       - [x] Administrator GUI
           - [x] See all available products 
           - [x] See total cost of all products
-          - [x] Add new product to inventory - **needs to be connected to DB**
+          - [x] Add new product to inventory 
           - [x] Add products to inventory - **needs to be connected to DB**
           - [x] Remove products from inventory - **needs to be connected to DB**
           - [x] See orders completed by any user 

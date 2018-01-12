@@ -30,6 +30,7 @@ import org.controlsfx.control.table.TableRowExpanderColumn;
 import org.controlsfx.tools.Utils;
 
 import java.sql.Connection;
+import java.sql.SQLException;
 import java.text.DecimalFormat;
 import java.util.Map;
 
@@ -72,10 +73,10 @@ public class InventoryScene {
         inventoryTableView.getChildren().add(createTitleLabel("Inventory", Color.DARKBLUE, "Calibri", FontWeight.BOLD, 16));
 
         if (user instanceof Administrator) {
-            inventoryTableView.getChildren().addAll(createInventoryTableView(inventory, user), addProductBox);
+            inventoryTableView.getChildren().addAll(createInventoryTableView(inventory, user, connection), addProductBox);
         }
         else {
-            inventoryTableView.getChildren().addAll(createInventoryTableView(inventory, user), createTitleLabel("Basket", Color.DARKBLUE,
+            inventoryTableView.getChildren().addAll(createInventoryTableView(inventory, user, connection), createTitleLabel("Basket", Color.DARKBLUE,
                     "Calibri", FontWeight.BOLD, 16), createBasketTableView(user.getBasket(), connection, user));
         }
 
@@ -256,7 +257,7 @@ public class InventoryScene {
         return titleLabel;
     }
 
-    private static TableView createInventoryTableView(final Inventory inventory, final User user) {
+    private static TableView createInventoryTableView(final Inventory inventory, final User user, final Connection connection) {
         final ObservableList<Map.Entry<Product, Integer>> items = FXCollections.observableArrayList(inventory.getProducts().entrySet());
 
         final TableView<Map.Entry<Product, Integer>> table = new TableView<>(items);
@@ -297,7 +298,7 @@ public class InventoryScene {
             table.getColumns().setAll(productNameColumn, productWeightColumn, productPriceColumn, productAmountColumn, productTotalColumn);
             addDetailsRowExpander(table, inventory, ADMIN_ADD_PRODUCT_BUTTON, ADMIN_REMOVE_PRODUCT_BUTTON, ADMIN_ADD_PRODUCT_NOTIFICATION_SUCCESS,
                     ADMIN_ADD_PRODUCT_NOTIFICATION_ERROR, ADMIN_REMOVE_PRODUCT_NOTIFICATION_SUCCESS, ADMIN_REMOVE_PRODUCT_NOTIFICATION_ERROR);
-            addProductBox = createAddProductBox(productNameColumn, productWeightColumn, productPriceColumn, productAmountColumn, inventory, items);
+            addProductBox = createAddProductBox(productNameColumn, productWeightColumn, productPriceColumn, productAmountColumn, inventory, items, user, connection);
         }
         else {
             table.getColumns().setAll(productNameColumn, productWeightColumn, productPriceColumn, productAmountColumn);
@@ -331,7 +332,8 @@ public class InventoryScene {
     }
 
     private static HBox createAddProductBox(final TableColumn productNameColumn, final TableColumn productWeightColumn, final TableColumn productPriceColumn,
-                                     final TableColumn productAmountColumn, final Inventory inventory, final ObservableList items) {
+                                            final TableColumn productAmountColumn, final Inventory inventory, final ObservableList items,
+                                            final User user, final Connection connection) {
         final HBox addProductBox = new HBox();
         final TextField addProductName = new TextField();
         addProductName.setPromptText("Enter name");
@@ -361,18 +363,24 @@ public class InventoryScene {
             final String newProductAmount = addProductAmount.getText();
             if (!newProductName.isEmpty() && !newProductWeight.isEmpty() && !newProductPrice.isEmpty() && ! newProductAmount.isEmpty()) {
                 try {
-                    // Next 3 lines of code is huuuge hack - but can't think of another solution.
-                    // It works, but may give poor performance on big ObservableList
-                    items.removeAll(inventory.getProducts().entrySet());
-                    inventory.addProducts(new Product(newProductName, Double.valueOf(newProductWeight), Double.valueOf(newProductPrice)), Integer.valueOf(newProductAmount));
-                    items.addAll(inventory.getProducts().entrySet());
 
+                    final Product product = new Product(newProductName, Double.parseDouble(newProductWeight), Double.parseDouble(newProductPrice));
                     // Here should also be a call to save new product to DB
+                    try {
+                        ((Administrator)user).addProductToInventory(connection, product, Integer.parseInt(newProductAmount));
+                        // Next 3 lines of code is huuuge hack - but can't think of another solution.
+                        // It works, but may give poor performance on big ObservableList
+                        items.removeAll(inventory.getProducts().entrySet());
+                        inventory.addProducts(product, Integer.parseInt(newProductAmount));
+                        items.addAll(inventory.getProducts().entrySet());
 
-                    addProductName.clear();
-                    addProductWeight.clear();
-                    addProductPrice.clear();
-                    addProductAmount.clear();
+                        addProductName.clear();
+                        addProductWeight.clear();
+                        addProductPrice.clear();
+                        addProductAmount.clear();
+                    } catch (SQLException e) {
+                        e.printStackTrace();
+                    }
                 } catch (InventoryException e) {
                     e.printStackTrace();
                     Notifications.create()
