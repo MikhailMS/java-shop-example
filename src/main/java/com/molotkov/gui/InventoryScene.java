@@ -89,11 +89,12 @@ public class InventoryScene {
 
     private static void addDetailsRowExpander(final TableView table, final ProductStorage storage, final String addButtonText,
                                               final String removeButtonText, final String addNotificationTextSuccess, final String addNotificationTextError,
-                                              final String removeNotificationTextSuccess, final String removeNotificationTextError) {
+                                              final String removeNotificationTextSuccess, final String removeNotificationTextError,
+                                              final User user, final Connection connection) {
         TableRowExpanderColumn<Map.Entry<Product, Integer>> expander = new TableRowExpanderColumn<>(param -> {
             final HBox editor = new HBox(10);
-            editor.getChildren().addAll(createAddButton(addButtonText, addNotificationTextSuccess, addNotificationTextError, storage, editor, param),
-                    createDeleteButton(removeButtonText, removeNotificationTextSuccess, removeNotificationTextError, storage, editor, param));
+            editor.getChildren().addAll(createAddButton(addButtonText, addNotificationTextSuccess, addNotificationTextError, storage, editor, param, user, connection),
+                    createDeleteButton(removeButtonText, removeNotificationTextSuccess, removeNotificationTextError, storage, editor, param, user, connection));
             return editor;
         });
         expander.setText(INVENTORY_DETAILS);
@@ -188,13 +189,20 @@ public class InventoryScene {
         table.getColumns().add(expander);
     }
 
-    private static Button createAddButton(final String buttonText, final String notificationTextSuccess, final String notificationTextError, final ProductStorage storage, final HBox editor , final TableRowExpanderColumn.TableRowDataFeatures<Map.Entry<Product, Integer>> param) {
+    private static Button createAddButton(final String buttonText, final String notificationTextSuccess, final String notificationTextError,
+                                          final ProductStorage storage, final HBox editor , final TableRowExpanderColumn.TableRowDataFeatures<Map.Entry<Product, Integer>> param,
+                                          final User user, final Connection connection) {
         final Button addToBasket = new Button();
         addToBasket.setText(buttonText);
 
         addToBasket.setOnMouseClicked(mouseEvent -> {
             try {
                 storage.addProducts(param.getValue().getKey(), 1);
+                if (user instanceof Administrator) {
+                    ((Administrator)user).increaseProductAmountInInventory(connection, param.getValue().getKey(), 1);
+                } else {
+                    System.out.println("Client detected - unlucky inventory");
+                }
                 Notifications.create()
                         .darkStyle()
                         .title("Info")
@@ -218,12 +226,19 @@ public class InventoryScene {
         return addToBasket;
     }
 
-    private static Button createDeleteButton(final String buttonText, final String notificationTextSuccess, final String notificationTextError, final ProductStorage storage, final HBox editor , final TableRowExpanderColumn.TableRowDataFeatures<Map.Entry<Product, Integer>> param) {
+    private static Button createDeleteButton(final String buttonText, final String notificationTextSuccess, final String notificationTextError,
+                                             final ProductStorage storage, final HBox editor , final TableRowExpanderColumn.TableRowDataFeatures<Map.Entry<Product, Integer>> param,
+                                             final User user, final Connection connection) {
         final Button deleteFromBasket = new Button();
         deleteFromBasket.setText(buttonText);
         deleteFromBasket.setOnMouseClicked(mouseEvent -> {
             try {
                 storage.removeProducts(param.getValue().getKey(), 1);
+                if (user instanceof Administrator) {
+                    ((Administrator)user).decreaseProductAmountInInventory(connection, param.getValue().getKey(), 1);
+                } else {
+                    System.out.println("Client detected - lucky inventory");
+                }
                 Notifications.create()
                         .darkStyle()
                         .title("Info")
@@ -297,13 +312,15 @@ public class InventoryScene {
         if (user instanceof Administrator) {
             table.getColumns().setAll(productNameColumn, productWeightColumn, productPriceColumn, productAmountColumn, productTotalColumn);
             addDetailsRowExpander(table, inventory, ADMIN_ADD_PRODUCT_BUTTON, ADMIN_REMOVE_PRODUCT_BUTTON, ADMIN_ADD_PRODUCT_NOTIFICATION_SUCCESS,
-                    ADMIN_ADD_PRODUCT_NOTIFICATION_ERROR, ADMIN_REMOVE_PRODUCT_NOTIFICATION_SUCCESS, ADMIN_REMOVE_PRODUCT_NOTIFICATION_ERROR);
+                    ADMIN_ADD_PRODUCT_NOTIFICATION_ERROR, ADMIN_REMOVE_PRODUCT_NOTIFICATION_SUCCESS, ADMIN_REMOVE_PRODUCT_NOTIFICATION_ERROR,
+                    user, connection);
             addProductBox = createAddProductBox(productNameColumn, productWeightColumn, productPriceColumn, productAmountColumn, inventory, items, user, connection);
         }
         else {
             table.getColumns().setAll(productNameColumn, productWeightColumn, productPriceColumn, productAmountColumn);
             addDetailsRowExpander(table, user.getBasket(), CLIENT_ADD_PRODUCT_BUTTON, CLIENT_REMOVE_PRODUCT_BUTTON, CLIENT_ADD_PRODUCT_NOTIFICATION_SUCCESS,
-                    CLIENT_ADD_PRODUCT_NOTIFICATION_ERROR, CLIENT_REMOVE_PRODUCT_NOTIFICATION_SUCCESS, CLIENT_REMOVE_PRODUCT_NOTIFICATION_ERROR);
+                    CLIENT_ADD_PRODUCT_NOTIFICATION_ERROR, CLIENT_REMOVE_PRODUCT_NOTIFICATION_SUCCESS, CLIENT_REMOVE_PRODUCT_NOTIFICATION_ERROR,
+                    user, connection);
         }
 
         table.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
@@ -367,7 +384,7 @@ public class InventoryScene {
                     final Product product = new Product(newProductName, Double.parseDouble(newProductWeight), Double.parseDouble(newProductPrice));
                     // Here should also be a call to save new product to DB
                     try {
-                        ((Administrator)user).addProductToInventory(connection, product, Integer.parseInt(newProductAmount));
+                        ((Administrator)user).addNewProductToInventory(connection, product, Integer.parseInt(newProductAmount));
                         // Next 3 lines of code is huuuge hack - but can't think of another solution.
                         // It works, but may give poor performance on big ObservableList
                         items.removeAll(inventory.getProducts().entrySet());

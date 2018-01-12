@@ -80,7 +80,7 @@ public class AdministratorTest {
     // TESTING addProductToInventory
         final Product newProduct = new Product("turkey", 1.5, 3);
         final int amount = 1;
-        admin.addProductToInventory(dataSource.getConnection(),newProduct, amount);
+        admin.addNewProductToInventory(dataSource.getConnection(),newProduct, amount);
 
         DBCursorHolder cursor = DBUtils.innerJoinTables(dataSource.getConnection(), "products", "inventory", "product_id",
                 new String[]{"product_name", "product_price", "product_amount"}, new String[]{String.format("product_name = '%s'",newProduct.getName())});
@@ -96,7 +96,7 @@ public class AdministratorTest {
         cursor.closeCursor();
 
     // TESTING removeProductFromInventory
-        admin.removeProductFromInventory(dataSource.getConnection(), newProduct, 1);
+        admin.decreaseProductAmountInInventory(dataSource.getConnection(), newProduct, 1);
 
         cursor = DBUtils.innerJoinTables(dataSource.getConnection(), "products", "inventory", "product_id",
                 new String[]{"product_name", "product_price", "product_amount"}, new String[]{String.format("product_name = '%s'",newProduct.getName())});

@@ -33,7 +33,22 @@ public class Administrator extends User {
         return total;
     }
 
-    public void addProductToInventory(final Connection connection, final Product product, final int amount) throws SQLException {
+    public void increaseProductAmountInInventory(final Connection connection, final Product product, final int amount)
+            throws SQLException {
+        final DBCursorHolder cursor = DBUtils.innerJoinTables(connection, "products", "inventory", "product_id",
+                new String[]{"product_id","product_amount"}, new String[]{String.format("product_name = '%s'",product.getName())});
+
+        while(cursor.getResults().next()) {
+            final int productId = cursor.getResults().getInt(1);
+            final int productAmount = cursor.getResults().getInt(2);
+            final int newAmount = productAmount + amount;
+            DBUtils.updateTable(connection, "inventory", new String[]{"product_amount"}, new String[]{Integer.toString(newAmount)},
+                new String[]{String.format("product_id = %d",productId)});
+
+        }
+    }
+
+    public void addNewProductToInventory(final Connection connection, final Product product, final int amount) throws SQLException {
         DBUtils.insertSpecificIntoTable(connection, "products", new String[]{"product_name","product_weight","product_price"},
                 new String[]{String.format("'%s'",product.getName()), Double.toString(product.getWeight()), Double.toString(product.getPrice())});
 
@@ -47,7 +62,7 @@ public class Administrator extends User {
         cursor.closeCursor();
     }
 
-    public void removeProductFromInventory(final Connection connection, final Product product, final int amount)
+    public void decreaseProductAmountInInventory(final Connection connection, final Product product, final int amount)
             throws SQLException, InventoryException {
         final DBCursorHolder cursor = DBUtils.innerJoinTables(connection, "products", "inventory", "product_id",
                 new String[]{"product_id","product_amount"}, new String[]{String.format("product_name = '%s'",product.getName())});
