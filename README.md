@@ -79,8 +79,8 @@ Also I am using TDD approach to complete this project as I found this really con
           - [x] See total cost of all completed orders
           - [x] Sort orders by date, total price
           - [x] Filter orders by date/total price
-          - [x] Add user to the system - **needs to be connected to DB**
-          - [x] Delete user from system - **needs to be connected to DB**
+          - [x] Add user to the system
+          - [x] Delete user from system
           - [x] Search for specific product by name
           - [x] Sort products by name, price
           - [x] Filter products by price, weight
