@@ -20,11 +20,17 @@ import java.util.List;
 
 public class GuiDbUtils {
 
-    public static void loadDataToInventory(final DBConnector connector, final Inventory inventory) {
+    public static void loadDataToInventory(final DBConnector connector, final Inventory inventory, final User user) {
         DBCursorHolder cursor;
         try {
-            cursor = DBUtils.innerJoinTables(connector.getConnection(), "products", "inventory", "product_id",
-                    new String[] {"product_name", "product_weight", "product_price", "product_amount"}, new String[]{});
+            if (user instanceof Client) {
+                cursor = DBUtils.innerJoinTables(connector.getConnection(), "products", "inventory", "product_id",
+                        new String[] {"product_name", "product_weight", "product_price", "product_amount"}, new String[]{"product_amount > 0"});
+            } else {
+                cursor = DBUtils.innerJoinTables(connector.getConnection(), "products", "inventory", "product_id",
+                        new String[] {"product_name", "product_weight", "product_price", "product_amount"}, new String[]{});
+            }
+
             while (cursor.getResults().next()) {
                 inventory.addProducts(new Product(cursor.getResults().getString(1),
                         cursor.getResults().getDouble(2), cursor.getResults().getDouble(3)),cursor.getResults().getInt(4));

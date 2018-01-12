@@ -103,7 +103,8 @@ Also I am using TDD approach to complete this project as I found this really con
   
 ## Bug trace
   - [x] When adding new product via form, product is added, but then I cannot change its amount
-  - [ ] restoreBasketFromDB method shall be fixed, as currently it's hardcoded to use fixed weight and price for all restored products in Basket
+  - [x] **METHOD DEPRECATED - WILL BE DELETED** restoreBasketFromDB method shall be fixed, as currently it's hardcoded to use fixed weight and price for all restored products in Basket
+  - [ ] When completing order as Client in GUI, basket is not reset. Should find a way to clear it
 
 ## Improvements, that could be done later
   - [ ] At the moment user can add more products into basket than there exist in inventory -> make them talk to one another

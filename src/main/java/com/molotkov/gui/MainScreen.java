@@ -221,7 +221,7 @@ public class MainScreen extends Application {
 
     private Pane createClientPaneScene() {
         // Need to load shopInventory
-        GuiDbUtils.loadDataToInventory(connector, shopInventory);
+        GuiDbUtils.loadDataToInventory(connector, shopInventory, user);
         // Need to load userOrders
         GuiDbUtils.loadDataToOrders(user, connector, userOrders);
         // Need to load client basket, if it's been saved
@@ -261,7 +261,7 @@ public class MainScreen extends Application {
 
     private Pane createAdminPaneScene() {
         // Need to load shopInventory
-        GuiDbUtils.loadDataToInventory(connector, shopInventory);
+        GuiDbUtils.loadDataToInventory(connector, shopInventory, user);
         // Need to load userOrders
         GuiDbUtils.loadDataToOrders(user, connector, userOrders);
         // Need to load users
