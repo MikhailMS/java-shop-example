@@ -54,7 +54,7 @@ Also I am using TDD approach to complete this project as I found this really con
           - [x] Filter orders by date
           - [x] Filter orders by total price 
       
-  - [ ] As an optional part, I'd like to introduce GUI, which will make it easier to fill basket, see orders and etc
+  - [-] As an optional part, I'd like to introduce GUI, which will make it easier to fill basket, see orders and etc
       - [x] Login screen
       - [x] Can login into system and gain appropriate rights
       - [x] Client GUI
@@ -73,8 +73,8 @@ Also I am using TDD approach to complete this project as I found this really con
           - [x] See all available products 
           - [x] See total cost of all products
           - [x] Add new product to inventory 
-          - [x] Add products to inventory - **needs to be connected to DB**
-          - [x] Remove products from inventory - **needs to be connected to DB**
+          - [x] Add products to inventory
+          - [x] Remove products from inventory 
           - [x] See orders completed by any user 
           - [x] See total cost of all completed orders
           - [x] Sort orders by date, total price
@@ -84,17 +84,22 @@ Also I am using TDD approach to complete this project as I found this really con
           - [x] Search for specific product by name
           - [x] Sort products by name, price
           - [x] Filter products by price, weight
-      - [ ] Bring all GUI components into one Stage
+      - [x] Bring all GUI components into one Stage
           - [x] Create main stage with TabPane(tab panel, that contains scenes) 
               - [x] Main stage, which creates tab panels depending on the privilege level of the logged user
               - [x] Save basket 
               - [x] Restore basket
-          - [ ] Connect GUI to database
+          - [x] Connect GUI to database
               - [x] Login GUI
               - [x] Client GUI
                   - [x] Highlighted parts
-              - [ ] Administrator GUI
-                  - [ ] Highlighted parts
+              - [x] Administrator GUI
+                  - [x] Highlighted parts
+                  
+      - [ ] Finish up tests
+          - [ ] Client GUI tests
+          - [ ] Administrator GUI tests
+          - [ ] MainStage GUI tests
               
   - [ ] As an optional part, I'd like to write a service, which will keep shop's inventory in sync with DB and completed orders
       - [ ] Once order is completed, service will update inventory in the DB and update local copy of the inventory
