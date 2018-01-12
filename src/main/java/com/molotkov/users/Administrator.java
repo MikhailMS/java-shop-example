@@ -65,9 +65,9 @@ public class Administrator extends User {
         }
     }
 
-    public void createUser(final Connection connection, final String userName, final String userPasswd) {
-        DBUtils.insertSpecificIntoTable(connection, "users", new String[]{"user_name","user_passwd"},
-                new String[]{String.format("'%s'",userName), String.format("'%s'",userPasswd)});
+    public void createUser(final Connection connection, final String userName, final String userPasswd, final boolean privilege) {
+        DBUtils.insertSpecificIntoTable(connection, "users", new String[]{"user_name","user_passwd", "privileges"},
+                new String[]{String.format("'%s'",userName), String.format("'%s'",userPasswd), privilege ? "'t'" : "'f" });
     }
 
     public void deleteUser(final Connection connection, final String userName) {

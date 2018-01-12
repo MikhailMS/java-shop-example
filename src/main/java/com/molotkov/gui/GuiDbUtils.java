@@ -35,6 +35,21 @@ public class GuiDbUtils {
         }
     }
 
+    public static void loadDataToUserList(final DBConnector connector, final List<User> userList) {
+        DBCursorHolder cursor;
+        try {
+            cursor = DBUtils.filterFromTable(connector.getConnection(), "users", new String[]{"user_name", "user_password", "privileges"},
+                    new String[]{});
+            while (cursor.getResults().next()) {
+                if (cursor.getResults().getBoolean(3)) userList.add(new Administrator(cursor.getResults().getString(1),
+                        cursor.getResults().getString(2)));
+                else userList.add(new Client(cursor.getResults().getString(1), cursor.getResults().getString(2)));
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
     public static void loadDataToOrders(final User user, final DBConnector connector, final List<Order> orders) {
         DBCursorHolder cursor;
         try {

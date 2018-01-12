@@ -35,6 +35,7 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
+import static com.molotkov.gui.GuiWindowConsts.HBOX_SPACING;
 import static com.molotkov.gui.GuiWindowConsts.WINDOW_HEIGHT;
 import static com.molotkov.gui.GuiWindowConsts.WINDOW_WIDTH;
 
@@ -43,9 +44,12 @@ public class MainScreen extends Application {
     private static final Color PRIMARY_STAGE_DEFAULT_BACKGROUND_COLOR = Color.WHITE;
 
     private User user;
+
     private Inventory shopInventory = new Inventory();
     private Basket clientBasket = new Basket();
     private List<Order> userOrders = new ArrayList<>();
+    private List<User> userList = new ArrayList<>();
+
     private DBConnector connector;
 
     private Stage primaryStage;
@@ -65,7 +69,7 @@ public class MainScreen extends Application {
 
         final Tab loginTab = new Tab();
         loginTab.setText("Login");
-        final HBox loginBox = new HBox(10);
+        final HBox loginBox = new HBox(HBOX_SPACING);
         loginBox.setAlignment(Pos.CENTER);
         loginBox.getChildren().add(loginButton(connector.getConnection()));
         loginTab.setContent(loginBox);
@@ -232,14 +236,14 @@ public class MainScreen extends Application {
 
         final Tab inventoryTab = new Tab();
         inventoryTab.setText("Inventory");
-        final HBox inventoryBox = new HBox(10);
+        final HBox inventoryBox = new HBox(HBOX_SPACING);
         inventoryBox.setAlignment(Pos.CENTER);
         inventoryBox.getChildren().add(InventoryScene.createMainInventoryBox(shopInventory, user, connector.getConnection()));
         inventoryTab.setContent(inventoryBox);
 
         final Tab orderHistoryTab = new Tab();
         orderHistoryTab.setText("Order History");
-        final HBox orderHistoryBox = new HBox(10);
+        final HBox orderHistoryBox = new HBox(HBOX_SPACING);
         orderHistoryBox.setAlignment(Pos.CENTER);
         orderHistoryBox.getChildren().add(HistoryScene.syncTablesIntoOneTable(HistoryScene.createOrderTableView(userOrders), HistoryScene.createTotalOrderTableView(userOrders)));
         orderHistoryTab.setContent(orderHistoryBox);
@@ -260,6 +264,8 @@ public class MainScreen extends Application {
         GuiDbUtils.loadDataToInventory(connector, shopInventory);
         // Need to load userOrders
         GuiDbUtils.loadDataToOrders(user, connector, userOrders);
+        // Need to load users
+        GuiDbUtils.loadDataToUserList(connector, userList);
 
         // Create Admin scene
         final TabPane tabPane = new TabPane();
@@ -268,17 +274,23 @@ public class MainScreen extends Application {
 
         final Tab inventoryTab = new Tab();
         inventoryTab.setText("Inventory");
-        final HBox inventoryBox = new HBox(10);
+        final HBox inventoryBox = new HBox(HBOX_SPACING);
         inventoryBox.setAlignment(Pos.CENTER);
         inventoryBox.getChildren().add(InventoryScene.createMainInventoryBox(shopInventory, user, connector.getConnection()));
         inventoryTab.setContent(inventoryBox);
 
         final Tab orderHistoryTab = new Tab();
         orderHistoryTab.setText("Order History");
-        final HBox orderHistoryBox = new HBox(10);
+        final HBox orderHistoryBox = new HBox(HBOX_SPACING);
         orderHistoryBox.setAlignment(Pos.CENTER);
         orderHistoryBox.getChildren().add(HistoryScene.syncTablesIntoOneTable(HistoryScene.createOrderTableView(userOrders), HistoryScene.createTotalOrderTableView(userOrders)));
         orderHistoryTab.setContent(orderHistoryBox);
+
+        final Tab controlUsersTab = new Tab();
+        controlUsersTab.setText("System users");
+        final HBox controlUsersBox = new HBox(HBOX_SPACING);
+        controlUsersBox.setAlignment(Pos.CENTER);
+        controlUsersBox.getChildren().add(ControlUsersScene.createControlTable(userList, (Administrator)user, connector.getConnection()));
 
         tabPane.getTabs().addAll(inventoryTab, orderHistoryTab);
         tabPane.setTabClosingPolicy(TabPane.TabClosingPolicy.UNAVAILABLE);
