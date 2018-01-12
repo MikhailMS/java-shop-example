@@ -128,7 +128,7 @@ public class ControlUsersScene {
                 try {
                     DBCursorHolder cursor = DBUtils.filterFromTable(connection, "users", new String[]{"user_name"},
                             new String[]{String.format("user_name='%s'", newUserName)});
-                    if (cursor.getResults().next()) {
+                    if (!cursor.getResults().next()) {
                         // Next 4 lines of code is huuuge hack - but can't think of another solution.
                         // It works, but may give poor performance on big ObservableList
                         items.removeAll(users);
