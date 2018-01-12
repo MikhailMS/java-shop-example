@@ -79,6 +79,7 @@ public class ControlUsersSceneTest extends ApplicationTest {
     public void should_contain_columns() {
         verifyThat(".table-view", TableViewMatchersExtension.hasColumnWithID("User name"));
         verifyThat(".table-view", TableViewMatchersExtension.hasColumnWithID("User privilege"));
+        dataSource.close();
     }
 
     @Test
@@ -86,6 +87,7 @@ public class ControlUsersSceneTest extends ApplicationTest {
         verifyThat(".table-view", TableViewMatchers.containsRow("testClient1", "False"));
         verifyThat(".table-view", TableViewMatchers.containsRow("testClient2", "False"));
         verifyThat(".table-view", TableViewMatchers.containsRow("admin", "True"));
+        dataSource.close();
     }
 
     @Test
@@ -94,6 +96,7 @@ public class ControlUsersSceneTest extends ApplicationTest {
         ((TextField) GuiTest.find("#user-password")).setText("admin2");
         clickOn("Administrator?").clickOn("Add new user");
         verifyThat(".table-view", TableViewMatchers.containsRow("admin2", "True"));
+        dataSource.close();
     }
 
     @Test
@@ -102,6 +105,7 @@ public class ControlUsersSceneTest extends ApplicationTest {
         ((TextField) GuiTest.find("#user-password")).setText("client");
         clickOn("Add new user");
         verifyThat(".table-view", TableViewMatchers.containsRow("client", "False"));
+        dataSource.close();
     }
 
     @Test
@@ -115,6 +119,6 @@ public class ControlUsersSceneTest extends ApplicationTest {
         verifyThat(".table-view", TableViewMatchersExtension.hasNoTableCell("admin"));
         verifyThat(".table-view", TableViewMatchersExtension.hasNoTableCell("True"));
         verifyThat(lookup("User has been removed successfully"), Node::isVisible);
+        dataSource.close();
     }
-
 }
