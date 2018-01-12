@@ -112,7 +112,7 @@ public class AdministratorTest {
         cursor.closeCursor();
 
     // TESTING createUser
-        admin.createUser(dataSource.getConnection(), "testUser3", "testUser3");
+        admin.createUser(dataSource.getConnection(), "testUser3", "testUser3", false);
         cursor = DBUtils.filterFromTable(dataSource.getConnection(), "users", new String[]{"user_name"}, new String[]{"user_passwd = 'testUser3'"});
         cursor.getResults().next();
 
