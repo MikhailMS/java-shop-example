@@ -113,7 +113,7 @@ public class AdministratorTest {
 
     // TESTING createUser
         admin.createUser(dataSource.getConnection(), "testUser3", "testUser3", false);
-        cursor = DBUtils.filterFromTable(dataSource.getConnection(), "users", new String[]{"user_name"}, new String[]{"user_passwd = 'testUser3'"});
+        cursor = DBUtils.filterFromTable(dataSource.getConnection(), "users", new String[]{"user_name"}, new String[]{"user_password = 'testUser3'"});
         cursor.getResults().next();
 
         assertEquals("createUser succeeds", "testUser3", cursor.getResults().getString(1));
@@ -121,7 +121,7 @@ public class AdministratorTest {
 
     // TESTING deleteUser
         admin.deleteUser(dataSource.getConnection(), "testUser3");
-        cursor = DBUtils.filterFromTable(dataSource.getConnection(), "users", new String[]{"user_name"}, new String[]{"user_passwd = 'testUser3'"});
+        cursor = DBUtils.filterFromTable(dataSource.getConnection(), "users", new String[]{"user_name"}, new String[]{"user_password = 'testUser3'"});
         String empty = "";
         while (cursor.getResults().next()) {
             empty += cursor.getResults().getString(1);
