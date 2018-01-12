@@ -151,7 +151,7 @@ public class ControlUsersScene {
                                 .position(Pos.CENTER)
                                 .owner(Utils.getWindow(addProductBox))
                                 .hideAfter(Duration.seconds(2))
-                                .showConfirm();
+                                .showError();
                     }
                     cursor.closeCursor();
                 } catch (SQLException e) {
@@ -165,7 +165,7 @@ public class ControlUsersScene {
                         .position(Pos.CENTER)
                         .owner(Utils.getWindow(addProductBox))
                         .hideAfter(Duration.seconds(2))
-                        .showConfirm();
+                        .showError();
             }
         });
         addProductBox.getChildren().addAll(addUserName, addUserPassword, enablePrivilege, addNewUserButton);

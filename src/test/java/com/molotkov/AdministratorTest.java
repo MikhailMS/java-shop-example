@@ -34,7 +34,7 @@ public class AdministratorTest {
         dataSource = new HikariDataSource(hikariConfig);
         final Statement statement = dataSource.getConnection().createStatement();
 
-        statement.addBatch("CREATE TABLE IF NOT EXISTS users ( user_name text PRIMARY KEY, user_passwd text NOT NULL," +
+        statement.addBatch("CREATE TABLE IF NOT EXISTS users ( user_name text PRIMARY KEY, user_password text NOT NULL," +
                 " privileges boolean DEFAULT FALSE )");
         statement.addBatch("INSERT INTO users VALUES ( 'admin', 'admin', TRUE )");
         statement.addBatch("INSERT INTO users VALUES ( 'testUser1', 'testUser1', FALSE )");

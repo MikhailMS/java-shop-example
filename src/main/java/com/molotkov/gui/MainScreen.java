@@ -291,8 +291,9 @@ public class MainScreen extends Application {
         final HBox controlUsersBox = new HBox(HBOX_SPACING);
         controlUsersBox.setAlignment(Pos.CENTER);
         controlUsersBox.getChildren().add(ControlUsersScene.createControlTable(userList, (Administrator)user, connector.getConnection()));
+        controlUsersTab.setContent(controlUsersBox);
 
-        tabPane.getTabs().addAll(inventoryTab, orderHistoryTab);
+        tabPane.getTabs().addAll(inventoryTab, orderHistoryTab, controlUsersTab);
         tabPane.setTabClosingPolicy(TabPane.TabClosingPolicy.UNAVAILABLE);
 
         // bind to take available space
