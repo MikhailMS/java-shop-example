@@ -29,12 +29,12 @@ public class HistorySceneTest extends ApplicationTest {
 
     @Override
     public void start(Stage stage) {
-        Scene scene = new Scene(new Group());
+        final Scene scene = new Scene(new Group());
 
         stage.setWidth(WINDOW_WIDTH);
         stage.setHeight(WINDOW_HEIGHT);
 
-        Basket testBasket = new Basket();
+        final Basket testBasket = new Basket();
         try {
             testBasket.addProducts(new Product("apple", 0.150, 0.8),3);
         } catch (BasketException e) {
@@ -52,15 +52,16 @@ public class HistorySceneTest extends ApplicationTest {
             final String itemString = basketSize > 1 ? basketSize + " products" : basketSize + " product";
             return String.format("Order contains %s: %s", itemString, allProductsString);
         });
-        Order testOrder1 = new Order(testBasket, "London");
-        Order testOrder2 = new Order(testBasket, "Manchester");
 
-        List<Order> testOrders = new ArrayList<>();
+        final Order testOrder1 = new Order(testBasket, "London");
+        final Order testOrder2 = new Order(testBasket, "Manchester");
+
+        final List<Order> testOrders = new ArrayList<>();
         testOrders.add(testOrder1);
         testOrders.add(testOrder2);
 
-        TableView orderTable = createOrderTableView(testOrders);
-        TableView totalTable = createTotalOrderTableView(testOrders);
+        final TableView orderTable = createOrderTableView(testOrders);
+        final TableView totalTable = createTotalOrderTableView(testOrders);
         totalTable.setPrefHeight(100);
 
         ((Group) scene.getRoot()).getChildren().addAll(syncTablesIntoOneTable(orderTable, totalTable));

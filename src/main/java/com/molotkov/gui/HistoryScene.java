@@ -31,13 +31,13 @@ public class HistoryScene {
     private static final String EMPTY_COLUMN = "empty";
 
     public static BorderPane syncTablesIntoOneTable(final TableView orderTable, final TableView totalTable) {
-        BorderPane pane = new BorderPane();
+        final BorderPane pane = new BorderPane();
 
         // bind/sync tables
         for( int i=0; i < orderTable.getColumns().size(); i++) {
 
-            TableColumn<Order,?> mainColumn = (TableColumn) orderTable.getColumns().get(i);
-            TableColumn<Double,?> sumColumn = (TableColumn) totalTable.getColumns().get(i);
+            final TableColumn<Order,?> mainColumn = (TableColumn) orderTable.getColumns().get(i);
+            final TableColumn<Double,?> sumColumn = (TableColumn) totalTable.getColumns().get(i);
 
             // sync column widths
             sumColumn.prefWidthProperty().bind( mainColumn.widthProperty());
@@ -120,7 +120,7 @@ public class HistoryScene {
         return table;
     }
 
-    private static void addCommonColumns(TableView table) {
+    private static void addCommonColumns(final TableView table) {
         final TableColumn<Order, String> orderAddressColumn = new TableColumn<>(ORDER_ADDRESS_COLUMN);
         orderAddressColumn.setId(ORDER_ADDRESS_COLUMN);
         orderAddressColumn.setCellValueFactory(item -> new SimpleStringProperty(item.getValue().getAddress()));
@@ -136,7 +136,7 @@ public class HistoryScene {
         table.getColumns().setAll(orderAddressColumn, orderTotalColumn);
     }
 
-    private static ScrollBar findScrollBar(TableView table, Orientation orientation) {
+    private static ScrollBar findScrollBar(final TableView table, final Orientation orientation) {
 
         // this would be the preferred solution, but it doesn't work. it always gives back the vertical scrollbar
         //		return (ScrollBar) table.lookup(".scroll-bar:horizontal");

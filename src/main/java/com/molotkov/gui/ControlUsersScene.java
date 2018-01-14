@@ -56,6 +56,7 @@ public class ControlUsersScene {
         userTableView.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
 
         controlTableBox.getChildren().setAll(userTableView, createAddUserBox(userNameColumn, users, observableUserList, admin, connection));
+
         final TableFilter<User> filter = TableFilter.forTableView(userTableView).lazy(false).apply();
 
         return controlTableBox;
@@ -176,7 +177,7 @@ public class ControlUsersScene {
 
     private static void addAdminRowExpander(final TableView table, final List<User> users, final ObservableList<User> observableUsers,
                                             final Administrator admin, final Connection connection) {
-        TableRowExpanderColumn<User> expander =  new TableRowExpanderColumn<>(param -> {
+        final TableRowExpanderColumn<User> expander =  new TableRowExpanderColumn<>(param -> {
             final HBox editor = new HBox(10);
             editor.getChildren().addAll(createDeleteButton("Remove user", "User has been removed successfully",
                     "Something went wrong while removing user", users, observableUsers, editor, param, admin, connection));

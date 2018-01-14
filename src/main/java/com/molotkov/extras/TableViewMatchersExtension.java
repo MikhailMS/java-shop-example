@@ -64,7 +64,7 @@ public class TableViewMatchersExtension {
 
         final List<List<Object>> testList = new ArrayList<>();
         for(final Map.Entry<Integer, List<ObservableValue<?>>> value : rowValuesMap.entrySet()) {
-            List<Object> entry = new ArrayList<>();
+            final List<Object> entry = new ArrayList<>();
             for(final ObservableValue<?> actualValue : value.getValue()) {
                 entry.add(actualValue.getValue());
             }
@@ -75,38 +75,38 @@ public class TableViewMatchersExtension {
     }
 
     @Factory
-    public static Matcher<TableView> hasColumnWithID(String columnId) {
+    public static Matcher<TableView> hasColumnWithID(final String columnId) {
         final String descriptionText = "has column title(id): " + columnId;
         return GeneralMatchers.typeSafeMatcher(TableView.class, descriptionText, (node) -> hasColumnWithID(node, columnId));
     }
 
-    private static <T> boolean hasColumnWithID(TableView<T> tableView, String columnId) {
-        for(TableColumn<?,?> column : tableView.getColumns()) {
+    private static <T> boolean hasColumnWithID(final TableView<T> tableView, final String columnId) {
+        for(final TableColumn<?,?> column : tableView.getColumns()) {
             if(column.getId().equals(columnId)) return true;
         }
         return false;
     }
 
     @Factory
-    public static Matcher<TableView> hasNoColumnWithID(String columnId) {
+    public static Matcher<TableView> hasNoColumnWithID(final String columnId) {
         final String descriptionText = "has column title: " + columnId;
         return GeneralMatchers.typeSafeMatcher(TableView.class, descriptionText, (node) -> hasNoColumnWithID(node, columnId));
     }
 
-    private static <T> boolean hasNoColumnWithID(TableView<T> tableView, String columnId) {
+    private static <T> boolean hasNoColumnWithID(final TableView<T> tableView, final String columnId) {
         for(TableColumn<?,?> column : tableView.getColumns()) {
             if(column.getId().equals(columnId)) return false;
         }
         return true;
     }
 
-    private static List<ObservableValue<?>> getRowValues(TableView<?> tableView, int rowIndex) {
-        Object rowObject = tableView.getItems().get(rowIndex);
-        List<ObservableValue<?>> rowValues = new ArrayList(tableView.getColumns().size());
+    private static List<ObservableValue<?>> getRowValues(final TableView<?> tableView, final int rowIndex) {
+        final Object rowObject = tableView.getItems().get(rowIndex);
+        final List<ObservableValue<?>> rowValues = new ArrayList(tableView.getColumns().size());
 
         for(int i = 0; i < tableView.getColumns().size(); ++i) {
-            TableColumn<?, ?> column = tableView.getColumns().get(i);
-            CellDataFeatures cellDataFeatures = new CellDataFeatures(tableView, column, rowObject);
+            final TableColumn<?, ?> column = tableView.getColumns().get(i);
+            final CellDataFeatures cellDataFeatures = new CellDataFeatures(tableView, column, rowObject);
             try {
                 rowValues.add(i, column.getCellValueFactory().call(cellDataFeatures));
             } catch (NullPointerException ex) {
@@ -118,11 +118,11 @@ public class TableViewMatchersExtension {
         return rowValues;
     }
 
-    private static boolean hasCellValue(Cell cell, Object value) {
+    private static boolean hasCellValue(final Cell cell, final Object value) {
         return !cell.isEmpty() && hasItemValue(cell.getText(), value);
     }
 
-    private static boolean hasItemValue(Object item, Object value) {
+    private static boolean hasItemValue(final Object item, final Object value) {
         if (item == null && value == null) {
             return true;
         } else if (item != null && value != null) {
@@ -132,7 +132,7 @@ public class TableViewMatchersExtension {
         }
     }
 
-    private static String toText(TableView<?> tableView) {
+    private static String toText(final TableView<?> tableView) {
         final StringJoiner joiner = new StringJoiner(", ", "[", "]");
 
         for(int rowIndex = 0; rowIndex < tableView.getItems().size(); ++rowIndex) {
@@ -141,9 +141,8 @@ public class TableViewMatchersExtension {
 
         return joiner.toString();
     }
-    private static String toText(TableView<?> tableView, int rowIndex) {
-        return '[' + (String)getRowValues(tableView, rowIndex).stream().map((observableValue) -> {
-            return observableValue.getValue() == null ? "null" : observableValue.getValue().toString();
-        }).collect(Collectors.joining(", ")) + ']';
+    private static String toText(final TableView<?> tableView, int rowIndex) {
+        return '[' + getRowValues(tableView, rowIndex).stream().map((observableValue) ->
+                observableValue.getValue() == null ? "null" : observableValue.getValue().toString()).collect(Collectors.joining(", ")) + ']';
     }
 }

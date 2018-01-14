@@ -36,11 +36,11 @@ public class ControlUsersSceneTest extends ApplicationTest {
 
     @Override
     public void start(Stage stage) throws SQLException {
-        Client testClient1 = new Client("testClient1", "testClient1");
-        Client testClient2 = new Client("testClient2", "testClient2");
-        Administrator admin = new Administrator("admin", "admin");
+        final Client testClient1 = new Client("testClient1", "testClient1");
+        final Client testClient2 = new Client("testClient2", "testClient2");
+        final Administrator admin = new Administrator("admin", "admin");
 
-        List<User> userList = new ArrayList<>();
+        final List<User> userList = new ArrayList<>();
         userList.add(testClient1);
         userList.add(testClient2);
         userList.add(admin);

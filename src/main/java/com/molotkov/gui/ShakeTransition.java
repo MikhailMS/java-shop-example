@@ -40,7 +40,7 @@ class ShakeTransition extends Transition {
      *
      * @param node The node to affect
      */
-    public ShakeTransition(final Node node, EventHandler<ActionEvent> event) {
+    public ShakeTransition(final Node node, final EventHandler<ActionEvent> event) {
         this.node=node;
         statusProperty().addListener((ov, t, newStatus) -> {
             switch(newStatus) {
