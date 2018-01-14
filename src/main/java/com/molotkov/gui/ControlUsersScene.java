@@ -66,7 +66,7 @@ public class ControlUsersScene {
                                              final List<User> users, final ObservableList<User> observableUsers, final HBox editor ,
                                              final TableRowExpanderColumn.TableRowDataFeatures<User> param, final Administrator admin,
                                              final Connection connection) {
-        Button deleteFromBasket = new Button();
+        final Button deleteFromBasket = new Button();
         deleteFromBasket.setText(buttonText);
         deleteFromBasket.setOnMouseClicked(mouseEvent -> {
             try {
@@ -127,7 +127,7 @@ public class ControlUsersScene {
             if (!newUserName.isEmpty() && !newUserPassword.isEmpty()) {
                 // Ensure that user doesn't exist in DB
                 try {
-                    DBCursorHolder cursor = DBUtils.filterFromTable(connection, "users", new String[]{"user_name"},
+                    final DBCursorHolder cursor = DBUtils.filterFromTable(connection, "users", new String[]{"user_name"},
                             new String[]{String.format("user_name='%s'", newUserName)});
                     if (!cursor.getResults().next()) {
                         // Next 4 lines of code is huuuge hack - but can't think of another solution.

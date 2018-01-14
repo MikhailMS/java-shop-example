@@ -105,7 +105,7 @@ public class MainScreen extends Application {
     }
 
     private Button loginButton(final Connection connection) {
-        Button btn = new Button();
+        final Button btn = new Button();
         btn.setText("Gain access to the Shop");
 
         btn.setOnAction(mainEvent -> loginAction(connection));
@@ -128,16 +128,16 @@ public class MainScreen extends Application {
         dialog.getDialogPane().getButtonTypes().addAll(loginButtonType, ButtonType.CANCEL);
 
         // Create the username and password labels and fields.
-        GridPane grid = new GridPane();
+        final GridPane grid = new GridPane();
         grid.setHgap(10);
         grid.setVgap(10);
         grid.setPadding(new Insets(20, 150, 10, 10));
 
-        TextField userName = new TextField();
+        final TextField userName = new TextField();
         userName.setPromptText("e.g. m03j");
-        PasswordField userPasswd = new PasswordField();
-        userPasswd.setPromptText("xxxx");
 
+        final PasswordField userPasswd = new PasswordField();
+        userPasswd.setPromptText("xxxx");
 
         grid.add(new Label("Usermame: "), 0, 0);
         grid.add(userName, 1, 0);
@@ -168,7 +168,7 @@ public class MainScreen extends Application {
         });
     }
 
-    private void userAuthentication(Event e, Dialog dialog, String userName, String userPasswd, Connection connection) throws SQLException {
+    private void userAuthentication(final Event e, final Dialog dialog, final String userName, final String userPasswd, final Connection connection) throws SQLException {
         if(e.getEventType().equals(ActionEvent.ACTION)){
             e.consume();
             if (isUserAllowed(userName, userPasswd, connection)) {
@@ -182,14 +182,14 @@ public class MainScreen extends Application {
                 dialog.close();
             }
             else {
-                ShakeTransition animation = new ShakeTransition(dialog.getDialogPane(), t->dialog.show());
+                final ShakeTransition animation = new ShakeTransition(dialog.getDialogPane(), t->dialog.show());
                 animation.playFromStart();
             }
         }
     }
 
-    private boolean isUserAllowed(String userName, String userPasswd, Connection connection) throws SQLException {
-        DBCursorHolder cursor = DBUtils.filterFromTable(connection, "users", new String[]{"user_name"},
+    private boolean isUserAllowed(final String userName, final String userPasswd, final Connection connection) throws SQLException {
+        final DBCursorHolder cursor = DBUtils.filterFromTable(connection, "users", new String[]{"user_name"},
                 new String[]{String.format("user_name = '%s'", userName), "AND", String.format("user_password = '%s'",userPasswd)});
         while(cursor.getResults().next()) {
             if (cursor.getResults().getString(1).equals(userName)) {
@@ -203,8 +203,8 @@ public class MainScreen extends Application {
         return false;
     }
 
-    private boolean isUserAdmin(String userName, String userPasswd, Connection connection) throws SQLException {
-        DBCursorHolder cursor = DBUtils.filterFromTable(connection, "users", new String[]{"privileges"},
+    private boolean isUserAdmin(final String userName, final String userPasswd, final Connection connection) throws SQLException {
+        final DBCursorHolder cursor = DBUtils.filterFromTable(connection, "users", new String[]{"privileges"},
                 new String[]{String.format("user_name = '%s'", userName), "AND", String.format("user_password = '%s'",userPasswd)});
         cursor.getResults().next();
         if (cursor.getResults().getBoolean(1)) {
@@ -216,7 +216,7 @@ public class MainScreen extends Application {
         }
     }
 
-    private void changeScene(Pane pane) {
+    private void changeScene(final Pane pane) {
         primaryStage.getScene().setRoot(pane);
     }
 

@@ -298,9 +298,9 @@ public class InventoryScene {
         final TableColumn<Map.Entry<Product, Integer>, Double> productPriceColumn = new TableColumn<>(PRODUCT_PRICE_COLUMN);
         productPriceColumn.setId(PRODUCT_PRICE_COLUMN);
         productPriceColumn.setCellValueFactory(item -> {
-            double price = item.getValue().getKey().getPrice();
-            DecimalFormat df = new DecimalFormat("#.##");
-            price = Double.valueOf(df.format(price));
+            final DecimalFormat df = new DecimalFormat("#.##");
+            final double price = Double.valueOf(df.format(item.getValue().getKey().getPrice()));
+
             return new SimpleObjectProperty<>(price);
         });
 

@@ -36,9 +36,9 @@ public class InventoryAdminSceneTest extends ApplicationTest {
 
     @Override
     public void start(Stage stage) throws SQLException {
-        User admin = new Administrator("t", "t");
+        final User admin = new Administrator("t", "t");
 
-        Inventory inventory = new Inventory();
+        final Inventory inventory = new Inventory();
         try {
             inventory.addProducts(new Product("chicken", 1, 2.3),3);
             inventory.addProducts(new Product("apple", 0.151, 0.8), 2);
