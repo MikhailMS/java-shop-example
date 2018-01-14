@@ -28,7 +28,7 @@ import static org.testfx.api.FxAssert.verifyThat;
 public class HistorySceneTest extends ApplicationTest {
 
     @Override
-    public void start(Stage stage) {
+    public void start(final Stage stage) {
         final Scene scene = new Scene(new Group());
 
         stage.setWidth(WINDOW_WIDTH);

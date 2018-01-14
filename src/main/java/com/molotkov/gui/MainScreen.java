@@ -55,7 +55,7 @@ public class MainScreen extends Application {
     private Stage primaryStage;
 
     @Override
-    public void start(Stage primaryStage) {
+    public void start(final Stage primaryStage) {
         this.primaryStage = primaryStage;
         this.primaryStage.setTitle(PRIMARY_STAGE_TITLE);
 

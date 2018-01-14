@@ -289,9 +289,9 @@ public class InventoryScene {
         final TableColumn<Map.Entry<Product, Integer>, Double> productWeightColumn = new TableColumn<>(PRODUCT_WEIGHT_COLUMN);
         productWeightColumn.setId(PRODUCT_WEIGHT_COLUMN);
         productWeightColumn.setCellValueFactory(item -> {
-            double weight = item.getValue().getKey().getWeight();
-            DecimalFormat df = new DecimalFormat("#.###");
-            weight = Double.valueOf(df.format(weight));
+            final DecimalFormat df = new DecimalFormat("#.###");
+            final double weight = Double.valueOf(df.format(item.getValue().getKey().getWeight()));
+
             return new SimpleObjectProperty<>(weight);
         });
 

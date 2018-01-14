@@ -35,7 +35,7 @@ public class InventoryAdminSceneTest extends ApplicationTest {
     public static PostgreSQLContainer postgres = new PostgreSQLContainer();
 
     @Override
-    public void start(Stage stage) throws SQLException {
+    public void start(final Stage stage) throws SQLException {
         final User admin = new Administrator("t", "t");
 
         final Inventory inventory = new Inventory();

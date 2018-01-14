@@ -35,7 +35,7 @@ public class ControlUsersSceneTest extends ApplicationTest {
     public static PostgreSQLContainer postgres = new PostgreSQLContainer();
 
     @Override
-    public void start(Stage stage) throws SQLException {
+    public void start(final Stage stage) throws SQLException {
         final Client testClient1 = new Client("testClient1", "testClient1");
         final Client testClient2 = new Client("testClient2", "testClient2");
         final Administrator admin = new Administrator("admin", "admin");
