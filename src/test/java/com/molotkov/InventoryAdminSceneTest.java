@@ -155,11 +155,11 @@ public class InventoryAdminSceneTest extends ApplicationTest {
 /*        ((TextField) GuiTest.find("#name")).setText("milk");
         clickOn("Add new product");
         verifyThat(lookup("One of the fields is empty. Make sure all product descriptors are filled in"), Node::isVisible);
-        sleep(3000);
+        sleep(3000);*/
         ((TextField) GuiTest.find("#weight")).setText("1.0");
         clickOn("Add new product");
         verifyThat(lookup("One of the fields is empty. Make sure all product descriptors are filled in"), Node::isVisible);
-        sleep(3000);*/
+        sleep(3000);
         ((TextField) GuiTest.find("#price")).setText("1.0");
         clickOn("Add new product");
         verifyThat(lookup("One of the fields is empty. Make sure all product descriptors are filled in"), Node::isVisible);
