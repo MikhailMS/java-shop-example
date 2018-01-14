@@ -31,30 +31,30 @@ public class TableViewMatchersExtension {
     }
 
     @Factory
-    public static Matcher<TableView> hasNoTableCell(Object value) {
-        String descriptionText = "has no table cell \"" + value + "\"";
+    public static Matcher<TableView> hasNoTableCell(final Object value) {
+        final String descriptionText = "has no table cell \"" + value + "\"";
         return GeneralMatchers.typeSafeMatcher(TableView.class, descriptionText,
                 (tableView) -> toText(tableView) + "\nwhich does contain a cell with the given value",
                 (node) -> hasNoTableCell(node, value));
     }
 
-    private static boolean hasNoTableCell(TableView tableView, Object value) {
-        NodeFinder nodeFinder = FxAssert.assertContext().getNodeFinder();
-        NodeQuery nodeQuery = nodeFinder.from(new Node[]{tableView});
+    private static boolean hasNoTableCell(final TableView tableView, final Object value) {
+        final NodeFinder nodeFinder = FxAssert.assertContext().getNodeFinder();
+        final NodeQuery nodeQuery = nodeFinder.from(new Node[]{tableView});
         return nodeQuery.lookup(".table-cell").match((cell) -> !hasCellValue((Cell) cell, value)).tryQuery().isPresent();
     }
 
     @Factory
-    public static Matcher<TableView> containsRow(Object... row) {
-        String descriptionText = "has row: " + Arrays.toString(row);
+    public static Matcher<TableView> containsRow(final Object... row) {
+        final String descriptionText = "has row: " + Arrays.toString(row);
         return GeneralMatchers.typeSafeMatcher(TableView.class, descriptionText, TableViewMatchersExtension::toText, (node) -> containsRow(node, row));
     }
-    private static <T> boolean containsRow(TableView<T> tableView, Object... row) {
+    private static <T> boolean containsRow(final TableView<T> tableView, final Object... row) {
         if (tableView.getItems().isEmpty()) {
             return false;
         }
 
-        Map<Integer, List<ObservableValue<?>>> rowValuesMap = new HashMap<>(tableView.getColumns().size());
+        final Map<Integer, List<ObservableValue<?>>> rowValuesMap = new HashMap<>(tableView.getColumns().size());
 
         List rowValues;
         for(int j = 0; j < tableView.getItems().size(); ++j) {
@@ -62,21 +62,21 @@ public class TableViewMatchersExtension {
             rowValuesMap.put(j, rowValues);
         }
 
-        List<List<Object>> testList = new ArrayList<>();
-        for(Map.Entry<Integer, List<ObservableValue<?>>> value : rowValuesMap.entrySet()) {
+        final List<List<Object>> testList = new ArrayList<>();
+        for(final Map.Entry<Integer, List<ObservableValue<?>>> value : rowValuesMap.entrySet()) {
             List<Object> entry = new ArrayList<>();
-            for(ObservableValue<?> actualValue : value.getValue()) {
+            for(final ObservableValue<?> actualValue : value.getValue()) {
                 entry.add(actualValue.getValue());
             }
             testList.add(entry);
         }
-        List<Object> entryRow = Arrays.asList(row);
+        final List<Object> entryRow = Arrays.asList(row);
         return testList.contains(entryRow);
     }
 
     @Factory
     public static Matcher<TableView> hasColumnWithID(String columnId) {
-        String descriptionText = "has column title(id): " + columnId;
+        final String descriptionText = "has column title(id): " + columnId;
         return GeneralMatchers.typeSafeMatcher(TableView.class, descriptionText, (node) -> hasColumnWithID(node, columnId));
     }
 
@@ -89,7 +89,7 @@ public class TableViewMatchersExtension {
 
     @Factory
     public static Matcher<TableView> hasNoColumnWithID(String columnId) {
-        String descriptionText = "has column title: " + columnId;
+        final String descriptionText = "has column title: " + columnId;
         return GeneralMatchers.typeSafeMatcher(TableView.class, descriptionText, (node) -> hasNoColumnWithID(node, columnId));
     }
 
@@ -133,7 +133,7 @@ public class TableViewMatchersExtension {
     }
 
     private static String toText(TableView<?> tableView) {
-        StringJoiner joiner = new StringJoiner(", ", "[", "]");
+        final StringJoiner joiner = new StringJoiner(", ", "[", "]");
 
         for(int rowIndex = 0; rowIndex < tableView.getItems().size(); ++rowIndex) {
             joiner.add(toText(tableView, rowIndex));

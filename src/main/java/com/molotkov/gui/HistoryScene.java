@@ -92,11 +92,11 @@ public class HistoryScene {
     }
 
     public static TableView createTotalOrderTableView(final List<Order> orders) {
-        Double totalCost = orders.parallelStream()
+        final Double totalCost = orders.parallelStream()
                 .mapToDouble(price -> price.getBasket().calculateTotal())
                 .sum();
 
-        ObservableList<Double> totalCostList = FXCollections.observableArrayList();
+        final ObservableList<Double> totalCostList = FXCollections.observableArrayList();
         totalCostList.add(totalCost);
 
         final TableView<Double> table = new TableView<>(totalCostList);

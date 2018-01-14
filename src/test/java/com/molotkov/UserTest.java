@@ -74,7 +74,7 @@ public class UserTest {
         assertEquals("getUserName succeeds", "testUser", testUser.getUserName());
         assertEquals("getUserPasswd succeeds", "testUser", testUser.getUserPasswd());
 
-        Basket testBasket = new Basket();
+        final Basket testBasket = new Basket();
         testUser.setBasket(testBasket);
 
         assertEquals("set/get User Basket succeeds", testBasket, testUser.getBasket());

@@ -114,16 +114,17 @@ public class MainScreen extends Application {
 
     private void loginAction(final Connection connection) {
         // Create the custom dialog.
-        Alert alert = new Alert(Alert.AlertType.INFORMATION);
+        final Alert alert = new Alert(Alert.AlertType.INFORMATION);
         alert.setTitle("Login");
         alert.setHeaderText("Login Dialog");
-        Dialog<Pair<String, String>> dialog = new Dialog<>();
+
+        final Dialog<Pair<String, String>> dialog = new Dialog<>();
         dialog.setTitle("Login into Super Java Shop");
         dialog.setContentText("Enter your username and password : ");
         dialog.initModality(Modality.NONE);
 
         // Set login button
-        ButtonType loginButtonType = new ButtonType("Login", ButtonBar.ButtonData.OK_DONE);
+        final ButtonType loginButtonType = new ButtonType("Login", ButtonBar.ButtonData.OK_DONE);
         dialog.getDialogPane().getButtonTypes().addAll(loginButtonType, ButtonType.CANCEL);
 
         // Create the username and password labels and fields.
@@ -144,7 +145,7 @@ public class MainScreen extends Application {
         grid.add(userPasswd, 1, 1);
 
         // Enable/Disable login button depending on whether a username was entered.
-        Node loginButton = dialog.getDialogPane().lookupButton(loginButtonType);
+        final Node loginButton = dialog.getDialogPane().lookupButton(loginButtonType);
         loginButton.setDisable(true);
 
         // Do some validation (using the Java 8 lambda syntax).
