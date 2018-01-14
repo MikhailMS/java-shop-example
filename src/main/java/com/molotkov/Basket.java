@@ -78,6 +78,7 @@ public class Basket implements ProductStorage {
         return result;
     }
 
+    @Deprecated
     public void restoreFromDB(final String productsName, final String productsAmount) {
         final List<String> names = Arrays.asList(productsName.split(","));
         final List<String> amounts = Arrays.asList(productsAmount.split(","));

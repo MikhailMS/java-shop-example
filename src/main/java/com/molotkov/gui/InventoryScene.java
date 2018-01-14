@@ -62,6 +62,9 @@ public class InventoryScene {
     private static final String ADMIN_REMOVE_PRODUCT_NOTIFICATION_SUCCESS = "Product has been removed from inventory";
     private static final String ADMIN_REMOVE_PRODUCT_NOTIFICATION_ERROR = "Something went wrong while removing product from inventory: Possibly you tried to remove more occurrences of a product than exist in inventory";
 
+    private static final String ADMIN_ADD_NEW_PRODUCT_BUTTON = "Add new product";
+    private static final String ADMIN_ADD_NEW_PRODUCT_NOTIFICATION_SUCCESS = "One of the fields is empty. Make sure all product descriptors are filled in";
+
     private static HBox addProductBox;
 
     public static VBox createMainInventoryBox(final Inventory inventory, final User user, final Connection connection) {
@@ -372,7 +375,7 @@ public class InventoryScene {
         addProductAmount.setId("amount");
         addProductAmount.setMaxWidth(productAmountColumn.getPrefWidth());
 
-        final Button addNewProductButton = new Button("Add new product");
+        final Button addNewProductButton = new Button(ADMIN_ADD_NEW_PRODUCT_BUTTON);
         addNewProductButton.setOnMouseClicked(mouseEvent -> {
             final String newProductName = addProductName.getText();
             final String newProductWeight = addProductWeight.getText();
@@ -413,7 +416,7 @@ public class InventoryScene {
                 Notifications.create()
                         .darkStyle()
                         .title("Error")
-                        .text("One of the fields is empty. Make sure all product descriptors are filled in")
+                        .text(ADMIN_ADD_NEW_PRODUCT_NOTIFICATION_SUCCESS)
                         .position(Pos.CENTER)
                         .owner(Utils.getWindow(addProductBox))
                         .hideAfter(Duration.seconds(2))

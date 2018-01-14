@@ -31,7 +31,6 @@ public class InventoryAdminSceneTest extends ApplicationTest {
     private HikariDataSource dataSource;
     private static boolean setupIsDone = false;
 
-
     @ClassRule
     public static PostgreSQLContainer postgres = new PostgreSQLContainer();
 
@@ -81,6 +80,7 @@ public class InventoryAdminSceneTest extends ApplicationTest {
         verifyThat(".table-view", TableViewMatchersExtension.hasColumnWithID("Product Price"));
         verifyThat(".table-view", TableViewMatchersExtension.hasColumnWithID("Quantity available in Inventory"));
         verifyThat(".table-view", TableViewMatchersExtension.hasColumnWithID("Product Total Price"));
+        verifyThat(".table-view", TableViewMatchersExtension.hasColumnWithID("Details"));
         dataSource.close();
     }
 
@@ -120,7 +120,7 @@ public class InventoryAdminSceneTest extends ApplicationTest {
     }
 
     @Test
-    public void can_remove_new_product_from_inventory_if_admin() {
+    public void can_decrease_new_product_if_admin() {
         ((TextField) GuiTest.find("#name")).setText("milk");
         ((TextField) GuiTest.find("#weight")).setText("1.0");
         ((TextField) GuiTest.find("#price")).setText("1.0");
@@ -147,6 +147,26 @@ public class InventoryAdminSceneTest extends ApplicationTest {
                 .clickOn((Node)from(lookup(".expander-button")).nth(0).query())
                 .clickOn("Remove from inventory");
         verifyThat(lookup("Something went wrong while removing product from inventory: Possibly you tried to remove more occurrences of a product than exist in inventory"), Node::isVisible);
+        dataSource.close();
+    }
+
+    @Test
+    public void cannot_create_new_product_if_details_incomplete() {
+        ((TextField) GuiTest.find("#name")).setText("milk");
+        clickOn("Add new product");
+        verifyThat(lookup("One of the fields is empty. Make sure all product descriptors are filled in"), Node::isVisible);
+        sleep(3000);
+        ((TextField) GuiTest.find("#weight")).setText("1.0");
+        clickOn("Add new product");
+        verifyThat(lookup("One of the fields is empty. Make sure all product descriptors are filled in"), Node::isVisible);
+        sleep(3000);
+        ((TextField) GuiTest.find("#price")).setText("1.0");
+        clickOn("Add new product");
+        verifyThat(lookup("One of the fields is empty. Make sure all product descriptors are filled in"), Node::isVisible);
+        sleep(3000);
+        ((TextField) GuiTest.find("#amount")).setText("5");
+        clickOn("Add new product");
+        verifyThat(lookup("One of the fields is empty. Make sure all product descriptors are filled in"), Node::isVisible);
         dataSource.close();
     }
 }
