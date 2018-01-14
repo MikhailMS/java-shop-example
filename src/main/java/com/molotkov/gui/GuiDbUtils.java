@@ -99,7 +99,7 @@ public class GuiDbUtils {
             Product restoredProduct;
             int counter = 0;
 
-            for(String productName : names) {
+            for(final String productName : names) {
                 final DBCursorHolder productDetails = DBUtils.filterFromTable(connector.getConnection(), "products",
                         new String[]{"product_weight", "product_price"}, new String[]{String.format("product_name='%s'", productName)});
                 while (productDetails.getResults().next()) {
@@ -108,6 +108,7 @@ public class GuiDbUtils {
                     basketToConstruct.addProducts(restoredProduct, Integer.parseInt(amounts.get(counter)));
                 }
                 productDetails.closeCursor();
+                counter++;
             }
         } catch (SQLException | BasketException e) {
             e.printStackTrace();

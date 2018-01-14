@@ -69,12 +69,12 @@ public class HistoryScene {
     }
 
     public static TableView createOrderTableView(final List<Order> orders) {
-        ObservableList<Order> items = FXCollections.observableList(orders);
+        final ObservableList<Order> items = FXCollections.observableList(orders);
         final TableView<Order> table = new TableView<>(items);
         table.setId("order-table");
         addCommonColumns(table);
 
-        TableRowExpanderColumn<Order> expander = new TableRowExpanderColumn<>(param -> {
+        final TableRowExpanderColumn<Order> expander = new TableRowExpanderColumn<>(param -> {
             HBox editor = new HBox(10);
             Label detailsLabel = new Label();
             detailsLabel.setText(String.format("%s", param.getValue().getBasket().toString()));
@@ -143,9 +143,9 @@ public class HistoryScene {
         //
         // => we have to search all scrollbars and return the one with the proper orientation
 
-        Set<Node> set = table.lookupAll(".scroll-bar");
-        for( Node node: set) {
-            ScrollBar bar = (ScrollBar) node;
+        final Set<Node> set = table.lookupAll(".scroll-bar");
+        for(final Node node: set) {
+            final ScrollBar bar = (ScrollBar) node;
             if( bar.getOrientation() == orientation) {
                 return bar;
             }

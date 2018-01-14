@@ -305,7 +305,7 @@ public class MainScreen extends Application {
         return borderPane;
     }
 
-    public static void main(String[] args) {
+    public static void main(final String[] args) {
         launch(args);
     }
 }

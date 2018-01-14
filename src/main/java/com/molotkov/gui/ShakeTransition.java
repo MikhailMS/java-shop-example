@@ -67,7 +67,7 @@ class ShakeTransition extends Transition {
                 new KeyFrame(Duration.millis(1000), new KeyValue(x, 0, WEB_EASE))
         );
         xIni=node.getScene().getWindow().getX();
-        x.addListener((ob,n,n1)->(node.getScene().getWindow()).setX(xIni+n1.doubleValue()));
+        x.addListener((ob,n,n1) -> node.getScene().getWindow().setX(xIni+n1.doubleValue()));
 
         setCycleDuration(Duration.seconds(1));
         setDelay(Duration.seconds(0.2));
@@ -97,7 +97,7 @@ class ShakeTransition extends Transition {
     }
 
     @Override
-    protected void interpolate(double d) {
+    protected void interpolate(final double d) {
         timeline.playFrom(Duration.seconds(d));
         timeline.stop();
     }

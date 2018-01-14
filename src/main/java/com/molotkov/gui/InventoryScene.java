@@ -94,7 +94,7 @@ public class InventoryScene {
                                               final String removeButtonText, final String addNotificationTextSuccess, final String addNotificationTextError,
                                               final String removeNotificationTextSuccess, final String removeNotificationTextError,
                                               final User user, final Connection connection) {
-        TableRowExpanderColumn<Map.Entry<Product, Integer>> expander = new TableRowExpanderColumn<>(param -> {
+        final TableRowExpanderColumn<Map.Entry<Product, Integer>> expander = new TableRowExpanderColumn<>(param -> {
             final HBox editor = new HBox(10);
             editor.getChildren().addAll(createAddButton(addButtonText, addNotificationTextSuccess, addNotificationTextError, storage, editor, param, user, connection),
                     createDeleteButton(removeButtonText, removeNotificationTextSuccess, removeNotificationTextError, storage, editor, param, user, connection));

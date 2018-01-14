@@ -94,7 +94,7 @@ public class TableViewMatchersExtension {
     }
 
     private static <T> boolean hasNoColumnWithID(final TableView<T> tableView, final String columnId) {
-        for(TableColumn<?,?> column : tableView.getColumns()) {
+        for(final TableColumn<?,?> column : tableView.getColumns()) {
             if(column.getId().equals(columnId)) return false;
         }
         return true;
@@ -141,7 +141,7 @@ public class TableViewMatchersExtension {
 
         return joiner.toString();
     }
-    private static String toText(final TableView<?> tableView, int rowIndex) {
+    private static String toText(final TableView<?> tableView, final int rowIndex) {
         return '[' + getRowValues(tableView, rowIndex).stream().map((observableValue) ->
                 observableValue.getValue() == null ? "null" : observableValue.getValue().toString()).collect(Collectors.joining(", ")) + ']';
     }

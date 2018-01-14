@@ -62,7 +62,7 @@ public class User implements UserInterface {
         return userPasswd;
     }
 
-    public void setBasket(Basket basket) {
+    public void setBasket(final Basket basket) {
         this.bakset = basket;
     }
 
