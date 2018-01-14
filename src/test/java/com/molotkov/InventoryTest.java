@@ -6,7 +6,6 @@ import org.junit.Before;
 import org.junit.Test;
 import java.text.DecimalFormat;
 
-import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
 public class InventoryTest {
