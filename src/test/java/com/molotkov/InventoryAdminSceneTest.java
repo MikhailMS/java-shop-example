@@ -152,7 +152,7 @@ public class InventoryAdminSceneTest extends ApplicationTest {
 
     @Test
     public void cannot_create_new_product_if_details_incomplete() {
-        ((TextField) GuiTest.find("#name")).setText("milk");
+/*        ((TextField) GuiTest.find("#name")).setText("milk");
         clickOn("Add new product");
         verifyThat(lookup("One of the fields is empty. Make sure all product descriptors are filled in"), Node::isVisible);
         sleep(3000);
@@ -163,7 +163,7 @@ public class InventoryAdminSceneTest extends ApplicationTest {
         ((TextField) GuiTest.find("#price")).setText("1.0");
         clickOn("Add new product");
         verifyThat(lookup("One of the fields is empty. Make sure all product descriptors are filled in"), Node::isVisible);
-        sleep(3000);
+        sleep(3000);*/
         ((TextField) GuiTest.find("#amount")).setText("5");
         clickOn("Add new product");
         verifyThat(lookup("One of the fields is empty. Make sure all product descriptors are filled in"), Node::isVisible);
