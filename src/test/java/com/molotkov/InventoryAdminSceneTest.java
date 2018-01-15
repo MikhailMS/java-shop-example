@@ -56,7 +56,6 @@ public class InventoryAdminSceneTest extends ApplicationTest {
         dataSource = new HikariDataSource(hikariConfig);
 
         if(!setupIsDone) {
-            System.out.println("Hallo ee");
             final Statement statement = dataSource.getConnection().createStatement();
 
             statement.addBatch("CREATE TABLE IF NOT EXISTS products ( product_id serial PRIMARY KEY, product_name text NOT NULL," +

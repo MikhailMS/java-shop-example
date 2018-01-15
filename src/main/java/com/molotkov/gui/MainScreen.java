@@ -43,16 +43,16 @@ public class MainScreen extends Application {
     private static final String PRIMARY_STAGE_TITLE = "Java Super Shop";
     private static final Color PRIMARY_STAGE_DEFAULT_BACKGROUND_COLOR = Color.WHITE;
 
-    private User user;
+    private static User user;
 
-    private Inventory shopInventory = new Inventory();
-    private Basket clientBasket = new Basket();
-    private List<Order> userOrders = new ArrayList<>();
-    private List<User> userList = new ArrayList<>();
+    private static Inventory shopInventory = new Inventory();
+    private static Basket clientBasket = new Basket();
+    private static List<Order> userOrders = new ArrayList<>();
+    private static List<User> userList = new ArrayList<>();
 
-    private DBConnector connector;
+    private static DBConnector connector;
 
-    private Stage primaryStage;
+    private static Stage primaryStage;
 
     @Override
     public void start(final Stage primaryStage) {
@@ -104,7 +104,7 @@ public class MainScreen extends Application {
         }
     }
 
-    private Button loginButton(final Connection connection) {
+    public static Button loginButton(final Connection connection) {
         final Button btn = new Button();
         btn.setText("Gain access to the Shop");
 
@@ -112,7 +112,7 @@ public class MainScreen extends Application {
         return btn;
     }
 
-    private void loginAction(final Connection connection) {
+    private static void loginAction(final Connection connection) {
         // Create the custom dialog.
         final Alert alert = new Alert(Alert.AlertType.INFORMATION);
         alert.setTitle("Login");
@@ -135,11 +135,13 @@ public class MainScreen extends Application {
 
         final TextField userName = new TextField();
         userName.setPromptText("e.g. m03j");
+        userName.setId("user-name");
 
         final PasswordField userPasswd = new PasswordField();
         userPasswd.setPromptText("xxxx");
+        userPasswd.setId("user-passwd");
 
-        grid.add(new Label("Usermame: "), 0, 0);
+        grid.add(new Label("Username: "), 0, 0);
         grid.add(userName, 1, 0);
         grid.add(new Label("Password: "), 0, 1);
         grid.add(userPasswd, 1, 1);
@@ -168,7 +170,7 @@ public class MainScreen extends Application {
         });
     }
 
-    private void userAuthentication(final Event e, final Dialog dialog, final String userName, final String userPasswd, final Connection connection) throws SQLException {
+    private static void userAuthentication(final Event e, final Dialog dialog, final String userName, final String userPasswd, final Connection connection) throws SQLException {
         if(e.getEventType().equals(ActionEvent.ACTION)){
             e.consume();
             if (isUserAllowed(userName, userPasswd, connection)) {
@@ -188,7 +190,7 @@ public class MainScreen extends Application {
         }
     }
 
-    private boolean isUserAllowed(final String userName, final String userPasswd, final Connection connection) throws SQLException {
+    private static boolean isUserAllowed(final String userName, final String userPasswd, final Connection connection) throws SQLException {
         final DBCursorHolder cursor = DBUtils.filterFromTable(connection, "users", new String[]{"user_name"},
                 new String[]{String.format("user_name = '%s'", userName), "AND", String.format("user_password = '%s'",userPasswd)});
         while(cursor.getResults().next()) {
@@ -203,7 +205,7 @@ public class MainScreen extends Application {
         return false;
     }
 
-    private boolean isUserAdmin(final String userName, final String userPasswd, final Connection connection) throws SQLException {
+    private static boolean isUserAdmin(final String userName, final String userPasswd, final Connection connection) throws SQLException {
         final DBCursorHolder cursor = DBUtils.filterFromTable(connection, "users", new String[]{"privileges"},
                 new String[]{String.format("user_name = '%s'", userName), "AND", String.format("user_password = '%s'",userPasswd)});
         cursor.getResults().next();
@@ -216,11 +218,11 @@ public class MainScreen extends Application {
         }
     }
 
-    private void changeScene(final Pane pane) {
+    private static void changeScene(final Pane pane) {
         primaryStage.getScene().setRoot(pane);
     }
 
-    private Pane createClientPaneScene() {
+    private static Pane createClientPaneScene() {
         // Need to load shopInventory
         GuiDbUtils.loadDataToInventory(connector, shopInventory, user);
         // Need to load userOrders
@@ -260,7 +262,7 @@ public class MainScreen extends Application {
         return borderPane;
     }
 
-    private Pane createAdminPaneScene() {
+    private static Pane createAdminPaneScene() {
         // Need to load shopInventory
         GuiDbUtils.loadDataToInventory(connector, shopInventory, user);
         // Need to load userOrders
