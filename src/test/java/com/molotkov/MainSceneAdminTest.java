@@ -3,7 +3,6 @@ package com.molotkov;
 import com.molotkov.db.DBConnector;
 import com.molotkov.extras.TableViewMatchersExtension;
 import com.molotkov.gui.MainScreen;
-import com.molotkov.users.Administrator;
 import com.molotkov.users.User;
 import com.zaxxer.hikari.HikariConfig;
 import com.zaxxer.hikari.HikariDataSource;
@@ -115,7 +114,7 @@ public class MainSceneAdminTest extends ApplicationTest {
         final BorderPane borderPane = new BorderPane();
 
         final Tab loginTab = new Tab();
-        loginTab.setText("Login");
+        loginTab.setText("Authorisation");
         final HBox loginBox = new HBox(HBOX_SPACING);
         loginBox.setAlignment(Pos.CENTER);
         loginBox.getChildren().add(MainScreen.loginButton(connector.getConnection()));

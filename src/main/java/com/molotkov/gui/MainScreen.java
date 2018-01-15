@@ -68,7 +68,7 @@ public class MainScreen extends Application {
         final BorderPane borderPane = new BorderPane();
 
         final Tab loginTab = new Tab();
-        loginTab.setText("Login");
+        loginTab.setText("Authorisation");
         final HBox loginBox = new HBox(HBOX_SPACING);
         loginBox.setAlignment(Pos.CENTER);
         loginBox.getChildren().add(loginButton(connector.getConnection()));
