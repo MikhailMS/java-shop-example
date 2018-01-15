@@ -138,14 +138,12 @@ public class MainSceneAdminTest extends ApplicationTest {
         ((PasswordField) GuiTest.find("#user-passwd")).setText("admin");
         clickOn("Login");
         sleep(3000);
-        clickOn((Node)from(lookup(".expander-button")).nth(0).query());
-        moveTo("Product Name");
-        verifyThat("Product Name", TableViewMatchersExtension.hasColumnWithID("Product Name"));
-        verifyThat(".table-view", TableViewMatchersExtension.hasColumnWithID("Product Name"));
-        verifyThat(".table-view", TableViewMatchersExtension.hasColumnWithID("Product Weight"));
-        verifyThat(".table-view", TableViewMatchersExtension.hasColumnWithID("Product Price"));
-        verifyThat(".table-view", TableViewMatchersExtension.hasColumnWithID("Quantity available in Inventory"));
-        verifyThat(".table-view", TableViewMatchersExtension.hasColumnWithID("Product Total Price"));
-        verifyThat(".table-view", TableViewMatchersExtension.hasColumnWithID("Details"));
+        //clickOn((Node)from(lookup(".expander-button")).nth(0).query());
+        verifyThat("#inventory-table-view", TableViewMatchersExtension.hasColumnWithID("Product Name"));
+        verifyThat("#inventory-table-view", TableViewMatchersExtension.hasColumnWithID("Product Weight"));
+        verifyThat("#inventory-table-view", TableViewMatchersExtension.hasColumnWithID("Product Price"));
+        verifyThat("#inventory-table-view", TableViewMatchersExtension.hasColumnWithID("Quantity available in Inventory"));
+        verifyThat("#inventory-table-view", TableViewMatchersExtension.hasColumnWithID("Product Total Price"));
+        verifyThat("#inventory-table-view", TableViewMatchersExtension.hasColumnWithID("Details"));
     }
 }
