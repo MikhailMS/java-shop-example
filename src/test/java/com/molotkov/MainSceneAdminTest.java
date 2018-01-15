@@ -1,5 +1,6 @@
 package com.molotkov;
 
+import com.molotkov.db.DBUtils;
 import com.molotkov.extras.TableViewMatchersExtension;
 import com.molotkov.gui.LoginButton;
 import com.molotkov.users.User;
@@ -22,6 +23,7 @@ import org.junit.Test;
 import org.loadui.testfx.GuiTest;
 import org.testcontainers.containers.PostgreSQLContainer;
 import org.testfx.framework.junit.ApplicationTest;
+import org.testfx.matcher.control.TableViewMatchers;
 
 import static org.testfx.api.FxAssert.verifyThat;
 
@@ -87,7 +89,7 @@ public class MainSceneAdminTest extends ApplicationTest {
 
             statement.addBatch("CREATE TABLE IF NOT EXISTS products ( product_id serial PRIMARY KEY, product_name text NOT NULL UNIQUE," +
                     " product_weight numeric (6,3) NOT NULL, product_price numeric (8,2) NOT NULL )");
-            statement.addBatch("INSERT INTO products ( product_name, product_weight, product_price ) VALUES ( 'apple', 0.150, 0.8 )");
+            statement.addBatch("INSERT INTO products ( product_name, product_weight, product_price ) VALUES ( 'apple', 0.151, 0.8 )");
             statement.addBatch("INSERT INTO products ( product_name, product_weight, product_price ) VALUES ( 'chicken', 1, 2.3 )");
 
             statement.addBatch("CREATE TABLE IF NOT EXISTS inventory ( entry_id serial, " +
@@ -133,17 +135,77 @@ public class MainSceneAdminTest extends ApplicationTest {
 
     @Test
     public void admin_can_login_n_see_inventory() {
-        clickOn("Gain access to the Shop");
-        ((TextField) GuiTest.find("#user-name")).setText("admin");
-        ((PasswordField) GuiTest.find("#user-passwd")).setText("admin");
-        clickOn("Login");
-        sleep(3000);
-        //clickOn((Node)from(lookup(".expander-button")).nth(0).query());
+        login();
         verifyThat("#inventory-table-view", TableViewMatchersExtension.hasColumnWithID("Product Name"));
         verifyThat("#inventory-table-view", TableViewMatchersExtension.hasColumnWithID("Product Weight"));
         verifyThat("#inventory-table-view", TableViewMatchersExtension.hasColumnWithID("Product Price"));
         verifyThat("#inventory-table-view", TableViewMatchersExtension.hasColumnWithID("Quantity available in Inventory"));
         verifyThat("#inventory-table-view", TableViewMatchersExtension.hasColumnWithID("Product Total Price"));
         verifyThat("#inventory-table-view", TableViewMatchersExtension.hasColumnWithID("Details"));
+    }
+
+    @Test
+    public void admin_can_see_inventory_entries() {
+        login();
+        verifyThat("#inventory-table-view", TableViewMatchers.containsRow("apple", 0.151, 0.8, 3, "2.40", false));
+        verifyThat("#inventory-table-view", TableViewMatchers.containsRow("chicken", 1.0, 2.3, 4, "9.20", false));
+    }
+
+    @Test
+    public void admin_can_create_new_product() throws SQLException {
+        login();
+        ((TextField) GuiTest.find("#name")).setText("milk");
+        ((TextField) GuiTest.find("#weight")).setText("1.0");
+        ((TextField) GuiTest.find("#price")).setText("1.0");
+        ((TextField) GuiTest.find("#amount")).setText("5");
+        clickOn("Add new product");
+        sleep(2000);
+        verifyThat("#inventory-table-view", TableViewMatchers.containsRow("milk", 1.0, 1.0, 5, "5.00", false));
+        sleep(2000);
+        DBUtils.deleteFromTable(dataSource.getConnection(), "products", new String[]{String.format("product_name='%s'", "milk")});
+        dataSource.close();
+    }
+
+    @Test
+    public void admin_can_increase_n_decrease_new_product_amount() throws SQLException {
+        login();
+        ((TextField) GuiTest.find("#name")).setText("milk");
+        ((TextField) GuiTest.find("#weight")).setText("1.0");
+        ((TextField) GuiTest.find("#price")).setText("1.0");
+        ((TextField) GuiTest.find("#amount")).setText("5");
+        clickOn("Add new product");
+        sleep(2000);
+        verifyThat("#inventory-table-view", TableViewMatchers.containsRow("milk", 1.0, 1.0, 5, "5.00", false));
+        sleep(500);
+        clickOn("Product Name")
+                .clickOn((Node)from(lookup(".expander-button")).nth(2).query())
+                .clickOn("Add to inventory");
+        verifyThat("#inventory-table-view", TableViewMatchers.containsRow("milk", 1.0, 1.0, 6, "6.00", false));
+        clickOn("Remove from inventory").clickOn("Remove from inventory");
+        verifyThat("#inventory-table-view", TableViewMatchers.containsRow("milk", 1.0, 1.0, 4, "4.00", false));
+
+        DBUtils.deleteFromTable(dataSource.getConnection(), "products", new String[]{String.format("product_name='%s'", "milk")});
+        dataSource.close();
+    }
+
+    @Test
+    public void admin_can_increase_n_decrease_product_amount() {
+        login();
+        clickOn("Product Name")
+                .clickOn((Node)from(lookup(".expander-button")).nth(0).query())
+                .clickOn("Add to inventory");
+        verifyThat("#inventory-table-view", TableViewMatchers.containsRow("apple", 0.151, 0.8, 4, "3.20", false));
+        clickOn("Remove from inventory");
+        verifyThat("#inventory-table-view", TableViewMatchers.containsRow("apple", 0.151, 0.8, 3, "2.40", false));
+
+        dataSource.close();
+    }
+
+    private void login() {
+        clickOn("Gain access to the Shop");
+        ((TextField) GuiTest.find("#user-name")).setText("admin");
+        ((PasswordField) GuiTest.find("#user-passwd")).setText("admin");
+        clickOn("Login");
+        sleep(3000);
     }
 }
