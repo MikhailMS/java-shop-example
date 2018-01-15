@@ -13,6 +13,7 @@ import com.molotkov.users.Administrator;
 import com.molotkov.users.Client;
 import com.molotkov.users.User;
 
+import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.Arrays;
@@ -20,14 +21,14 @@ import java.util.List;
 
 public class GuiDbUtils {
 
-    public static void loadDataToInventory(final DBConnector connector, final Inventory inventory, final User user) {
+    public static void loadDataToInventory(final Connection connection, final Inventory inventory, final User user) {
         DBCursorHolder cursor;
         try {
             if (user instanceof Client) {
-                cursor = DBUtils.innerJoinTables(connector.getConnection(), "products", "inventory", "product_id",
+                cursor = DBUtils.innerJoinTables(connection, "products", "inventory", "product_id",
                         new String[] {"product_name", "product_weight", "product_price", "product_amount"}, new String[]{"product_amount > 0"});
             } else {
-                cursor = DBUtils.innerJoinTables(connector.getConnection(), "products", "inventory", "product_id",
+                cursor = DBUtils.innerJoinTables(connection, "products", "inventory", "product_id",
                         new String[] {"product_name", "product_weight", "product_price", "product_amount"}, new String[]{});
             }
 
@@ -41,10 +42,10 @@ public class GuiDbUtils {
         }
     }
 
-    public static void loadDataToUserList(final DBConnector connector, final List<User> userList) {
+    public static void loadDataToUserList(final Connection connection, final List<User> userList) {
         DBCursorHolder cursor;
         try {
-            cursor = DBUtils.filterFromTable(connector.getConnection(), "users", new String[]{"user_name", "user_password", "privileges"},
+            cursor = DBUtils.filterFromTable(connection, "users", new String[]{"user_name", "user_password", "privileges"},
                     new String[]{});
             while (cursor.getResults().next()) {
                 if (cursor.getResults().getBoolean(3)) userList.add(new Administrator(cursor.getResults().getString(1),
@@ -56,17 +57,17 @@ public class GuiDbUtils {
         }
     }
 
-    public static void loadDataToOrders(final User user, final DBConnector connector, final List<Order> orders) {
+    public static void loadDataToOrders(final User user, final Connection connection, final List<Order> orders) {
         DBCursorHolder cursor;
         try {
-            if (user instanceof Administrator) cursor = DBUtils.innerJoinTables(connector.getConnection(), "baskets","orders",
+            if (user instanceof Administrator) cursor = DBUtils.innerJoinTables(connection, "baskets","orders",
                     "basket_id", new String[]{"products_name", "products_amount", "address"}, new String[]{});
-            else cursor = DBUtils.innerJoinTables(connector.getConnection(), "baskets","orders",
+            else cursor = DBUtils.innerJoinTables(connection, "baskets","orders",
                     "basket_id", new String[]{"products_name", "products_amount", "address"},
                     new String[]{String.format("basket_owner='%s'", user.getUserName())});
             while (cursor.getResults().next()) {
                 final Basket orderBasket = new Basket();
-                constructBasketFromDB(connector, cursor.getResults(), orderBasket);
+                constructBasketFromDB(connection, cursor.getResults(), orderBasket);
                 orders.add(new Order(orderBasket, cursor.getResults().getString(3)));
             }
             cursor.closeCursor();
@@ -76,14 +77,14 @@ public class GuiDbUtils {
         }
     }
 
-    public static void loadSavedBasket(final Client client, final DBConnector connector, final Basket basket) {
+    public static void loadSavedBasket(final Client client, final Connection connection, final Basket basket) {
         DBCursorHolder cursor;
         try {
-            cursor = DBUtils.filterFromTable(connector.getConnection(), "baskets", new String[]{"products_name", "products_amount", "basket_id"},
+            cursor = DBUtils.filterFromTable(connection, "baskets", new String[]{"products_name", "products_amount", "basket_id"},
                     new String[]{String.format("basket_owner='%s'", client.getUserName()), "AND", "processed='f'"});
             while (cursor.getResults().next()) {
                 client.setRetrievedBasketId(cursor.getResults().getInt(3));
-                constructBasketFromDB(connector, cursor.getResults(), basket);
+                constructBasketFromDB(connection, cursor.getResults(), basket);
             }
             cursor.closeCursor();
         } catch (SQLException e) {
@@ -91,7 +92,7 @@ public class GuiDbUtils {
         }
     }
 
-    private static void constructBasketFromDB(final DBConnector connector, final ResultSet products, final Basket basketToConstruct) {
+    private static void constructBasketFromDB(final Connection connection, final ResultSet products, final Basket basketToConstruct) {
         try {
             final List<String> names = Arrays.asList(products.getString(1).split(","));
             final List<String> amounts = Arrays.asList(products.getString(2).split(","));
@@ -100,7 +101,7 @@ public class GuiDbUtils {
             int counter = 0;
 
             for(final String productName : names) {
-                final DBCursorHolder productDetails = DBUtils.filterFromTable(connector.getConnection(), "products",
+                final DBCursorHolder productDetails = DBUtils.filterFromTable(connection, "products",
                         new String[]{"product_weight", "product_price"}, new String[]{String.format("product_name='%s'", productName)});
                 while (productDetails.getResults().next()) {
                     restoredProduct = new Product(productName, productDetails.getResults().getDouble(1),

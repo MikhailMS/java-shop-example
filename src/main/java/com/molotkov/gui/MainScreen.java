@@ -4,33 +4,18 @@ import com.molotkov.Basket;
 import com.molotkov.Inventory;
 import com.molotkov.Order;
 import com.molotkov.db.DBConnector;
-import com.molotkov.db.DBCursorHolder;
-import com.molotkov.db.DBUtils;
-import com.molotkov.users.Administrator;
 import com.molotkov.users.Client;
 import com.molotkov.users.User;
 import javafx.application.Application;
-import javafx.application.Platform;
-import javafx.beans.property.ReadOnlyDoubleWrapper;
-import javafx.event.ActionEvent;
-import javafx.event.Event;
-import javafx.event.EventType;
-import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Group;
-import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.layout.BorderPane;
-import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
-import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
-import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.scene.control.*;
-import javafx.util.Pair;
 
-import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
@@ -71,7 +56,8 @@ public class MainScreen extends Application {
         loginTab.setText("Authorisation");
         final HBox loginBox = new HBox(HBOX_SPACING);
         loginBox.setAlignment(Pos.CENTER);
-        loginBox.getChildren().add(loginButton(connector.getConnection()));
+        loginBox.getChildren().add(LoginButton.createLoginButton(primaryStage, connector.getConnection(), user, shopInventory,
+                clientBasket, userOrders, userList));
         loginTab.setContent(loginBox);
 
         tabPane.getTabs().add(loginTab);
@@ -102,209 +88,6 @@ public class MainScreen extends Application {
         } catch (SQLException e) {
             e.printStackTrace();
         }
-    }
-
-    public static Button loginButton(final Connection connection) {
-        final Button btn = new Button();
-        btn.setText("Gain access to the Shop");
-
-        btn.setOnAction(mainEvent -> loginAction(connection));
-        return btn;
-    }
-
-    private static void loginAction(final Connection connection) {
-        // Create the custom dialog.
-        final Alert alert = new Alert(Alert.AlertType.INFORMATION);
-        alert.setTitle("Login");
-        alert.setHeaderText("Login Dialog");
-
-        final Dialog<Pair<String, String>> dialog = new Dialog<>();
-        dialog.setTitle("Login into Super Java Shop");
-        dialog.setContentText("Enter your username and password : ");
-        dialog.initModality(Modality.NONE);
-
-        // Set login button
-        final ButtonType loginButtonType = new ButtonType("Login", ButtonBar.ButtonData.OK_DONE);
-        dialog.getDialogPane().getButtonTypes().addAll(loginButtonType, ButtonType.CANCEL);
-
-        // Create the username and password labels and fields.
-        final GridPane grid = new GridPane();
-        grid.setHgap(10);
-        grid.setVgap(10);
-        grid.setPadding(new Insets(20, 150, 10, 10));
-
-        final TextField userName = new TextField();
-        userName.setPromptText("e.g. m03j");
-        userName.setId("user-name");
-
-        final PasswordField userPasswd = new PasswordField();
-        userPasswd.setPromptText("xxxx");
-        userPasswd.setId("user-passwd");
-
-        grid.add(new Label("Username: "), 0, 0);
-        grid.add(userName, 1, 0);
-        grid.add(new Label("Password: "), 0, 1);
-        grid.add(userPasswd, 1, 1);
-
-        // Enable/Disable login button depending on whether a username was entered.
-        final Node loginButton = dialog.getDialogPane().lookupButton(loginButtonType);
-        loginButton.setDisable(true);
-
-        // Do some validation (using the Java 8 lambda syntax).
-        userName.textProperty().addListener((observable, oldValue, newValue) -> loginButton.setDisable(newValue.trim().isEmpty()));
-
-        dialog.getDialogPane().setContent(grid);
-
-        // Request focus on the player name field by default.
-        Platform.runLater(() -> userName.requestFocus());
-
-        dialog.initModality(Modality.APPLICATION_MODAL);
-        dialog.show();
-
-        loginButton.addEventFilter(EventType.ROOT, e -> {
-            try {
-                userAuthentication(e, dialog, userName.getText(), userPasswd.getText(), connection);
-            } catch (SQLException ex) {
-                ex.printStackTrace();
-            }
-        });
-    }
-
-    private static void userAuthentication(final Event e, final Dialog dialog, final String userName, final String userPasswd, final Connection connection) throws SQLException {
-        if(e.getEventType().equals(ActionEvent.ACTION)){
-            e.consume();
-            if (isUserAllowed(userName, userPasswd, connection)) {
-                if (isUserAdmin(userName, userPasswd, connection)) {
-                    user = new Administrator(userName,userPasswd);
-                    changeScene(createAdminPaneScene());
-                } else {
-                    user = new Client(userName, userPasswd);
-                    changeScene(createClientPaneScene());
-                }
-                dialog.close();
-            }
-            else {
-                final ShakeTransition animation = new ShakeTransition(dialog.getDialogPane(), t->dialog.show());
-                animation.playFromStart();
-            }
-        }
-    }
-
-    private static boolean isUserAllowed(final String userName, final String userPasswd, final Connection connection) throws SQLException {
-        final DBCursorHolder cursor = DBUtils.filterFromTable(connection, "users", new String[]{"user_name"},
-                new String[]{String.format("user_name = '%s'", userName), "AND", String.format("user_password = '%s'",userPasswd)});
-        while(cursor.getResults().next()) {
-            if (cursor.getResults().getString(1).equals(userName)) {
-                cursor.closeCursor();
-                return true;
-            } else {
-                cursor.closeCursor();
-                return false;
-            }
-        }
-        return false;
-    }
-
-    private static boolean isUserAdmin(final String userName, final String userPasswd, final Connection connection) throws SQLException {
-        final DBCursorHolder cursor = DBUtils.filterFromTable(connection, "users", new String[]{"privileges"},
-                new String[]{String.format("user_name = '%s'", userName), "AND", String.format("user_password = '%s'",userPasswd)});
-        cursor.getResults().next();
-        if (cursor.getResults().getBoolean(1)) {
-            cursor.closeCursor();
-            return true;
-        } else {
-            cursor.closeCursor();
-            return false;
-        }
-    }
-
-    private static void changeScene(final Pane pane) {
-        primaryStage.getScene().setRoot(pane);
-    }
-
-    private static Pane createClientPaneScene() {
-        // Need to load shopInventory
-        GuiDbUtils.loadDataToInventory(connector, shopInventory, user);
-        // Need to load userOrders
-        GuiDbUtils.loadDataToOrders(user, connector, userOrders);
-        // Need to load client basket, if it's been saved
-        GuiDbUtils.loadSavedBasket((Client)user, connector, clientBasket);
-
-        // Create Client scene
-        user.setBasket(clientBasket);
-
-        final TabPane tabPane = new TabPane();
-
-        final BorderPane borderPane = new BorderPane();
-
-        final Tab inventoryTab = new Tab();
-        inventoryTab.setText("Inventory");
-        final HBox inventoryBox = new HBox(HBOX_SPACING);
-        inventoryBox.setAlignment(Pos.CENTER);
-        inventoryBox.getChildren().add(InventoryScene.createMainInventoryBox(shopInventory, user, connector.getConnection()));
-        inventoryTab.setContent(inventoryBox);
-
-        final Tab orderHistoryTab = new Tab();
-        orderHistoryTab.setText("Order History");
-        final HBox orderHistoryBox = new HBox(HBOX_SPACING);
-        orderHistoryBox.setAlignment(Pos.CENTER);
-        orderHistoryBox.getChildren().add(HistoryScene.syncTablesIntoOneTable(HistoryScene.createOrderTableView(userOrders), HistoryScene.createTotalOrderTableView(userOrders)));
-        orderHistoryTab.setContent(orderHistoryBox);
-
-        tabPane.getTabs().addAll(inventoryTab, orderHistoryTab);
-        tabPane.setTabClosingPolicy(TabPane.TabClosingPolicy.UNAVAILABLE);
-
-        // bind to take available space
-        borderPane.prefHeightProperty().bind(new ReadOnlyDoubleWrapper(WINDOW_HEIGHT));
-        borderPane.prefWidthProperty().bind(new ReadOnlyDoubleWrapper(WINDOW_WIDTH));
-        borderPane.setCenter(tabPane);
-
-        return borderPane;
-    }
-
-    private static Pane createAdminPaneScene() {
-        // Need to load shopInventory
-        GuiDbUtils.loadDataToInventory(connector, shopInventory, user);
-        // Need to load userOrders
-        GuiDbUtils.loadDataToOrders(user, connector, userOrders);
-        // Need to load users
-        GuiDbUtils.loadDataToUserList(connector, userList);
-
-        // Create Admin scene
-        final TabPane tabPane = new TabPane();
-
-        final BorderPane borderPane = new BorderPane();
-
-        final Tab inventoryTab = new Tab();
-        inventoryTab.setText("Inventory");
-        final HBox inventoryBox = new HBox(HBOX_SPACING);
-        inventoryBox.setAlignment(Pos.CENTER);
-        inventoryBox.getChildren().add(InventoryScene.createMainInventoryBox(shopInventory, user, connector.getConnection()));
-        inventoryTab.setContent(inventoryBox);
-
-        final Tab orderHistoryTab = new Tab();
-        orderHistoryTab.setText("Order History");
-        final HBox orderHistoryBox = new HBox(HBOX_SPACING);
-        orderHistoryBox.setAlignment(Pos.CENTER);
-        orderHistoryBox.getChildren().add(HistoryScene.syncTablesIntoOneTable(HistoryScene.createOrderTableView(userOrders), HistoryScene.createTotalOrderTableView(userOrders)));
-        orderHistoryTab.setContent(orderHistoryBox);
-
-        final Tab controlUsersTab = new Tab();
-        controlUsersTab.setText("System users");
-        final HBox controlUsersBox = new HBox(HBOX_SPACING);
-        controlUsersBox.setAlignment(Pos.CENTER);
-        controlUsersBox.getChildren().add(ControlUsersScene.createControlTable(userList, (Administrator)user, connector.getConnection()));
-        controlUsersTab.setContent(controlUsersBox);
-
-        tabPane.getTabs().addAll(inventoryTab, orderHistoryTab, controlUsersTab);
-        tabPane.setTabClosingPolicy(TabPane.TabClosingPolicy.UNAVAILABLE);
-
-        // bind to take available space
-        borderPane.prefHeightProperty().bind(new ReadOnlyDoubleWrapper(WINDOW_HEIGHT));
-        borderPane.prefWidthProperty().bind(new ReadOnlyDoubleWrapper(WINDOW_WIDTH));
-        borderPane.setCenter(tabPane);
-
-        return borderPane;
     }
 
     public static void main(final String[] args) {

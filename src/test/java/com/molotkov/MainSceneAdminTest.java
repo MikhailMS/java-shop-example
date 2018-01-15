@@ -1,8 +1,7 @@
 package com.molotkov;
 
-import com.molotkov.db.DBConnector;
 import com.molotkov.extras.TableViewMatchersExtension;
-import com.molotkov.gui.MainScreen;
+import com.molotkov.gui.LoginButton;
 import com.molotkov.users.User;
 import com.zaxxer.hikari.HikariConfig;
 import com.zaxxer.hikari.HikariDataSource;
@@ -22,7 +21,6 @@ import org.junit.Test;
 import org.loadui.testfx.GuiTest;
 import org.testcontainers.containers.PostgreSQLContainer;
 import org.testfx.framework.junit.ApplicationTest;
-import javafx.scene.control.DialogPane;
 
 import static org.testfx.api.FxAssert.verifyThat;
 
@@ -42,14 +40,12 @@ public class MainSceneAdminTest extends ApplicationTest {
     private static final String PRIMARY_STAGE_TITLE = "Java Super Shop";
     private static final Color PRIMARY_STAGE_DEFAULT_BACKGROUND_COLOR = Color.WHITE;
 
-    private static User user;
+    private User user;
 
-    private static Inventory shopInventory = new Inventory();
-    private static Basket clientBasket = new Basket();
-    private static List<Order> userOrders = new ArrayList<>();
-    private static List<User> userList = new ArrayList<>();
-
-    //private static DBConnector connector;
+    private Inventory shopInventory = new Inventory();
+    private Basket clientBasket = new Basket();
+    private List<Order> userOrders = new ArrayList<>();
+    private List<User> userList = new ArrayList<>();
 
     private static Stage primaryStage;
 
@@ -106,8 +102,6 @@ public class MainSceneAdminTest extends ApplicationTest {
         this.primaryStage = primaryStage;
         this.primaryStage.setTitle(PRIMARY_STAGE_TITLE);
 
-        //connector = new DBConnector(postgres.getJdbcUrl(), new User(postgres.getUsername(), postgres.getPassword()));
-
         final Group root = new Group();
         final Scene scene = new Scene(root, WINDOW_WIDTH, WINDOW_HEIGHT, PRIMARY_STAGE_DEFAULT_BACKGROUND_COLOR);
         final TabPane tabPane = new TabPane();
@@ -118,8 +112,8 @@ public class MainSceneAdminTest extends ApplicationTest {
         loginTab.setText("Authorisation");
         final HBox loginBox = new HBox(HBOX_SPACING);
         loginBox.setAlignment(Pos.CENTER);
-
-        loginBox.getChildren().add(MainScreen.loginButton(dataSource.getConnection()));
+        loginBox.getChildren().add(LoginButton.createLoginButton(primaryStage, dataSource.getConnection(), user, shopInventory,
+                clientBasket, userOrders, userList));
         loginTab.setContent(loginBox);
 
         tabPane.getTabs().add(loginTab);
