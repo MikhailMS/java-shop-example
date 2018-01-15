@@ -105,7 +105,7 @@ public class MainSceneAdminTest extends ApplicationTest {
         this.primaryStage = primaryStage;
         this.primaryStage.setTitle(PRIMARY_STAGE_TITLE);
 
-        connector = new DBConnector("jdbc:postgresql:test_db");
+        connector = new DBConnector(dataSource.getJdbcUrl(), new User(dataSource.getUsername(), dataSource.getPassword()));
 
         final Group root = new Group();
         final Scene scene = new Scene(root, WINDOW_WIDTH, WINDOW_HEIGHT, PRIMARY_STAGE_DEFAULT_BACKGROUND_COLOR);
