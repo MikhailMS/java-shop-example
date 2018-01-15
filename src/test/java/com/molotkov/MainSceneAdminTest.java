@@ -7,6 +7,7 @@ import com.zaxxer.hikari.HikariConfig;
 import com.zaxxer.hikari.HikariDataSource;
 import javafx.geometry.Pos;
 import javafx.scene.Group;
+import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.control.PasswordField;
 import javafx.scene.control.Tab;
@@ -137,6 +138,9 @@ public class MainSceneAdminTest extends ApplicationTest {
         ((PasswordField) GuiTest.find("#user-passwd")).setText("admin");
         clickOn("Login");
         sleep(3000);
+        clickOn((Node)from(lookup(".expander-button")).nth(0).query());
+        moveTo("Product Name");
+        verifyThat("Product Name", TableViewMatchersExtension.hasColumnWithID("Product Name"));
         verifyThat(".table-view", TableViewMatchersExtension.hasColumnWithID("Product Name"));
         verifyThat(".table-view", TableViewMatchersExtension.hasColumnWithID("Product Weight"));
         verifyThat(".table-view", TableViewMatchersExtension.hasColumnWithID("Product Price"));
