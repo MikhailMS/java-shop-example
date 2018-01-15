@@ -137,7 +137,7 @@ public class MainSceneAdminTest extends ApplicationTest {
 
     @Test
     public void admin_can_login_n_see_inventory() {
-        clickOn("Gain access to to the Shop");
+        clickOn("Gain access to the Shop");
         ((TextField) GuiTest.find("#user-name")).setText("admin");
         ((PasswordField) GuiTest.find("#user-passwd")).setText("admin");
         clickOn("Login");
