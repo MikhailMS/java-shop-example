@@ -135,11 +135,7 @@ public class MainSceneAdminTest extends ApplicationTest {
 
     @Test
     public void admin_can_login_n_see_inventory() {
-        clickOn("Gain access to the Shop");
-        ((TextField)from(lookup("#user-name")).query()).setText("admin");
-        ((PasswordField)from(lookup("#user-passwd")).query()).setText("admin");
-        clickOn("Login");
-        sleep(2500);
+        login();
 
         verifyThat("#inventory-table-view", TableViewMatchersExtension.hasColumnWithID("Product Name"));
         verifyThat("#inventory-table-view", TableViewMatchersExtension.hasColumnWithID("Product Weight"));
@@ -153,11 +149,7 @@ public class MainSceneAdminTest extends ApplicationTest {
 
     @Test
     public void admin_can_see_inventory_entries() {
-        clickOn("Gain access to the Shop");
-        ((TextField)from(lookup("#user-name")).query()).setText("admin");
-        ((PasswordField)from(lookup("#user-passwd")).query()).setText("admin");
-        clickOn("Login");
-        sleep(2500);
+        login();
 
         verifyThat("#inventory-table-view", TableViewMatchers.containsRow("apple", 0.151, 0.8, 3, "2.40", false));
         verifyThat("#inventory-table-view", TableViewMatchers.containsRow("chicken", 1.0, 2.3, 4, "9.20", false));
@@ -167,11 +159,7 @@ public class MainSceneAdminTest extends ApplicationTest {
 
     @Test
     public void admin_can_create_new_product() throws SQLException {
-        clickOn("Gain access to the Shop");
-        ((TextField)from(lookup("#user-name")).query()).setText("admin");
-        ((PasswordField)from(lookup("#user-passwd")).query()).setText("admin");
-        clickOn("Login");
-        sleep(2500);
+        login();
 
         ((TextField) GuiTest.find("#name")).setText("milk");
         ((TextField) GuiTest.find("#weight")).setText("1.0");
@@ -189,11 +177,7 @@ public class MainSceneAdminTest extends ApplicationTest {
 
     @Test
     public void admin_can_increase_n_decrease_new_product_amount() throws SQLException {
-        clickOn("Gain access to the Shop");
-        ((TextField)from(lookup("#user-name")).query()).setText("admin");
-        ((PasswordField)from(lookup("#user-passwd")).query()).setText("admin");
-        clickOn("Login");
-        sleep(2500);
+        login();
 
         ((TextField) GuiTest.find("#name")).setText("milk");
         ((TextField) GuiTest.find("#weight")).setText("1.0");
@@ -224,11 +208,7 @@ public class MainSceneAdminTest extends ApplicationTest {
 
     @Test
     public void admin_can_increase_n_decrease_product_amount() {
-        clickOn("Gain access to the Shop");
-        ((TextField)from(lookup("#user-name")).query()).setText("admin");
-        ((PasswordField)from(lookup("#user-passwd")).query()).setText("admin");
-        clickOn("Login");
-        sleep(2500);
+        login();
 
         clickOn("Product Name")
                 .clickOn((Node)from(lookup("#inventory-table-view .expander-button")).nth(0).query())
@@ -240,5 +220,13 @@ public class MainSceneAdminTest extends ApplicationTest {
         verifyThat("#inventory-table-view", TableViewMatchers.containsRow("apple", 0.151, 0.8, 3, "2.40"));
 
         dataSource.close();
+    }
+
+    private void login() {
+        clickOn("Gain access to the Shop");
+        ((TextField)from(lookup("#user-name")).query()).setText("admin");
+        ((PasswordField)from(lookup("#user-passwd")).query()).setText("admin");
+        clickOn("Login");
+        sleep(2500);
     }
 }
