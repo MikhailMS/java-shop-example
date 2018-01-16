@@ -133,7 +133,5 @@ public class OrderDBTest {
 
         // Check if orders match
         assertEquals("Retrieve order query succeeded", savedOrder.toString(), restoredOrder.toString());
-
-        closeConnection();
     }
 }

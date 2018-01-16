@@ -127,8 +127,6 @@ public class DBUtilsTest {
 
         assertEquals("Delete from table query succeeds", "2 2 4 ", resultString6);
         cursor.closeCursor();
-
-        closeConnection();
     }
 
     @Test(expected = SQLException.class)
@@ -139,7 +137,5 @@ public class DBUtilsTest {
 
         final DBCursorHolder cursor = DBUtils.selectFromTable(dataSource.getConnection(), "test_table", new String[]{});
         cursor.closeCursor();
-
-        closeConnection();
     }
 }

@@ -155,8 +155,6 @@ public class MainSceneAdminTest extends ApplicationTest {
         verifyThat("#inventory-table-view", TableViewMatchersExtension.hasColumnWithID("Quantity available in Inventory"));
         verifyThat("#inventory-table-view", TableViewMatchersExtension.hasColumnWithID("Product Total Price"));
         verifyThat("#inventory-table-view", TableViewMatchersExtension.hasColumnWithID("Details"));
-
-        closeConnection();
     }
 
     @Test
@@ -165,8 +163,6 @@ public class MainSceneAdminTest extends ApplicationTest {
 
         verifyThat("#inventory-table-view", TableViewMatchers.containsRow("apple", 0.151, 0.8, 3, "2.40", false));
         verifyThat("#inventory-table-view", TableViewMatchers.containsRow("chicken", 1.0, 2.3, 4, "9.20", false));
-
-        closeConnection();
     }
 
     @Test
@@ -183,8 +179,6 @@ public class MainSceneAdminTest extends ApplicationTest {
 
         DBUtils.deleteFromTable(dataSource.getConnection(), "inventory", new String[]{String.format("product_id=%d", 3)});
         DBUtils.deleteFromTable(dataSource.getConnection(), "products", new String[]{String.format("product_name='%s'", "milk")});
-
-        closeConnection();
     }
 
     @Test
@@ -214,8 +208,6 @@ public class MainSceneAdminTest extends ApplicationTest {
         DBUtils.deleteFromTable(dataSource.getConnection(), "inventory", new String[]{String.format("product_id=%d", 3)});
         DBUtils.deleteFromTable(dataSource.getConnection(), "products", new String[]{String.format("product_name='%s'", "milk")});
         sleep(2000);
-
-        closeConnection();
     }
 
     @Test
@@ -230,8 +222,6 @@ public class MainSceneAdminTest extends ApplicationTest {
         clickOn((Node)from(lookup("#inventory-table-view .expander-button")).nth(0).query())
                 .clickOn("Remove from inventory");
         verifyThat("#inventory-table-view", TableViewMatchers.containsRow("apple", 0.151, 0.8, 3, "2.40"));
-
-        closeConnection();
     }
 
     @Test
@@ -242,8 +232,6 @@ public class MainSceneAdminTest extends ApplicationTest {
         verifyThat("#order-table", TableViewMatchersExtension.hasColumnWithID("Delivery Address"));
         verifyThat("#order-table", TableViewMatchersExtension.hasColumnWithID("Total order price"));
         verifyThat("#order-table", TableViewMatchersExtension.hasColumnWithID("Order Details"));
-
-        closeConnection();
     }
 
     @Test
@@ -255,8 +243,6 @@ public class MainSceneAdminTest extends ApplicationTest {
         verifyThat("#order-table", TableViewMatchers.containsRow("London", 2.50));
 
         verifyThat("#total-table", TableViewMatchers.containsRow(4.95));
-
-        closeConnection();
     }
 
     @Test
@@ -266,8 +252,6 @@ public class MainSceneAdminTest extends ApplicationTest {
                 .clickOn("Delivery address")
                 .clickOn((Node)from(lookup("#order-table .expander-button")).nth(1).query());
         verifyThat(lookup("Basket has 2 products."), Node::isVisible);
-
-        closeConnection();
     }
 
     @Test
@@ -278,8 +262,6 @@ public class MainSceneAdminTest extends ApplicationTest {
         verifyThat("#order-table", TableViewMatchersExtension.hasColumnWithID("User name"));
         verifyThat("#order-table", TableViewMatchersExtension.hasColumnWithID("User privilege"));
         verifyThat("#order-table", TableViewMatchersExtension.hasColumnWithID("Details"));
-
-        closeConnection();
     }
 
     @Test
@@ -290,8 +272,6 @@ public class MainSceneAdminTest extends ApplicationTest {
         verifyThat("#users-table", TableViewMatchers.containsRow("testUser1", "False"));
         verifyThat("#users-table", TableViewMatchers.containsRow("testUser2", "False"));
         verifyThat("#users-table", TableViewMatchers.containsRow("admin", "True"));
-
-        closeConnection();
     }
 
     @Test
@@ -307,8 +287,6 @@ public class MainSceneAdminTest extends ApplicationTest {
         verifyThat("#users-table", TableViewMatchers.containsRow("admin2", "True"));
 
         DBUtils.deleteFromTable(dataSource.getConnection(), "users", new String[]{String.format("user_name='%s'", "admin2")});
-
-        closeConnection();
     }
 
     @Test
@@ -324,8 +302,6 @@ public class MainSceneAdminTest extends ApplicationTest {
         verifyThat("#users-table", TableViewMatchers.containsRow("testUser3", "False"));
 
         DBUtils.deleteFromTable(dataSource.getConnection(), "users", new String[]{String.format("user_name='%s'", "testUser3")});
-
-        closeConnection();
     }
 
     @Test
@@ -344,8 +320,6 @@ public class MainSceneAdminTest extends ApplicationTest {
                 .clickOn("Remove user");
         verifyThat(lookup("User has been removed successfully"), Node::isVisible);
         sleep(2000);
-
-        closeConnection();
     }
 
     @Test
@@ -358,8 +332,6 @@ public class MainSceneAdminTest extends ApplicationTest {
                 .clickOn("Remove user");
         verifyThat(lookup("User has been removed successfully"), Node::isVisible);
         sleep(2000);
-
-        closeConnection();
     }
 
     private void login() {

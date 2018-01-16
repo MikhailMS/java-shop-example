@@ -92,16 +92,12 @@ public class InventoryAdminSceneTest extends ApplicationTest {
         verifyThat(".table-view", TableViewMatchersExtension.hasColumnWithID("Quantity available in Inventory"));
         verifyThat(".table-view", TableViewMatchersExtension.hasColumnWithID("Product Total Price"));
         verifyThat(".table-view", TableViewMatchersExtension.hasColumnWithID("Details"));
-
-        closeConnection();
     }
 
     @Test
     public void should_contain_data_in_rows_for_admin() throws SQLException {
         verifyThat(".table-view", TableViewMatchers.containsRow("apple", 0.151, 0.8, 2, "1.60", false));
         verifyThat(".table-view", TableViewMatchers.containsRow("chicken", 1.0, 2.3, 3, "6.90", false));
-
-        closeConnection();
     }
 
     @Test
@@ -113,8 +109,6 @@ public class InventoryAdminSceneTest extends ApplicationTest {
         clickOn("Add new product");
         sleep(2000);
         verifyThat(".table-view", TableViewMatchers.containsRow("milk", 1.0, 1.0, 5, "5.00", false));
-
-        closeConnection();
     }
 
     @Test
@@ -130,8 +124,6 @@ public class InventoryAdminSceneTest extends ApplicationTest {
         clickOn("Add to inventory");
         sleep(1000);
         verifyThat(".table-view", TableViewMatchers.containsRow("milk", 1.0, 1.0, 6, "6.00", false));
-
-        closeConnection();
     }
 
     @Test
@@ -147,8 +139,6 @@ public class InventoryAdminSceneTest extends ApplicationTest {
         clickOn("Remove from inventory");
         sleep(1000);
         verifyThat(".table-view", TableViewMatchers.containsRow("milk", 1.0, 1.0, 4, "4.00", false));
-
-        closeConnection();
     }
 
     @Test
@@ -163,8 +153,6 @@ public class InventoryAdminSceneTest extends ApplicationTest {
                 .clickOn((Node)from(lookup(".expander-button")).nth(0).query())
                 .clickOn("Remove from inventory");
         verifyThat(lookup("Something went wrong while removing product from inventory: Possibly you tried to remove more occurrences of a product than exist in inventory"), Node::isVisible);
-
-        closeConnection();
     }
 
     @Test
@@ -181,8 +169,6 @@ public class InventoryAdminSceneTest extends ApplicationTest {
         clickOn("Add new product");
         verifyThat(lookup("One of the fields is empty. Make sure all product descriptors are filled in"), Node::isVisible);
         sleep(3000);
-
-        closeConnection();
     }
 
     @Test
@@ -191,7 +177,5 @@ public class InventoryAdminSceneTest extends ApplicationTest {
         clickOn("Add new product");
         verifyThat(lookup("One of the fields is empty. Make sure all product descriptors are filled in"), Node::isVisible);
         sleep(3000);
-
-        closeConnection();
     }
 }

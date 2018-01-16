@@ -4,9 +4,7 @@ import com.molotkov.db.DBCursorHolder;
 import com.molotkov.users.User;
 import com.zaxxer.hikari.HikariConfig;
 import com.zaxxer.hikari.HikariDataSource;
-import org.junit.Before;
-import org.junit.ClassRule;
-import org.junit.Test;
+import org.junit.*;
 import org.testcontainers.containers.PostgreSQLContainer;
 
 import java.sql.SQLException;
@@ -17,15 +15,25 @@ import java.time.format.DateTimeFormatter;
 import static org.rnorth.visibleassertions.VisibleAssertions.assertEquals;
 
 public class UserTest {
-    private HikariDataSource dataSource;
+    private static HikariDataSource dataSource;
 
     @ClassRule
     public static PostgreSQLContainer postgres = new PostgreSQLContainer();
 
+    @After
+    public void closeConnection() throws SQLException {
+        dataSource.getConnection().close();
+    }
+
+    @AfterClass
+    public static void closeDataSource() {
+        dataSource.close();
+    }
+
     @Before
     public void setUp() throws SQLException {
         final HikariConfig hikariConfig = new HikariConfig();
-        hikariConfig.setMaximumPoolSize(20);
+        hikariConfig.setMaximumPoolSize(100);
         hikariConfig.setJdbcUrl(postgres.getJdbcUrl());
         hikariConfig.setUsername(postgres.getUsername());
         hikariConfig.setPassword(postgres.getPassword());
@@ -278,7 +286,5 @@ public class UserTest {
 
         assertEquals("admin can sort inventory by price", "apple 0.150 0.80 3 ", inventory);
         cursor.closeCursor();
-
-        dataSource.close();
     }
 }

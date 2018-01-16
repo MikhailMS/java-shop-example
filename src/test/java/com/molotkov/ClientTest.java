@@ -104,7 +104,5 @@ public class ClientTest {
         final String resultCompleteBasket = cursor.getResults().getString(1);
         cursor.closeCursor();
         assertEquals("completeOrder - basket update - succeeds", "1", resultCompleteBasket);
-
-        closeConnection();
     }
 }
