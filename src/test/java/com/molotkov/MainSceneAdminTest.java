@@ -18,6 +18,8 @@ import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.paint.Color;
 import javafx.stage.Stage;
+import org.junit.After;
+import org.junit.AfterClass;
 import org.junit.ClassRule;
 import org.junit.Test;
 import org.loadui.testfx.GuiTest;
@@ -133,8 +135,18 @@ public class MainSceneAdminTest extends ApplicationTest {
         this.primaryStage.show();
     }
 
+    @After
+    public void closeConnection() throws SQLException {
+        dataSource.getConnection().close();
+    }
+
+    @AfterClass
+    public void closeDataSource() {
+        dataSource.close();
+    }
+
     @Test
-    public void admin_can_login_n_see_inventory_table() {
+    public void admin_can_login_n_see_inventory_table() throws SQLException {
         login();
 
         verifyThat("#inventory-table-view", TableViewMatchersExtension.hasColumnWithID("Product Name"));
@@ -144,17 +156,17 @@ public class MainSceneAdminTest extends ApplicationTest {
         verifyThat("#inventory-table-view", TableViewMatchersExtension.hasColumnWithID("Product Total Price"));
         verifyThat("#inventory-table-view", TableViewMatchersExtension.hasColumnWithID("Details"));
 
-        dataSource.close();
+        closeConnection();
     }
 
     @Test
-    public void admin_can_see_inventory_entries() {
+    public void admin_can_see_inventory_entries() throws SQLException {
         login();
 
         verifyThat("#inventory-table-view", TableViewMatchers.containsRow("apple", 0.151, 0.8, 3, "2.40", false));
         verifyThat("#inventory-table-view", TableViewMatchers.containsRow("chicken", 1.0, 2.3, 4, "9.20", false));
 
-        dataSource.close();
+        closeConnection();
     }
 
     @Test
@@ -172,7 +184,7 @@ public class MainSceneAdminTest extends ApplicationTest {
         DBUtils.deleteFromTable(dataSource.getConnection(), "inventory", new String[]{String.format("product_id=%d", 3)});
         DBUtils.deleteFromTable(dataSource.getConnection(), "products", new String[]{String.format("product_name='%s'", "milk")});
 
-        dataSource.close();
+        closeConnection();
     }
 
     @Test
@@ -203,11 +215,11 @@ public class MainSceneAdminTest extends ApplicationTest {
         DBUtils.deleteFromTable(dataSource.getConnection(), "products", new String[]{String.format("product_name='%s'", "milk")});
         sleep(2000);
 
-        dataSource.close();
+        closeConnection();
     }
 
     @Test
-    public void admin_can_increase_n_decrease_product_amount() {
+    public void admin_can_increase_n_decrease_product_amount() throws SQLException {
         login();
 
         clickOn("Product Name")
@@ -219,11 +231,11 @@ public class MainSceneAdminTest extends ApplicationTest {
                 .clickOn("Remove from inventory");
         verifyThat("#inventory-table-view", TableViewMatchers.containsRow("apple", 0.151, 0.8, 3, "2.40"));
 
-        dataSource.close();
+        closeConnection();
     }
 
     @Test
-    public void admin_can_see_order_history_table() {
+    public void admin_can_see_order_history_table() throws SQLException {
         login();
 
         clickOn("Order History");
@@ -231,11 +243,11 @@ public class MainSceneAdminTest extends ApplicationTest {
         verifyThat("#order-table", TableViewMatchersExtension.hasColumnWithID("Total order price"));
         verifyThat("#order-table", TableViewMatchersExtension.hasColumnWithID("Order Details"));
 
-        dataSource.close();
+        closeConnection();
     }
 
     @Test
-    public void admin_can_see_full_order_history_n_total() {
+    public void admin_can_see_full_order_history_n_total() throws SQLException {
         login();
 
         clickOn("Order History");
@@ -244,22 +256,22 @@ public class MainSceneAdminTest extends ApplicationTest {
 
         verifyThat("#total-table", TableViewMatchers.containsRow(4.95));
 
-        dataSource.close();
+        closeConnection();
     }
 
     @Test
-    public void admin_can_see_order_details() {
+    public void admin_can_see_order_details() throws SQLException {
         login();
         clickOn("Order History")
                 .clickOn("Delivery address")
                 .clickOn((Node)from(lookup("#order-table .expander-button")).nth(1).query());
         verifyThat(lookup("Basket has 2 products."), Node::isVisible);
 
-        dataSource.close();
+        closeConnection();
     }
 
     @Test
-    public void admin_can_see_system_users_table() {
+    public void admin_can_see_system_users_table() throws SQLException {
         login();
 
         clickOn("System users");
@@ -267,11 +279,11 @@ public class MainSceneAdminTest extends ApplicationTest {
         verifyThat("#order-table", TableViewMatchersExtension.hasColumnWithID("User privilege"));
         verifyThat("#order-table", TableViewMatchersExtension.hasColumnWithID("Details"));
 
-        dataSource.close();
+        closeConnection();
     }
 
     @Test
-    public void admin_can_see_all_system_users() {
+    public void admin_can_see_all_system_users() throws SQLException {
         login();
 
         clickOn("System users");
@@ -279,7 +291,7 @@ public class MainSceneAdminTest extends ApplicationTest {
         verifyThat("#users-table", TableViewMatchers.containsRow("testUser2", "False"));
         verifyThat("#users-table", TableViewMatchers.containsRow("admin", "True"));
 
-        dataSource.close();
+        closeConnection();
     }
 
     @Test
@@ -296,7 +308,7 @@ public class MainSceneAdminTest extends ApplicationTest {
 
         DBUtils.deleteFromTable(dataSource.getConnection(), "users", new String[]{String.format("user_name='%s'", "admin2")});
 
-        dataSource.close();
+        closeConnection();
     }
 
     @Test
@@ -313,11 +325,11 @@ public class MainSceneAdminTest extends ApplicationTest {
 
         DBUtils.deleteFromTable(dataSource.getConnection(), "users", new String[]{String.format("user_name='%s'", "testUser3")});
 
-        dataSource.close();
+        closeConnection();
     }
 
     @Test
-    public void admin_can_delete_new_admin() {
+    public void admin_can_delete_new_admin() throws SQLException {
         login();
 
         clickOn("System users");
@@ -333,11 +345,11 @@ public class MainSceneAdminTest extends ApplicationTest {
         verifyThat(lookup("User has been removed successfully"), Node::isVisible);
         sleep(2000);
 
-        dataSource.close();
+        closeConnection();
     }
 
     @Test
-    public void admin_can_delete_existing_user() {
+    public void admin_can_delete_existing_user() throws SQLException {
         login();
 
         clickOn("System users")
@@ -347,7 +359,7 @@ public class MainSceneAdminTest extends ApplicationTest {
         verifyThat(lookup("User has been removed successfully"), Node::isVisible);
         sleep(2000);
 
-        dataSource.close();
+        closeConnection();
     }
 
     private void login() {
