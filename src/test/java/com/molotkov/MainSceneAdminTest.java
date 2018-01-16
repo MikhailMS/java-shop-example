@@ -177,21 +177,15 @@ public class MainSceneAdminTest extends ApplicationTest {
         clickOn("Add new product");
         verifyThat("#inventory-table-view", TableViewMatchers.containsRow("milk", 1.0, 1.0, 5, "5.00", false));
 
-        System.out.println((Node)from(lookup("+")).query());
-        System.out.println(((Node)from(lookup("+")).query()).getStyleClass().get(1));
-        System.out.println(((Node)from(lookup("+")).query()).getStyle());
-        System.out.println(((Node)from(lookup("+")).query()).getParent().toString());
-        sleep(500);
-
         clickOn("Product Name")
                 .clickOn((Node)from(lookup("#inventory-table-view .expander-button")).nth(2).query())
                 .clickOn("Add to inventory");
         verifyThat("#inventory-table-view", TableViewMatchers.containsRow("milk", 1.0, 1.0, 6, "6.00", false));
-
+        sleep(2000);
         clickOn((Node)from(lookup("#inventory-table-view .expander-button")).nth(2).query())
-                .clickOn("Remove from inventory")
-                .clickOn((Node)from(lookup("#inventory-table-view .expander-button")).nth(2).query())
                 .clickOn("Remove from inventory");
+        sleep(2000);
+        clickOn("Remove from inventory");
         verifyThat("#inventory-table-view", TableViewMatchers.containsRow("milk", 1.0, 1.0, 4, "4.00", false));
 
         DBUtils.deleteFromTable(dataSource.getConnection(), "products", new String[]{String.format("product_name='%s'", "milk")});
