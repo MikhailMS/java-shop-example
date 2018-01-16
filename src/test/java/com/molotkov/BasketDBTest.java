@@ -6,9 +6,7 @@ import com.molotkov.exceptions.BasketException;
 import com.molotkov.products.Product;
 import com.zaxxer.hikari.HikariConfig;
 import com.zaxxer.hikari.HikariDataSource;
-import org.junit.Before;
-import org.junit.ClassRule;
-import org.junit.Test;
+import org.junit.*;
 import org.testcontainers.containers.PostgreSQLContainer;
 
 import java.sql.SQLException;
@@ -19,14 +17,25 @@ import java.util.List;
 import static org.rnorth.visibleassertions.VisibleAssertions.assertEquals;
 
 public class BasketDBTest {
-    private HikariDataSource dataSource;
+    private static HikariDataSource dataSource;
 
     @ClassRule
     public static PostgreSQLContainer postgres = new PostgreSQLContainer();
 
+    @After
+    public void closeConnection() throws SQLException {
+        dataSource.getConnection().close();
+    }
+
+    @AfterClass
+    public static void closeDataSource() {
+        dataSource.close();
+    }
+
     @Before
     public void setUp() throws SQLException {
         final HikariConfig hikariConfig = new HikariConfig();
+        hikariConfig.setMaximumPoolSize(100);
         hikariConfig.setJdbcUrl(postgres.getJdbcUrl());
         hikariConfig.setUsername(postgres.getUsername());
         hikariConfig.setPassword(postgres.getPassword());
@@ -83,6 +92,6 @@ public class BasketDBTest {
         assertEquals("RetrieveBasketFromDB succeeded", "Basket has 1 product.",restoredBasket.toString());
         cursor.closeCursor();
 
-        dataSource.close();
+        closeConnection();
     }
 }

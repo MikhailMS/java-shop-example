@@ -7,9 +7,7 @@ import com.molotkov.products.Product;
 import com.molotkov.users.Administrator;
 import com.zaxxer.hikari.HikariConfig;
 import com.zaxxer.hikari.HikariDataSource;
-import org.junit.Before;
-import org.junit.ClassRule;
-import org.junit.Test;
+import org.junit.*;
 import org.testcontainers.containers.PostgreSQLContainer;
 
 import java.sql.SQLException;
@@ -18,10 +16,20 @@ import java.sql.Statement;
 import static org.rnorth.visibleassertions.VisibleAssertions.assertEquals;
 
 public class AdministratorTest {
-    private HikariDataSource dataSource;
+    private static HikariDataSource dataSource;
 
     @ClassRule
     public static PostgreSQLContainer postgres = new PostgreSQLContainer();
+
+    @After
+    public void closeConnection() throws SQLException {
+        dataSource.getConnection().close();
+    }
+
+    @AfterClass
+    public static void closeDataSource() {
+        dataSource.close();
+    }
 
     @Before
     public void setUp() throws SQLException {
@@ -129,5 +137,7 @@ public class AdministratorTest {
 
         assertEquals("deleteUser succeeds", "", empty);
         cursor.closeCursor();
+
+        closeConnection();
     }
 }

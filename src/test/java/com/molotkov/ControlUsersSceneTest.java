@@ -10,6 +10,8 @@ import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.control.TextField;
 import javafx.stage.Stage;
+import org.junit.After;
+import org.junit.AfterClass;
 import org.junit.ClassRule;
 import org.junit.Test;
 import org.loadui.testfx.GuiTest;
@@ -28,11 +30,21 @@ import static com.molotkov.gui.GuiWindowConsts.WINDOW_WIDTH;
 import static org.testfx.api.FxAssert.verifyThat;
 
 public class ControlUsersSceneTest extends ApplicationTest {
-    private HikariDataSource dataSource;
+    private static HikariDataSource dataSource;
     private static boolean setupIsDone = false;
 
     @ClassRule
     public static PostgreSQLContainer postgres = new PostgreSQLContainer();
+
+    @After
+    public void closeConnection() throws SQLException {
+        dataSource.getConnection().close();
+    }
+
+    @AfterClass
+    public static void closeDataSource() {
+        dataSource.close();
+    }
 
     @Override
     public void start(final Stage stage) throws SQLException {
@@ -47,7 +59,7 @@ public class ControlUsersSceneTest extends ApplicationTest {
 
         // TestContainers bit
         final HikariConfig hikariConfig = new HikariConfig();
-        hikariConfig.setMaximumPoolSize(35);
+        hikariConfig.setMaximumPoolSize(100);
         hikariConfig.setJdbcUrl(postgres.getJdbcUrl());
         hikariConfig.setUsername(postgres.getUsername());
         hikariConfig.setPassword(postgres.getPassword());
@@ -76,40 +88,44 @@ public class ControlUsersSceneTest extends ApplicationTest {
     }
 
     @Test
-    public void should_contain_columns() {
+    public void should_contain_columns() throws SQLException {
         verifyThat(".table-view", TableViewMatchersExtension.hasColumnWithID("User name"));
         verifyThat(".table-view", TableViewMatchersExtension.hasColumnWithID("User privilege"));
-        dataSource.close();
+
+        closeConnection();
     }
 
     @Test
-    public void should_contain_rows() {
+    public void should_contain_rows() throws SQLException {
         verifyThat(".table-view", TableViewMatchers.containsRow("testClient1", "False"));
         verifyThat(".table-view", TableViewMatchers.containsRow("testClient2", "False"));
         verifyThat(".table-view", TableViewMatchers.containsRow("admin", "True"));
-        dataSource.close();
+
+        closeConnection();
     }
 
     @Test
-    public void can_add_new_admin_user() {
+    public void can_add_new_admin_user() throws SQLException {
         ((TextField) GuiTest.find("#user-name")).setText("admin2");
         ((TextField) GuiTest.find("#user-password")).setText("admin2");
         clickOn("Administrator?").clickOn("Add new user");
         verifyThat(".table-view", TableViewMatchers.containsRow("admin2", "True"));
-        dataSource.close();
+
+        closeConnection();
     }
 
     @Test
-    public void can_add_new_client_user() {
+    public void can_add_new_client_user() throws SQLException {
         ((TextField) GuiTest.find("#user-name")).setText("client");
         ((TextField) GuiTest.find("#user-password")).setText("client");
         clickOn("Add new user");
         verifyThat(".table-view", TableViewMatchers.containsRow("client", "False"));
-        dataSource.close();
+
+        closeConnection();
     }
 
     @Test
-    public void can_remove_user() {
+    public void can_remove_user() throws SQLException {
         verifyThat(".table-view", TableViewMatchers.containsRow("testClient1", "False"));
         verifyThat(".table-view", TableViewMatchers.containsRow("testClient2", "False"));
         verifyThat(".table-view", TableViewMatchers.containsRow("admin", "True"));
@@ -119,6 +135,7 @@ public class ControlUsersSceneTest extends ApplicationTest {
         verifyThat(".table-view", TableViewMatchersExtension.hasNoTableCell("admin"));
         verifyThat(".table-view", TableViewMatchersExtension.hasNoTableCell("True"));
         verifyThat(lookup("User has been removed successfully"), Node::isVisible);
-        dataSource.close();
+
+        closeConnection();
     }
 }

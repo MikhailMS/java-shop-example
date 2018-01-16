@@ -57,6 +57,16 @@ public class MainSceneAdminTest extends ApplicationTest {
     @ClassRule
     public static PostgreSQLContainer postgres = new PostgreSQLContainer();
 
+    @After
+    public void closeConnection() throws SQLException {
+        dataSource.getConnection().close();
+    }
+
+    @AfterClass
+    public static void closeDataSource() {
+        dataSource.close();
+    }
+
     @Override
     public void start(final Stage primaryStage) throws SQLException {
         // TestContainers bit
@@ -133,16 +143,6 @@ public class MainSceneAdminTest extends ApplicationTest {
 
         this.primaryStage.setScene(scene);
         this.primaryStage.show();
-    }
-
-    @After
-    public void closeConnection() throws SQLException {
-        dataSource.getConnection().close();
-    }
-
-    @AfterClass
-    public static void closeDataSource() {
-        dataSource.close();
     }
 
     @Test

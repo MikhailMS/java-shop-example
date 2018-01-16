@@ -13,6 +13,8 @@ import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.paint.Color;
 import javafx.stage.Stage;
+import org.junit.After;
+import org.junit.AfterClass;
 import org.junit.ClassRule;
 import org.testcontainers.containers.PostgreSQLContainer;
 import org.testfx.framework.junit.ApplicationTest;
@@ -27,7 +29,7 @@ import static com.molotkov.gui.GuiWindowConsts.WINDOW_HEIGHT;
 import static com.molotkov.gui.GuiWindowConsts.WINDOW_WIDTH;
 
 public class MainScreenClientTest extends ApplicationTest {
-    private HikariDataSource dataSource;
+    private static HikariDataSource dataSource;
     private static boolean setupIsDone = false;
 
     private static final String PRIMARY_STAGE_TITLE = "Java Super Shop";
@@ -45,11 +47,21 @@ public class MainScreenClientTest extends ApplicationTest {
     @ClassRule
     public static PostgreSQLContainer postgres = new PostgreSQLContainer();
 
+    @After
+    public void closeConnection() throws SQLException {
+        dataSource.getConnection().close();
+    }
+
+    @AfterClass
+    public static void closeDataSource() {
+        dataSource.close();
+    }
+
     @Override
     public void start(final Stage primaryStage) throws SQLException {
         // TestContainers bit
         final HikariConfig hikariConfig = new HikariConfig();
-        hikariConfig.setMaximumPoolSize(65);
+        hikariConfig.setMaximumPoolSize(100);
         hikariConfig.setJdbcUrl(postgres.getJdbcUrl());
         hikariConfig.setUsername(postgres.getUsername());
         hikariConfig.setPassword(postgres.getPassword());

@@ -4,10 +4,8 @@ import com.molotkov.db.DBCursorHolder;
 import com.molotkov.db.DBUtils;
 import com.zaxxer.hikari.HikariConfig;
 import com.zaxxer.hikari.HikariDataSource;
-import org.junit.Before;
+import org.junit.*;
 
-import org.junit.ClassRule;
-import org.junit.Test;
 import org.testcontainers.containers.PostgreSQLContainer;
 
 import java.sql.SQLException;
@@ -16,15 +14,25 @@ import java.sql.Statement;
 import static org.rnorth.visibleassertions.VisibleAssertions.assertEquals;
 
 public class DBUtilsTest {
-    private HikariDataSource dataSource;
+    private static HikariDataSource dataSource;
 
     @ClassRule
     public static PostgreSQLContainer postgres = new PostgreSQLContainer();
 
+    @After
+    public void closeConnection() throws SQLException {
+        dataSource.getConnection().close();
+    }
+
+    @AfterClass
+    public static void closeDataSource() {
+        dataSource.close();
+    }
+
     @Before
     public void setUp() throws SQLException {
         final HikariConfig hikariConfig = new HikariConfig();
-        hikariConfig.setMaximumPoolSize(25);
+        hikariConfig.setMaximumPoolSize(100);
         hikariConfig.setJdbcUrl(postgres.getJdbcUrl());
         hikariConfig.setUsername(postgres.getUsername());
         hikariConfig.setPassword(postgres.getPassword());
@@ -119,6 +127,8 @@ public class DBUtilsTest {
 
         assertEquals("Delete from table query succeeds", "2 2 4 ", resultString6);
         cursor.closeCursor();
+
+        closeConnection();
     }
 
     @Test(expected = SQLException.class)
@@ -129,5 +139,7 @@ public class DBUtilsTest {
 
         final DBCursorHolder cursor = DBUtils.selectFromTable(dataSource.getConnection(), "test_table", new String[]{});
         cursor.closeCursor();
+
+        closeConnection();
     }
 }
