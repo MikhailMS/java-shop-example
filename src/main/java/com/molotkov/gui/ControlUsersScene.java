@@ -33,6 +33,7 @@ public class ControlUsersScene {
     public static VBox createControlTable(final List<User> users, final Administrator admin, final Connection connection) {
         final ObservableList<User> observableUserList = FXCollections.observableArrayList(users);
         final TableView<User> userTableView = new TableView<>(observableUserList);
+        userTableView.setId("users-table");
         userTableView.setPrefWidth(WINDOW_WIDTH);
         userTableView.setPrefHeight(WINDOW_HEIGHT);
 
@@ -183,7 +184,8 @@ public class ControlUsersScene {
                     "Something went wrong while removing user", users, observableUsers, editor, param, admin, connection));
             return editor;
         });
-        expander.setId("admin-expander");
+        expander.setText("Details");
+        expander.setId("Details");
 
         table.getColumns().add(expander);
     }

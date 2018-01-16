@@ -81,6 +81,8 @@ public class HistoryScene {
             editor.getChildren().addAll(detailsLabel);
             return editor;
         });
+        expander.setText("Order Details");
+        expander.setId("Order Details");
 
         table.getColumns().add(expander);
 

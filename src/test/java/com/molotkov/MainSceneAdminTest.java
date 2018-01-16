@@ -25,6 +25,8 @@ import org.testcontainers.containers.PostgreSQLContainer;
 import org.testfx.framework.junit.ApplicationTest;
 import org.testfx.matcher.control.TableViewMatchers;
 
+import javax.xml.soap.Text;
+
 import static org.testfx.api.FxAssert.verifyThat;
 
 import java.sql.SQLException;
@@ -134,7 +136,7 @@ public class MainSceneAdminTest extends ApplicationTest {
     }
 
     @Test
-    public void admin_can_login_n_see_inventory() {
+    public void admin_can_login_n_see_inventory_table() {
         login();
 
         verifyThat("#inventory-table-view", TableViewMatchersExtension.hasColumnWithID("Product Name"));
@@ -218,6 +220,134 @@ public class MainSceneAdminTest extends ApplicationTest {
         clickOn((Node)from(lookup("#inventory-table-view .expander-button")).nth(0).query())
                 .clickOn("Remove from inventory");
         verifyThat("#inventory-table-view", TableViewMatchers.containsRow("apple", 0.151, 0.8, 3, "2.40"));
+
+        dataSource.close();
+    }
+
+    @Test
+    public void admin_can_see_order_history_table() {
+        login();
+
+        clickOn("Order History");
+        verifyThat("#order-table", TableViewMatchersExtension.hasColumnWithID("Delivery Address"));
+        verifyThat("#order-table", TableViewMatchersExtension.hasColumnWithID("Total order price"));
+        verifyThat("#order-table", TableViewMatchersExtension.hasColumnWithID("Order Details"));
+
+        dataSource.close();
+    }
+
+    @Test
+    public void admin_can_see_full_order_history_n_total() {
+        login();
+
+        clickOn("Order History");
+        verifyThat("#order-table", TableViewMatchers.containsRow("Manchester", 2.45));
+        verifyThat("#order-table", TableViewMatchers.containsRow("London", 2.50));
+
+        verifyThat("#total-table", TableViewMatchers.containsRow(4.95));
+
+        dataSource.close();
+    }
+
+    @Test
+    public void admin_can_see_order_details() {
+        login();
+        clickOn("Order History")
+                .clickOn("Delivery Address")
+                .clickOn((Node)from(lookup("#order-table .expander-button")).nth(1).query());
+        verifyThat(lookup("Basket has 2 products."), Node::isVisible);
+
+        dataSource.close();
+    }
+
+    @Test
+    public void admin_can_see_system_users_table() {
+        login();
+
+        clickOn("System users");
+        verifyThat("#order-table", TableViewMatchersExtension.hasColumnWithID("User name"));
+        verifyThat("#order-table", TableViewMatchersExtension.hasColumnWithID("User privilege"));
+        verifyThat("#order-table", TableViewMatchersExtension.hasColumnWithID("Details"));
+
+        dataSource.close();
+    }
+
+    @Test
+    public void admin_can_see_all_system_users() {
+        login();
+
+        clickOn("System users");
+        verifyThat("#users-table", TableViewMatchers.containsRow("testUser1", "False"));
+        verifyThat("#users-table", TableViewMatchers.containsRow("testUser2", "False"));
+        verifyThat("#users-table", TableViewMatchers.containsRow("admin", "True"));
+
+        dataSource.close();
+    }
+
+    @Test
+    public void admin_can_create_new_admin() throws SQLException {
+        login();
+
+        clickOn("System users");
+
+        ((TextField)from(lookup("#user-name")).query()).setText("admin2");
+        ((TextField)from(lookup("#user-password")).query()).setText("admin2");
+        clickOn("Administrator?").clickOn("Add new user");
+
+        verifyThat("#users-table", TableViewMatchers.containsRow("admin2", "True"));
+
+        DBUtils.deleteFromTable(dataSource.getConnection(), "users", new String[]{String.format("user_name='%s'", "admin2")});
+
+        dataSource.close();
+    }
+
+    @Test
+    public void admin_can_create_new_client() throws SQLException {
+        login();
+
+        clickOn("System users");
+
+        ((TextField)from(lookup("#user-name")).query()).setText("testUser3");
+        ((TextField)from(lookup("#user-password")).query()).setText("testUser3");
+        clickOn("Add new user");
+
+        verifyThat("#users-table", TableViewMatchers.containsRow("testUser3", "False"));
+
+        DBUtils.deleteFromTable(dataSource.getConnection(), "users", new String[]{String.format("user_name='%s'", "testUser3")});
+
+        dataSource.close();
+    }
+
+    @Test
+    public void admin_can_delete_new_admin() {
+        login();
+
+        clickOn("System users");
+        ((TextField)from(lookup("#user-name")).query()).setText("admin2");
+        ((TextField)from(lookup("#user-password")).query()).setText("admin2");
+
+        clickOn("Administrator?").clickOn("Add new user");
+        verifyThat("#users-table", TableViewMatchers.containsRow("admin2", "True"));
+
+        clickOn("User name")
+                .clickOn((Node)from(lookup("#users-table .expander-button")).nth(1).query())
+                .clickOn("Remove user");
+        verifyThat(lookup("User has been removed successfully"), Node::isVisible);
+        sleep(2000);
+
+        dataSource.close();
+    }
+
+    @Test
+    public void admin_can_delete_existing_user() {
+        login();
+
+        clickOn("System users")
+                .clickOn("User name")
+                .clickOn((Node)from(lookup("#users-table .expander-button")).nth(1).query())
+                .clickOn("Remove user");
+        verifyThat(lookup("User has been removed successfully"), Node::isVisible);
+        sleep(2000);
 
         dataSource.close();
     }
