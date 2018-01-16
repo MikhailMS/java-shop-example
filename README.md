@@ -97,9 +97,10 @@ Also I am using TDD approach to complete this project as I found this really con
                   - [x] Highlighted parts
                   
       - [ ] Finish up tests
-          - [ ] Client GUI tests
-          - [ ] Administrator GUI tests
+          - [x] Review tests for the project so far
           - [ ] MainStage GUI tests
+              - [ ] Client GUI tests
+              - [x] Administrator GUI tests
               
   - [ ] As an optional part, I'd like to write a service, which will keep shop's inventory in sync with DB and completed orders
       - [ ] Once order is completed, service will update inventory in the DB and update local copy of the inventory

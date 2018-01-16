@@ -49,7 +49,7 @@ public class MainScreenClientTest extends ApplicationTest {
     public void start(final Stage primaryStage) throws SQLException {
         // TestContainers bit
         final HikariConfig hikariConfig = new HikariConfig();
-        hikariConfig.setMaximumPoolSize(45);
+        hikariConfig.setMaximumPoolSize(65);
         hikariConfig.setJdbcUrl(postgres.getJdbcUrl());
         hikariConfig.setUsername(postgres.getUsername());
         hikariConfig.setPassword(postgres.getPassword());
