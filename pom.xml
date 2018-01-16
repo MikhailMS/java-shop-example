@@ -7,6 +7,9 @@
   <version>1.0</version>
   <name>shop</name>
   <url>https://example.com</url>
+  <properties>
+    <project.build.sourceEncoding>UTF-16</project.build.sourceEncoding>
+  </properties>
   <dependencies>
     <!-- https://mvnrepository.com/artifact/org.controlsfx/controlsfx -->
     <dependency>
