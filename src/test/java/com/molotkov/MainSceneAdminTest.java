@@ -136,8 +136,8 @@ public class MainSceneAdminTest extends ApplicationTest {
     @Test
     public void admin_can_login_n_see_inventory() {
         clickOn("Gain access to the Shop");
-        ((TextField) GuiTest.find("#user-name")).setText("admin");
-        ((PasswordField) GuiTest.find("#user-passwd")).setText("admin");
+        ((TextField)from(lookup("#user-name")).query()).setText("admin");
+        ((PasswordField)from(lookup("#user-passwd")).query()).setText("admin");
         clickOn("Login");
         sleep(2500);
 
@@ -147,26 +147,29 @@ public class MainSceneAdminTest extends ApplicationTest {
         verifyThat("#inventory-table-view", TableViewMatchersExtension.hasColumnWithID("Quantity available in Inventory"));
         verifyThat("#inventory-table-view", TableViewMatchersExtension.hasColumnWithID("Product Total Price"));
         verifyThat("#inventory-table-view", TableViewMatchersExtension.hasColumnWithID("Details"));
+
+        dataSource.close();
     }
 
     @Test
     public void admin_can_see_inventory_entries() {
         clickOn("Gain access to the Shop");
-        ((TextField) GuiTest.find("#user-name")).setText("admin");
-        ((PasswordField) GuiTest.find("#user-passwd")).setText("admin");
+        ((TextField)from(lookup("#user-name")).query()).setText("admin");
+        ((PasswordField)from(lookup("#user-passwd")).query()).setText("admin");
         clickOn("Login");
         sleep(2500);
 
         verifyThat("#inventory-table-view", TableViewMatchers.containsRow("apple", 0.151, 0.8, 3, "2.40", false));
         verifyThat("#inventory-table-view", TableViewMatchers.containsRow("chicken", 1.0, 2.3, 4, "9.20", false));
+
         dataSource.close();
     }
 
     @Test
     public void admin_can_create_new_product() throws SQLException {
         clickOn("Gain access to the Shop");
-        ((TextField) GuiTest.find("#user-name")).setText("admin");
-        ((PasswordField) GuiTest.find("#user-passwd")).setText("admin");
+        ((TextField)from(lookup("#user-name")).query()).setText("admin");
+        ((PasswordField)from(lookup("#user-passwd")).query()).setText("admin");
         clickOn("Login");
         sleep(2500);
 
@@ -175,18 +178,20 @@ public class MainSceneAdminTest extends ApplicationTest {
         ((TextField) GuiTest.find("#price")).setText("1.0");
         ((TextField) GuiTest.find("#amount")).setText("5");
         clickOn("Add new product");
-        sleep(2000);
         verifyThat("#inventory-table-view", TableViewMatchers.containsRow("milk", 1.0, 1.0, 5, "5.00", false));
         sleep(2000);
+
+        DBUtils.deleteFromTable(dataSource.getConnection(), "inventory", new String[]{String.format("product_id=%d", 3)});
         DBUtils.deleteFromTable(dataSource.getConnection(), "products", new String[]{String.format("product_name='%s'", "milk")});
+
         dataSource.close();
     }
 
     @Test
     public void admin_can_increase_n_decrease_new_product_amount() throws SQLException {
         clickOn("Gain access to the Shop");
-        ((TextField) GuiTest.find("#user-name")).setText("admin");
-        ((PasswordField) GuiTest.find("#user-passwd")).setText("admin");
+        ((TextField)from(lookup("#user-name")).query()).setText("admin");
+        ((PasswordField)from(lookup("#user-passwd")).query()).setText("admin");
         clickOn("Login");
         sleep(2500);
 
@@ -208,23 +213,26 @@ public class MainSceneAdminTest extends ApplicationTest {
         clickOn("Remove from inventory");
         verifyThat("#inventory-table-view", TableViewMatchers.containsRow("milk", 1.0, 1.0, 4, "4.00", false));
 
+        DBUtils.deleteFromTable(dataSource.getConnection(), "inventory", new String[]{String.format("product_id=%d", 3)});
         DBUtils.deleteFromTable(dataSource.getConnection(), "products", new String[]{String.format("product_name='%s'", "milk")});
+
         dataSource.close();
     }
 
     @Test
     public void admin_can_increase_n_decrease_product_amount() {
         clickOn("Gain access to the Shop");
-        ((TextField) GuiTest.find("#user-name")).setText("admin");
-        ((PasswordField) GuiTest.find("#user-passwd")).setText("admin");
+        ((TextField)from(lookup("#user-name")).query()).setText("admin");
+        ((PasswordField)from(lookup("#user-passwd")).query()).setText("admin");
         clickOn("Login");
         sleep(2500);
 
         clickOn("Product Name")
-                .clickOn((Node)from(lookup(".expander-button")).nth(0).query())
+                .clickOn((Node)from(lookup("#inventory-table-view .expander-button")).nth(0).query())
                 .clickOn("Add to inventory");
         verifyThat("#inventory-table-view", TableViewMatchers.containsRow("apple", 0.151, 0.8, 4, "3.20", false));
-        clickOn("Remove from inventory");
+        clickOn((Node)from(lookup("#inventory-table-view .expander-button")).nth(0).query())
+                .clickOn("Remove from inventory");
         verifyThat("#inventory-table-view", TableViewMatchers.containsRow("apple", 0.151, 0.8, 3, "2.40", false));
 
         dataSource.close();
