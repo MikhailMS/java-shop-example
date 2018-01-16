@@ -59,7 +59,7 @@ public class MainSceneAdminTest extends ApplicationTest {
     public void start(final Stage primaryStage) throws SQLException {
         // TestContainers bit
         final HikariConfig hikariConfig = new HikariConfig();
-        hikariConfig.setMaximumPoolSize(35);
+        hikariConfig.setMaximumPoolSize(45);
         hikariConfig.setJdbcUrl(postgres.getJdbcUrl());
         hikariConfig.setUsername(postgres.getUsername());
         hikariConfig.setPassword(postgres.getPassword());
@@ -149,6 +149,7 @@ public class MainSceneAdminTest extends ApplicationTest {
         login();
         verifyThat("#inventory-table-view", TableViewMatchers.containsRow("apple", 0.151, 0.8, 3, "2.40", false));
         verifyThat("#inventory-table-view", TableViewMatchers.containsRow("chicken", 1.0, 2.3, 4, "9.20", false));
+        dataSource.close();
     }
 
     @Test
@@ -174,14 +175,23 @@ public class MainSceneAdminTest extends ApplicationTest {
         ((TextField) GuiTest.find("#price")).setText("1.0");
         ((TextField) GuiTest.find("#amount")).setText("5");
         clickOn("Add new product");
-        sleep(2000);
         verifyThat("#inventory-table-view", TableViewMatchers.containsRow("milk", 1.0, 1.0, 5, "5.00", false));
+
+        System.out.println((Node)from(lookup("+")).query());
+        System.out.println(((Node)from(lookup("+")).query()).getStyleClass().get(1));
+        System.out.println(((Node)from(lookup("+")).query()).getStyle());
+        System.out.println(((Node)from(lookup("+")).query()).getParent().toString());
         sleep(500);
+
         clickOn("Product Name")
-                .clickOn((Node)from(lookup(".expander-button")).nth(2).query())
+                .clickOn((Node)from(lookup("#inventory-table-view .expander-button")).nth(2).query())
                 .clickOn("Add to inventory");
         verifyThat("#inventory-table-view", TableViewMatchers.containsRow("milk", 1.0, 1.0, 6, "6.00", false));
-        clickOn("Remove from inventory").clickOn("Remove from inventory");
+
+        clickOn((Node)from(lookup("#inventory-table-view .expander-button")).nth(2).query())
+                .clickOn("Remove from inventory")
+                .clickOn((Node)from(lookup("#inventory-table-view .expander-button")).nth(2).query())
+                .clickOn("Remove from inventory");
         verifyThat("#inventory-table-view", TableViewMatchers.containsRow("milk", 1.0, 1.0, 4, "4.00", false));
 
         DBUtils.deleteFromTable(dataSource.getConnection(), "products", new String[]{String.format("product_name='%s'", "milk")});
@@ -206,6 +216,6 @@ public class MainSceneAdminTest extends ApplicationTest {
         ((TextField) GuiTest.find("#user-name")).setText("admin");
         ((PasswordField) GuiTest.find("#user-passwd")).setText("admin");
         clickOn("Login");
-        sleep(3000);
+        sleep(2500);
     }
 }
