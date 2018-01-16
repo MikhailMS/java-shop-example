@@ -25,8 +25,6 @@ import org.testcontainers.containers.PostgreSQLContainer;
 import org.testfx.framework.junit.ApplicationTest;
 import org.testfx.matcher.control.TableViewMatchers;
 
-import javax.xml.soap.Text;
-
 import static org.testfx.api.FxAssert.verifyThat;
 
 import java.sql.SQLException;
@@ -61,7 +59,7 @@ public class MainSceneAdminTest extends ApplicationTest {
     public void start(final Stage primaryStage) throws SQLException {
         // TestContainers bit
         final HikariConfig hikariConfig = new HikariConfig();
-        hikariConfig.setMaximumPoolSize(45);
+        hikariConfig.setMaximumPoolSize(100);
         hikariConfig.setJdbcUrl(postgres.getJdbcUrl());
         hikariConfig.setUsername(postgres.getUsername());
         hikariConfig.setPassword(postgres.getPassword());
@@ -253,7 +251,7 @@ public class MainSceneAdminTest extends ApplicationTest {
     public void admin_can_see_order_details() {
         login();
         clickOn("Order History")
-                .clickOn("Delivery Address")
+                .clickOn("Delivery address")
                 .clickOn((Node)from(lookup("#order-table .expander-button")).nth(1).query());
         verifyThat(lookup("Basket has 2 products."), Node::isVisible);
 
