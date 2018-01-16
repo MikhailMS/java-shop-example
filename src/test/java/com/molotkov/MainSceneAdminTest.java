@@ -207,14 +207,17 @@ public class MainSceneAdminTest extends ApplicationTest {
                 .clickOn("Add to inventory");
         verifyThat("#inventory-table-view", TableViewMatchers.containsRow("milk", 1.0, 1.0, 6, "6.00", false));
         sleep(2000);
+
         clickOn((Node)from(lookup("#inventory-table-view .expander-button")).nth(2).query())
                 .clickOn("Remove from inventory");
         sleep(2000);
+
         clickOn("Remove from inventory");
         verifyThat("#inventory-table-view", TableViewMatchers.containsRow("milk", 1.0, 1.0, 4, "4.00", false));
 
         DBUtils.deleteFromTable(dataSource.getConnection(), "inventory", new String[]{String.format("product_id=%d", 3)});
         DBUtils.deleteFromTable(dataSource.getConnection(), "products", new String[]{String.format("product_name='%s'", "milk")});
+        sleep(2000);
 
         dataSource.close();
     }
@@ -231,9 +234,10 @@ public class MainSceneAdminTest extends ApplicationTest {
                 .clickOn((Node)from(lookup("#inventory-table-view .expander-button")).nth(0).query())
                 .clickOn("Add to inventory");
         verifyThat("#inventory-table-view", TableViewMatchers.containsRow("apple", 0.151, 0.8, 4, "3.20", false));
+        sleep(500);
         clickOn((Node)from(lookup("#inventory-table-view .expander-button")).nth(0).query())
                 .clickOn("Remove from inventory");
-        verifyThat("#inventory-table-view", TableViewMatchers.containsRow("apple", 0.151, 0.8, 3, "2.40", false));
+        verifyThat("#inventory-table-view", TableViewMatchers.containsRow("apple", 0.151, 0.8, 3, "2.40"));
 
         dataSource.close();
     }
