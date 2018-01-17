@@ -20,8 +20,8 @@ public class UserTest {
     @ClassRule
     public static PostgreSQLContainer postgres = new PostgreSQLContainer();
 
-    @AfterClass
-    public static void closeDataSource() {
+    @After
+    public void closeDataSource() {
         dataSource.close();
     }
 

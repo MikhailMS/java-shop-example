@@ -36,6 +36,11 @@ public class InventoryAdminSceneTest extends ApplicationTest {
     @ClassRule
     public static PostgreSQLContainer postgres = new PostgreSQLContainer();
 
+    @After
+    public void closeDataSource() {
+        dataSource.close();
+    }
+
     @Override
     public void start(final Stage stage) throws SQLException {
         final User admin = new Administrator("t", "t");

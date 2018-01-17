@@ -22,6 +22,10 @@ public class OrderDBTest {
     @ClassRule
     public static PostgreSQLContainer postgres = new PostgreSQLContainer();
 
+    @After
+    public void closeDataSource() {
+        dataSource.close();
+    }
 
     @Before
     public void setUp() throws SQLException {

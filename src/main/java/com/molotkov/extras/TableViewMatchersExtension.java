@@ -26,9 +26,24 @@ import org.testfx.service.query.NodeQuery;
 
 
 public class TableViewMatchersExtension {
+    private static final String SELECTOR_TABLE_CELL = ".table-cell";
     public static final int REPLACEMENT_VALUE = -1; // replaces NULL in getRowValues method
 
     private TableViewMatchersExtension() {
+    }
+
+    @Factory
+    public static Matcher<TableView> hasTableCell(Object value) {
+        String descriptionText = "has table cell \"" + value + "\"";
+        return GeneralMatchers.typeSafeMatcher(TableView.class, descriptionText,
+                (tableView) -> toText(tableView) + "\nwhich does not contain a cell with the given value",
+                (node) -> hasTableCell(node, value));
+    }
+
+    private static boolean hasTableCell(TableView tableView, Object value) {
+        NodeFinder nodeFinder = FxAssert.assertContext().getNodeFinder();
+        NodeQuery nodeQuery = nodeFinder.from(new Node[]{tableView});
+        return nodeQuery.lookup(".table-cell").match((cell) -> hasCellValue((Cell) cell, value)).tryQuery().isPresent();
     }
 
     @Factory
@@ -132,6 +147,8 @@ public class TableViewMatchersExtension {
             return false;
         }
     }
+
+
 
     private static String toText(final TableView<?> tableView) {
         final StringJoiner joiner = new StringJoiner(", ", "[", "]");

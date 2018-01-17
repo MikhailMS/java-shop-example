@@ -36,6 +36,11 @@ public class ControlUsersSceneTest extends ApplicationTest {
     @ClassRule
     public static PostgreSQLContainer postgres = new PostgreSQLContainer();
 
+    @After
+    public void closeDataSource() {
+        dataSource.close();
+    }
+
     @Override
     public void start(final Stage stage) throws SQLException {
         final Client testClient1 = new Client("testClient1", "testClient1");

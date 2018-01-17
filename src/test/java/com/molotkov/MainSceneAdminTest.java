@@ -57,6 +57,11 @@ public class MainSceneAdminTest extends ApplicationTest {
     @ClassRule
     public static PostgreSQLContainer postgres = new PostgreSQLContainer();
 
+    @After
+    public void closeDataSource() {
+        dataSource.close();
+    }
+
     @Override
     public void start(final Stage primaryStage) throws SQLException {
         // TestContainers bit
@@ -166,7 +171,7 @@ public class MainSceneAdminTest extends ApplicationTest {
         verifyThat("#inventory-table-view", TableViewMatchers.containsRow("milk", 1.0, 1.0, 5, "5.00", false));
         sleep(2000);
 
-        DBUtils.deleteFromTable(dataSource.getConnection(), "inventory", new String[]{String.format("product_id=%d", 3)});
+        DBUtils.deleteFromTable(dataSource.getConnection(), "inventory", new String[]{String.format("product_id=%d", 4)});
         DBUtils.deleteFromTable(dataSource.getConnection(), "products", new String[]{String.format("product_name='%s'", "milk")});
     }
 
@@ -231,7 +236,7 @@ public class MainSceneAdminTest extends ApplicationTest {
         verifyThat("#order-table", TableViewMatchers.containsRow("Manchester", 5.40));
         verifyThat("#order-table", TableViewMatchers.containsRow("London", 1.60));
 
-        verifyThat("#total-table", TableViewMatchers.containsRow(4.95));
+        verifyThat("#total-table", TableViewMatchersExtension.hasTableCell(7.0));
     }
 
     @Test
@@ -248,9 +253,9 @@ public class MainSceneAdminTest extends ApplicationTest {
         login();
 
         clickOn("System users");
-        verifyThat("#order-table", TableViewMatchersExtension.hasColumnWithID("User name"));
-        verifyThat("#order-table", TableViewMatchersExtension.hasColumnWithID("User privilege"));
-        verifyThat("#order-table", TableViewMatchersExtension.hasColumnWithID("Details"));
+        verifyThat("#users-table", TableViewMatchersExtension.hasColumnWithID("User name"));
+        verifyThat("#users-table", TableViewMatchersExtension.hasColumnWithID("User privilege"));
+        verifyThat("#users-table", TableViewMatchersExtension.hasColumnWithID("Details"));
     }
 
     @Test
@@ -322,7 +327,8 @@ public class MainSceneAdminTest extends ApplicationTest {
         verifyThat(lookup("User has been removed successfully"), Node::isVisible);
 
         DBUtils.insertSpecificIntoTable(dataSource.getConnection(), "users", new String[]{"user_name", "user_password"},
-                new String[]{"testUser1", "testUser1"});
+                new String[]{"'testUser1'", "'testUser1'"});
+
         sleep(2000);
     }
 

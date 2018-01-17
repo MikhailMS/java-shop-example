@@ -37,6 +37,11 @@ public class InventoryClientSceneTest extends ApplicationTest {
     @ClassRule
     public static PostgreSQLContainer postgres = new PostgreSQLContainer();
 
+    @After
+    public void closeDataSource() {
+        dataSource.close();
+    }
+
     @Override
     public void start(final Stage stage) throws SQLException {
         final User client = new Client("t", "t");
