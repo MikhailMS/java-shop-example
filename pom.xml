@@ -8,7 +8,7 @@
   <name>shop</name>
   <url>https://example.com</url>
   <properties>
-    <project.build.sourceEncoding>UTF-16</project.build.sourceEncoding>
+    <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
   </properties>
   <dependencies>
     <!-- https://mvnrepository.com/artifact/org.controlsfx/controlsfx -->
