@@ -21,11 +21,6 @@ public class AdministratorTest {
     @ClassRule
     public static PostgreSQLContainer postgres = new PostgreSQLContainer();
 
-    @After
-    public void closeConnection() throws SQLException {
-        dataSource.getConnection().close();
-    }
-
     @AfterClass
     public static void closeDataSource() {
         dataSource.close();

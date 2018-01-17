@@ -20,11 +20,6 @@ public class UserTest {
     @ClassRule
     public static PostgreSQLContainer postgres = new PostgreSQLContainer();
 
-    @After
-    public void closeConnection() throws SQLException {
-        dataSource.getConnection().close();
-    }
-
     @AfterClass
     public static void closeDataSource() {
         dataSource.close();
@@ -74,7 +69,7 @@ public class UserTest {
     }
 
     @Test
-    public void testUserClassMethods() throws SQLException, InterruptedException {
+    public void testUserClassMethods() throws SQLException {
     //-------------- User test cases -------------------------------
         final User testUser = new User("testUser", "testUser");
         assertEquals("Constructor succeeds", true, testUser instanceof User);
