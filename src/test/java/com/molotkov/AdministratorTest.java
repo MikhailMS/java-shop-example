@@ -127,5 +127,7 @@ public class AdministratorTest {
 
         assertEquals("deleteUser succeeds", "", empty);
         cursor.closeCursor();
+
+        dataSource.close();
     }
 }
