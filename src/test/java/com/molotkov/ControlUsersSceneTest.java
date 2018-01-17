@@ -30,16 +30,11 @@ import static com.molotkov.gui.GuiWindowConsts.WINDOW_WIDTH;
 import static org.testfx.api.FxAssert.verifyThat;
 
 public class ControlUsersSceneTest extends ApplicationTest {
-    private static HikariDataSource dataSource;
+    private HikariDataSource dataSource;
     private static boolean setupIsDone = false;
 
     @ClassRule
     public static PostgreSQLContainer postgres = new PostgreSQLContainer();
-
-    @AfterClass
-    public static void closeDataSource() {
-        dataSource.close();
-    }
 
     @Override
     public void start(final Stage stage) throws SQLException {

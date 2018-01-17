@@ -39,7 +39,7 @@ import static com.molotkov.gui.GuiWindowConsts.WINDOW_HEIGHT;
 import static com.molotkov.gui.GuiWindowConsts.WINDOW_WIDTH;
 
 public class MainSceneAdminTest extends ApplicationTest {
-    private static HikariDataSource dataSource;
+    private HikariDataSource dataSource;
     private static boolean setupIsDone = false;
 
     private static final String PRIMARY_STAGE_TITLE = "Java Super Shop";
@@ -56,11 +56,6 @@ public class MainSceneAdminTest extends ApplicationTest {
 
     @ClassRule
     public static PostgreSQLContainer postgres = new PostgreSQLContainer();
-
-    @AfterClass
-    public static void closeDataSource() {
-        dataSource.close();
-    }
 
     @Override
     public void start(final Stage primaryStage) throws SQLException {

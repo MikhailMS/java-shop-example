@@ -17,15 +17,11 @@ import java.util.List;
 import static org.rnorth.visibleassertions.VisibleAssertions.assertEquals;
 
 public class OrderDBTest {
-    private static HikariDataSource dataSource;
+    private  HikariDataSource dataSource;
 
     @ClassRule
     public static PostgreSQLContainer postgres = new PostgreSQLContainer();
 
-    @AfterClass
-    public static void closeDataSource() {
-        dataSource.close();
-    }
 
     @Before
     public void setUp() throws SQLException {
