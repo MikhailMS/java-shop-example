@@ -19,7 +19,6 @@ import javafx.scene.layout.HBox;
 import javafx.scene.paint.Color;
 import javafx.stage.Stage;
 import org.junit.After;
-import org.junit.AfterClass;
 import org.junit.ClassRule;
 import org.junit.Test;
 import org.loadui.testfx.GuiTest;
@@ -66,7 +65,6 @@ public class MainSceneAdminTest extends ApplicationTest {
     public void start(final Stage primaryStage) throws SQLException {
         // TestContainers bit
         final HikariConfig hikariConfig = new HikariConfig();
-        //hikariConfig.setMaximumPoolSize(100);
         hikariConfig.setJdbcUrl(postgres.getJdbcUrl());
         hikariConfig.setUsername(postgres.getUsername());
         hikariConfig.setPassword(postgres.getPassword());
@@ -140,7 +138,7 @@ public class MainSceneAdminTest extends ApplicationTest {
     }
 
     @Test
-    public void admin_can_login_n_see_inventory_table() throws SQLException {
+    public void admin_can_login_n_see_inventory_table() {
         login();
 
         verifyThat("#inventory-table-view", TableViewMatchersExtension.hasColumnWithID("Product Name"));
@@ -152,7 +150,7 @@ public class MainSceneAdminTest extends ApplicationTest {
     }
 
     @Test
-    public void admin_can_see_inventory_entries() throws SQLException {
+    public void admin_can_see_inventory_products() {
         login();
 
         verifyThat("#inventory-table-view", TableViewMatchers.containsRow("apple", 0.151, 0.8, 3, "2.40", false));
@@ -219,7 +217,7 @@ public class MainSceneAdminTest extends ApplicationTest {
     }
 
     @Test
-    public void admin_can_see_order_history_table() throws SQLException {
+    public void admin_can_see_order_history_table() {
         login();
 
         clickOn("Order History");
@@ -229,7 +227,7 @@ public class MainSceneAdminTest extends ApplicationTest {
     }
 
     @Test
-    public void admin_can_see_full_order_history_n_total() throws SQLException {
+    public void admin_can_see_full_order_history_n_total() {
         login();
 
         clickOn("Order History");
@@ -240,7 +238,7 @@ public class MainSceneAdminTest extends ApplicationTest {
     }
 
     @Test
-    public void admin_can_see_order_details() throws SQLException {
+    public void admin_can_see_order_details() {
         login();
         clickOn("Order History")
                 .clickOn("Delivery address")
@@ -249,7 +247,7 @@ public class MainSceneAdminTest extends ApplicationTest {
     }
 
     @Test
-    public void admin_can_see_system_users_table() throws SQLException {
+    public void admin_can_see_system_users_table() {
         login();
 
         clickOn("System users");
@@ -259,7 +257,7 @@ public class MainSceneAdminTest extends ApplicationTest {
     }
 
     @Test
-    public void admin_can_see_all_system_users() throws SQLException {
+    public void admin_can_see_all_system_users() {
         login();
 
         clickOn("System users");
@@ -299,7 +297,7 @@ public class MainSceneAdminTest extends ApplicationTest {
     }
 
     @Test
-    public void admin_can_delete_new_admin() throws SQLException {
+    public void admin_can_delete_new_admin() {
         login();
 
         clickOn("System users");
