@@ -84,10 +84,9 @@ public class MainSceneAdminTest extends ApplicationTest {
             statement.addBatch("INSERT INTO baskets ( basket_owner, products_name, products_amount ) VALUES ( 'testUser2', 'apple', '2' )");
 
             statement.addBatch("CREATE TABLE IF NOT EXISTS orders ( order_id serial, basket_id int4 REFERENCES baskets(basket_id) ON DELETE CASCADE," +
-                    " order_owner text REFERENCES users(user_name) ON DELETE CASCADE, address text NOT NULL, total_price numeric (8,2) NOT NULL," +
-                    " completed boolean DEFAULT FALSE, created_at timestamp DEFAULT CURRENT_TIMESTAMP )");
-            statement.addBatch("INSERT INTO orders ( basket_id, order_owner, address, total_price ) VALUES ( 1, 'testUser1', 'Manchester', 2.45 )");
-            statement.addBatch("INSERT INTO orders ( basket_id, order_owner, address, total_price ) VALUES ( 2, 'testUser2', 'London', 2.50 )");
+                    " order_owner text REFERENCES users(user_name) ON DELETE CASCADE, address text NOT NULL, created_at timestamp DEFAULT CURRENT_TIMESTAMP )");
+            statement.addBatch("INSERT INTO orders ( basket_id, order_owner, address ) VALUES ( 1, 'testUser1', 'Manchester' )");
+            statement.addBatch("INSERT INTO orders ( basket_id, order_owner, address ) VALUES ( 2, 'testUser2', 'London' )");
 
             statement.addBatch("CREATE TABLE IF NOT EXISTS products ( product_id serial PRIMARY KEY, product_name text NOT NULL UNIQUE," +
                     " product_weight numeric (6,3) NOT NULL, product_price numeric (8,2) NOT NULL )");
@@ -219,7 +218,7 @@ public class MainSceneAdminTest extends ApplicationTest {
         login();
 
         clickOn("Order History");
-        verifyThat("#order-table", TableViewMatchersExtension.hasColumnWithID("Delivery Address"));
+        verifyThat("#order-table", TableViewMatchersExtension.hasColumnWithID("Delivery address"));
         verifyThat("#order-table", TableViewMatchersExtension.hasColumnWithID("Total order price"));
         verifyThat("#order-table", TableViewMatchersExtension.hasColumnWithID("Order Details"));
     }
@@ -229,8 +228,8 @@ public class MainSceneAdminTest extends ApplicationTest {
         login();
 
         clickOn("Order History");
-        verifyThat("#order-table", TableViewMatchers.containsRow("Manchester", 2.45));
-        verifyThat("#order-table", TableViewMatchers.containsRow("London", 2.50));
+        verifyThat("#order-table", TableViewMatchers.containsRow("Manchester", 5.40));
+        verifyThat("#order-table", TableViewMatchers.containsRow("London", 1.60));
 
         verifyThat("#total-table", TableViewMatchers.containsRow(4.95));
     }
@@ -321,6 +320,9 @@ public class MainSceneAdminTest extends ApplicationTest {
                 .clickOn((Node)from(lookup("#users-table .expander-button")).nth(1).query())
                 .clickOn("Remove user");
         verifyThat(lookup("User has been removed successfully"), Node::isVisible);
+
+        DBUtils.insertSpecificIntoTable(dataSource.getConnection(), "users", new String[]{"user_name", "user_password"},
+                new String[]{"testUser1", "testUser1"});
         sleep(2000);
     }
 
