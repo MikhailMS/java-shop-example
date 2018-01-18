@@ -54,7 +54,7 @@ Also I am using TDD approach to complete this project as I found this really con
           - [x] Filter orders by date
           - [x] Filter orders by total price 
       
-  - [-] As an optional part, I'd like to introduce GUI, which will make it easier to fill basket, see orders and etc
+  - [x] As an optional part, I'd like to introduce GUI, which will make it easier to fill basket, see orders and etc
       - [x] Login screen
       - [x] Can login into system and gain appropriate rights
       - [x] Client GUI

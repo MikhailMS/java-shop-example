@@ -8,7 +8,10 @@ services:
 before_install:
   - sudo apt-get install jq
   - wget -O ~/codacy-coverage-reporter-assembly-latest.jar $(curl https://api.github.com/repos/codacy/codacy-coverage-reporter/releases/latest | jq -r .assets[0].browser_download_url)
-
+  - if [[ "${TRAVIS_OS_NAME}" == osx ]]; then
+  -   brew update
+  -   brew cask reinstall caskroom/versions/java8
+  - fi
 
 matrix:
   include:
@@ -19,9 +22,14 @@ matrix:
       env:
         - CODACY_PROJECT_TOKEN=30ded88adc3944479b2de1780b26f01b
         - _JAVA_OPTIONS="-Djava.awt.headless=true -Dtestfx.robot=glass -Dtestfx.headless=true -Dprism.order=sw -Dprism.text=t2k -Dtestfx.setup.timeout=2500"
+  # Headless macOS
+    - os: osx
+      osx_image: xcode9
+      env:
+        - _JAVA_OPTIONS="-Djava.awt.headless=true -Dtestfx.robot=glass -Dtestfx.headless=true -Dprism.order=sw -Dprism.text=t2k -Dtestfx.setup.timeout=2500"
 
 after_success:
-  - java -cp ~/codacy-coverage-reporter-assembly-latest.jar com.codacy.CodacyCoverageReporter -l Java -r build/reports/jacoco/test/jacocoTestReport.xml
+  - java -cp ~/codacy-coverage-reporter-assembly-latest.jar com.codacy.CodacyCoverageReporter -l Java -r build-reporting/target/coverage-reports/jacoco.xml
 
 notifications:
   slack:
