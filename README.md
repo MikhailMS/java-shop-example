@@ -96,7 +96,7 @@ Also I am using TDD approach to complete this project as I found this really con
               - [x] Administrator GUI
                   - [x] Highlighted parts
                   
-      - [ ] Finish up tests
+      - [x] Finish up tests
           - [x] Review tests for the project so far
           - [x] MainStage GUI tests
               - [x] Client GUI tests
@@ -112,6 +112,7 @@ Also I am using TDD approach to complete this project as I found this really con
   - [x] **METHOD DEPRECATED - WILL BE DELETED** restoreBasketFromDB method shall be fixed, as currently it's hardcoded to use fixed weight and price for all restored products in Basket
   - [ ] When completing order as Client in GUI, basket is not reset. Should find a way to clear it
   - [ ] When basket has been restored, restored products cannot be removed.
+
 ## Improvements, that could be done later
   - [ ] At the moment user can add more products into basket than there exist in inventory -> make them talk to one another
   - [ ] At the moment there is no column to sort orders by date, but could be added. Will require extra column in GUI and extra filed in Order class
