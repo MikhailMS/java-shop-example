@@ -7,7 +7,10 @@ import com.molotkov.products.Product;
 import com.molotkov.users.Client;
 import com.zaxxer.hikari.HikariConfig;
 import com.zaxxer.hikari.HikariDataSource;
-import org.junit.*;
+import org.junit.After;
+import org.junit.Before;
+import org.junit.ClassRule;
+import org.junit.Test;
 import org.testcontainers.containers.PostgreSQLContainer;
 
 import java.sql.SQLException;
@@ -57,15 +60,15 @@ public class ClientTest {
         final Basket basket = new Basket();
         final Product apple = new Product("apple", 0.150, 0.8);
 
-    // TESTING addProductToBasket
+        // TESTING addProductToBasket
         client.addProductToBasket(basket, apple, 2);
         assertEquals("addProductToBasket succeeds", true, basket.getProducts().containsKey(apple));
 
-    // TESTING removeProductFromBasket
+        // TESTING removeProductFromBasket
         client.removeProductFromBasket(basket, apple, 2);
         assertEquals("removeProductFromBasket succeeds", 0, basket.getProducts().get(apple));
 
-    // TESTING saveBasket
+        // TESTING saveBasket
         client.addProductToBasket(basket, apple, 2);
         client.saveBasket(dataSource.getConnection(), basket);
         DBCursorHolder cursor = DBUtils.filterFromTable(dataSource.getConnection(), "baskets", new String[]{"basket_id"},
@@ -76,11 +79,11 @@ public class ClientTest {
         cursor.closeCursor();
         assertEquals("saveBasket succeeds", "1", resultSaveBasket);
 
-    // TESTING restoreBasket
+        // TESTING restoreBasket
         final Basket restoredBasket = client.restoreBasket(dataSource.getConnection());
         assertEquals("restoreBasket succeeds", basket.toString(), restoredBasket.toString());
 
-    // TESTING completeOrder
+        // TESTING completeOrder
         client.setRetrievedBasketId(dataSource.getConnection());
         client.completeOrder(dataSource.getConnection(), "London");
         cursor = DBUtils.filterFromTable(dataSource.getConnection(), "orders", new String[]{"order_id"},

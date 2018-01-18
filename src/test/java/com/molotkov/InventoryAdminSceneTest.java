@@ -25,7 +25,6 @@ import java.sql.Statement;
 
 import static com.molotkov.gui.GuiWindowConsts.WINDOW_HEIGHT;
 import static com.molotkov.gui.GuiWindowConsts.WINDOW_WIDTH;
-
 import static org.testfx.api.FxAssert.verifyThat;
 
 public class InventoryAdminSceneTest extends ApplicationTest {
@@ -46,7 +45,7 @@ public class InventoryAdminSceneTest extends ApplicationTest {
 
         final Inventory inventory = new Inventory();
         try {
-            inventory.addProducts(new Product("chicken", 1, 2.3),3);
+            inventory.addProducts(new Product("chicken", 1, 2.3), 3);
             inventory.addProducts(new Product("apple", 0.151, 0.8), 2);
         } catch (InventoryException e) {
             e.printStackTrace();
@@ -60,7 +59,7 @@ public class InventoryAdminSceneTest extends ApplicationTest {
 
         dataSource = new HikariDataSource(hikariConfig);
 
-        if(!setupIsDone) {
+        if (!setupIsDone) {
             final Statement statement = dataSource.getConnection().createStatement();
 
             statement.addBatch("CREATE TABLE IF NOT EXISTS products ( product_id serial PRIMARY KEY, product_name text NOT NULL," +
@@ -113,7 +112,7 @@ public class InventoryAdminSceneTest extends ApplicationTest {
         clickOn("Add new product");
         sleep(1000);
         clickOn("Product Name");
-        clickOn((Node)from(lookup(".expander-button")).nth(2).query());
+        clickOn((Node) from(lookup(".expander-button")).nth(2).query());
         clickOn("Add to inventory");
         sleep(1000);
         verifyThat(".table-view", TableViewMatchers.containsRow("milk", 1.0, 1.0, 6, "6.00", false));
@@ -128,7 +127,7 @@ public class InventoryAdminSceneTest extends ApplicationTest {
         clickOn("Add new product");
         sleep(1000);
         clickOn("Product Name");
-        clickOn((Node)from(lookup(".expander-button")).nth(2).query());
+        clickOn((Node) from(lookup(".expander-button")).nth(2).query());
         clickOn("Remove from inventory");
         sleep(1000);
         verifyThat(".table-view", TableViewMatchers.containsRow("milk", 1.0, 1.0, 4, "4.00", false));
@@ -137,13 +136,13 @@ public class InventoryAdminSceneTest extends ApplicationTest {
     @Test
     public void cannot_decrease_product_amount_below_zero_if_admin() throws SQLException {
         clickOn("Product Name")
-                .clickOn((Node)from(lookup(".expander-button")).nth(0).query())
+                .clickOn((Node) from(lookup(".expander-button")).nth(0).query())
                 .clickOn("Remove from inventory")
                 .sleep(2200)
-                .clickOn((Node)from(lookup(".expander-button")).nth(0).query())
+                .clickOn((Node) from(lookup(".expander-button")).nth(0).query())
                 .clickOn("Remove from inventory")
                 .sleep(2200)
-                .clickOn((Node)from(lookup(".expander-button")).nth(0).query())
+                .clickOn((Node) from(lookup(".expander-button")).nth(0).query())
                 .clickOn("Remove from inventory");
         verifyThat(lookup("Something went wrong while removing product from inventory: Possibly you tried to remove more occurrences of a product than exist in inventory"), Node::isVisible);
     }

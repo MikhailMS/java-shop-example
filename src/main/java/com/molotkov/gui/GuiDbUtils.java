@@ -3,7 +3,6 @@ package com.molotkov.gui;
 import com.molotkov.Basket;
 import com.molotkov.Inventory;
 import com.molotkov.Order;
-import com.molotkov.db.DBConnector;
 import com.molotkov.db.DBCursorHolder;
 import com.molotkov.db.DBUtils;
 import com.molotkov.exceptions.BasketException;
@@ -26,15 +25,15 @@ public class GuiDbUtils {
         try {
             if (user instanceof Client) {
                 cursor = DBUtils.innerJoinTables(connection, "products", "inventory", "product_id",
-                        new String[] {"product_name", "product_weight", "product_price", "product_amount"}, new String[]{"product_amount > 0"});
+                        new String[]{"product_name", "product_weight", "product_price", "product_amount"}, new String[]{"product_amount > 0"});
             } else {
                 cursor = DBUtils.innerJoinTables(connection, "products", "inventory", "product_id",
-                        new String[] {"product_name", "product_weight", "product_price", "product_amount"}, new String[]{});
+                        new String[]{"product_name", "product_weight", "product_price", "product_amount"}, new String[]{});
             }
 
             while (cursor.getResults().next()) {
                 inventory.addProducts(new Product(cursor.getResults().getString(1),
-                        cursor.getResults().getDouble(2), cursor.getResults().getDouble(3)),cursor.getResults().getInt(4));
+                        cursor.getResults().getDouble(2), cursor.getResults().getDouble(3)), cursor.getResults().getInt(4));
             }
             cursor.closeCursor();
         } catch (SQLException | InventoryException e) {
@@ -60,9 +59,9 @@ public class GuiDbUtils {
     public static void loadDataToOrders(final User user, final Connection connection, final List<Order> orders) {
         DBCursorHolder cursor;
         try {
-            if (user instanceof Administrator) cursor = DBUtils.innerJoinTables(connection, "baskets","orders",
+            if (user instanceof Administrator) cursor = DBUtils.innerJoinTables(connection, "baskets", "orders",
                     "basket_id", new String[]{"products_name", "products_amount", "address"}, new String[]{});
-            else cursor = DBUtils.innerJoinTables(connection, "baskets","orders",
+            else cursor = DBUtils.innerJoinTables(connection, "baskets", "orders",
                     "basket_id", new String[]{"products_name", "products_amount", "address"},
                     new String[]{String.format("basket_owner='%s'", user.getUserName())});
             while (cursor.getResults().next()) {
@@ -100,7 +99,7 @@ public class GuiDbUtils {
             Product restoredProduct;
             int counter = 0;
 
-            for(final String productName : names) {
+            for (final String productName : names) {
                 final DBCursorHolder productDetails = DBUtils.filterFromTable(connection, "products",
                         new String[]{"product_weight", "product_price"}, new String[]{String.format("product_name='%s'", productName)});
                 while (productDetails.getResults().next()) {

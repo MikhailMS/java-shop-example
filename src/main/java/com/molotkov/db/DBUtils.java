@@ -1,7 +1,12 @@
 package com.molotkov.db;
 
-import java.sql.*;
-import java.util.*;
+import java.sql.Connection;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -56,7 +61,7 @@ public class DBUtils {
             final List<String> valuesList = Arrays.asList(newValues);
             final List<String> columnValueList = new ArrayList<>();
             iterateSimultaneously(columnsList, valuesList, (String column, String value) ->
-                    columnValueList.add(String.format("%s = %s",column, value)));
+                    columnValueList.add(String.format("%s = %s", column, value)));
             final String columnValueString = Stream.of(columnValueList.toArray(new String[0])).collect(Collectors.joining(" "));
             final String filterArgumentsString = Stream.of(filterArguments).collect(Collectors.joining(" "));
             final String query = String.format("UPDATE %s SET %s WHERE %s", tableName, columnValueString, filterArgumentsString);
@@ -71,7 +76,7 @@ public class DBUtils {
                                                  final String[] selectColumns) throws SQLException {
         final Statement statement = connection.createStatement();
         String selectColumnsString;
-        if (selectColumns.length==0) {
+        if (selectColumns.length == 0) {
             selectColumnsString = "*";
         } else {
             selectColumnsString = Stream.of(selectColumns).collect(Collectors.joining(", "));
@@ -87,7 +92,7 @@ public class DBUtils {
         final Statement statement = connection.createStatement();
 
         String whereKeyWord;
-        if (filterArguments.length==0) {
+        if (filterArguments.length == 0) {
             whereKeyWord = "";
         } else {
             whereKeyWord = "WHERE";
@@ -96,7 +101,7 @@ public class DBUtils {
         final String filterArgumentsString = Stream.of(filterArguments).collect(Collectors.joining(" "));
 
         String selectColumnsString;
-        if (selectColumns.length==0) {
+        if (selectColumns.length == 0) {
             selectColumnsString = "*";
         } else {
             selectColumnsString = Stream.of(selectColumns).collect(Collectors.joining(", "));
@@ -109,11 +114,11 @@ public class DBUtils {
     }
 
     public static DBCursorHolder innerJoinTables(final Connection connection, final String tableNameR, final String tableNameL,
-                                                 final String innerJoinColumn, final String[] selectColumns, final String[] filterArguments) throws SQLException  {
+                                                 final String innerJoinColumn, final String[] selectColumns, final String[] filterArguments) throws SQLException {
         final Statement statement = connection.createStatement();
 
         String whereKeyWord;
-        if (filterArguments.length==0) {
+        if (filterArguments.length == 0) {
             whereKeyWord = "";
         } else {
             whereKeyWord = "WHERE";
@@ -122,14 +127,14 @@ public class DBUtils {
         final String filterArgumentsString = Stream.of(filterArguments).collect(Collectors.joining(" "));
 
         String selectColumnsString;
-        if (selectColumns.length==0) {
+        if (selectColumns.length == 0) {
             selectColumnsString = "*";
         } else {
             selectColumnsString = Stream.of(selectColumns).collect(Collectors.joining(", "));
         }
 
         final String query = String.format("SELECT %s FROM %s INNER JOIN %s USING (%s) %s %s", selectColumnsString,
-                tableNameR, tableNameL, innerJoinColumn ,whereKeyWord, filterArgumentsString);
+                tableNameR, tableNameL, innerJoinColumn, whereKeyWord, filterArgumentsString);
         final ResultSet resultSet = statement.executeQuery(query);
 
         return new DBCursorHolder(resultSet, statement);
@@ -139,7 +144,7 @@ public class DBUtils {
         try {
             final Statement statement = connection.createStatement();
             String whereKeyWord;
-            if (filterArguments.length==0) {
+            if (filterArguments.length == 0) {
                 whereKeyWord = "";
             } else {
                 whereKeyWord = "WHERE";

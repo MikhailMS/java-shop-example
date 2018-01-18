@@ -8,7 +8,6 @@ import com.molotkov.products.Product;
 import com.molotkov.users.Administrator;
 import com.molotkov.users.Client;
 import com.molotkov.users.User;
-
 import javafx.beans.property.ReadOnlyDoubleWrapper;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.property.SimpleStringProperty;
@@ -23,7 +22,6 @@ import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
 import javafx.util.Duration;
-
 import org.controlsfx.control.Notifications;
 import org.controlsfx.control.table.TableFilter;
 import org.controlsfx.control.table.TableRowExpanderColumn;
@@ -77,8 +75,7 @@ public class InventoryScene {
 
         if (user instanceof Administrator) {
             inventoryTableView.getChildren().addAll(createInventoryTableView(inventory, user, connection), addProductBox);
-        }
-        else {
+        } else {
             inventoryTableView.getChildren().addAll(createInventoryTableView(inventory, user, connection), createTitleLabel("Basket", Color.DARKBLUE,
                     "Calibri", FontWeight.BOLD, 16), createBasketTableView(user.getBasket(), connection, user));
         }
@@ -122,11 +119,11 @@ public class InventoryScene {
                     .entrySet().parallelStream().mapToInt(Map.Entry::getValue).sum(), param.getValue().calculateTotal()));
 
             completeOrder.setOnMouseClicked(mouseEvent -> {
-                if(param.getValue().getProducts().size() > 0) {
-                    if(!address.getText().isEmpty()) {
+                if (param.getValue().getProducts().size() > 0) {
+                    if (!address.getText().isEmpty()) {
                         try {
 
-                            final Client client = (Client)user;
+                            final Client client = (Client) user;
 
                             if (client.retrievedBasketId() >= 0) {
                                 client.completeOrder(connection, address.getText());
@@ -181,7 +178,7 @@ public class InventoryScene {
                 }
             });
 
-            editor. getChildren().addAll(detailsLabel, address, completeOrder);
+            editor.getChildren().addAll(detailsLabel, address, completeOrder);
 
             return editor;
         });
@@ -193,7 +190,7 @@ public class InventoryScene {
     }
 
     private static Button createAddButton(final String buttonText, final String notificationTextSuccess, final String notificationTextError,
-                                          final ProductStorage storage, final HBox editor , final TableRowExpanderColumn.TableRowDataFeatures<Map.Entry<Product, Integer>> param,
+                                          final ProductStorage storage, final HBox editor, final TableRowExpanderColumn.TableRowDataFeatures<Map.Entry<Product, Integer>> param,
                                           final User user, final Connection connection) {
         final Button addToBasket = new Button();
         addToBasket.setText(buttonText);
@@ -202,7 +199,7 @@ public class InventoryScene {
             try {
                 storage.addProducts(param.getValue().getKey(), 1);
                 if (user instanceof Administrator) {
-                    ((Administrator)user).increaseProductAmountInInventory(connection, param.getValue().getKey(), 1);
+                    ((Administrator) user).increaseProductAmountInInventory(connection, param.getValue().getKey(), 1);
                 } else {
                     System.out.println("Client detected - unlucky inventory");
                 }
@@ -230,7 +227,7 @@ public class InventoryScene {
     }
 
     private static Button createDeleteButton(final String buttonText, final String notificationTextSuccess, final String notificationTextError,
-                                             final ProductStorage storage, final HBox editor , final TableRowExpanderColumn.TableRowDataFeatures<Map.Entry<Product, Integer>> param,
+                                             final ProductStorage storage, final HBox editor, final TableRowExpanderColumn.TableRowDataFeatures<Map.Entry<Product, Integer>> param,
                                              final User user, final Connection connection) {
         final Button deleteFromBasket = new Button();
         deleteFromBasket.setText(buttonText);
@@ -238,7 +235,7 @@ public class InventoryScene {
             try {
                 storage.removeProducts(param.getValue().getKey(), 1);
                 if (user instanceof Administrator) {
-                    ((Administrator)user).decreaseProductAmountInInventory(connection, param.getValue().getKey(), 1);
+                    ((Administrator) user).decreaseProductAmountInInventory(connection, param.getValue().getKey(), 1);
                 } else {
                     System.out.println("Client detected - lucky inventory");
                 }
@@ -318,8 +315,7 @@ public class InventoryScene {
                     ADMIN_ADD_PRODUCT_NOTIFICATION_ERROR, ADMIN_REMOVE_PRODUCT_NOTIFICATION_SUCCESS, ADMIN_REMOVE_PRODUCT_NOTIFICATION_ERROR,
                     user, connection);
             addProductBox = createAddProductBox(productNameColumn, productWeightColumn, productPriceColumn, productAmountColumn, inventory, items, user, connection);
-        }
-        else {
+        } else {
             table.getColumns().setAll(productNameColumn, productWeightColumn, productPriceColumn, productAmountColumn);
             addDetailsRowExpander(table, user.getBasket(), CLIENT_ADD_PRODUCT_BUTTON, CLIENT_REMOVE_PRODUCT_BUTTON, CLIENT_ADD_PRODUCT_NOTIFICATION_SUCCESS,
                     CLIENT_ADD_PRODUCT_NOTIFICATION_ERROR, CLIENT_REMOVE_PRODUCT_NOTIFICATION_SUCCESS, CLIENT_REMOVE_PRODUCT_NOTIFICATION_ERROR,
@@ -328,7 +324,7 @@ public class InventoryScene {
 
         table.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
 
-        final TableFilter<Map.Entry<Product,Integer>> filter = TableFilter.forTableView(table).lazy(false).apply();
+        final TableFilter<Map.Entry<Product, Integer>> filter = TableFilter.forTableView(table).lazy(false).apply();
 
         return table;
     }
@@ -381,13 +377,13 @@ public class InventoryScene {
             final String newProductWeight = addProductWeight.getText();
             final String newProductPrice = addProductPrice.getText();
             final String newProductAmount = addProductAmount.getText();
-            if (!newProductName.isEmpty() && !newProductWeight.isEmpty() && !newProductPrice.isEmpty() && ! newProductAmount.isEmpty()) {
+            if (!newProductName.isEmpty() && !newProductWeight.isEmpty() && !newProductPrice.isEmpty() && !newProductAmount.isEmpty()) {
                 try {
 
                     final Product product = new Product(newProductName, Double.parseDouble(newProductWeight), Double.parseDouble(newProductPrice));
                     // Here should also be a call to save new product to DB
                     try {
-                        ((Administrator)user).addNewProductToInventory(connection, product, Integer.parseInt(newProductAmount));
+                        ((Administrator) user).addNewProductToInventory(connection, product, Integer.parseInt(newProductAmount));
                         // Next 3 lines of code is huuuge hack - but can't think of another solution.
                         // It works, but may give poor performance on big ObservableList
                         items.removeAll(inventory.getProducts().entrySet());

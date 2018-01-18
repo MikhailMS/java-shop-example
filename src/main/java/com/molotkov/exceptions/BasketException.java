@@ -1,6 +1,6 @@
 package com.molotkov.exceptions;
 
-public class BasketException  extends Exception {
+public class BasketException extends Exception {
     private static final long serialVersionUID = 2L;
 
     public BasketException(final String message) {

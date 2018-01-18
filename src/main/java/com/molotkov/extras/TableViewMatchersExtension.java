@@ -1,28 +1,21 @@
 package com.molotkov.extras;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Objects;
-import java.util.StringJoiner;
-import java.util.stream.Collectors;
-
 import javafx.beans.property.SimpleIntegerProperty;
 import javafx.beans.value.ObservableValue;
 import javafx.scene.Node;
 import javafx.scene.control.Cell;
 import javafx.scene.control.TableColumn;
-import javafx.scene.control.TableView;
 import javafx.scene.control.TableColumn.CellDataFeatures;
-
+import javafx.scene.control.TableView;
 import org.hamcrest.Factory;
 import org.hamcrest.Matcher;
 import org.testfx.api.FxAssert;
 import org.testfx.matcher.base.GeneralMatchers;
 import org.testfx.service.finder.NodeFinder;
 import org.testfx.service.query.NodeQuery;
+
+import java.util.*;
+import java.util.stream.Collectors;
 
 
 public class TableViewMatchersExtension {
@@ -33,14 +26,14 @@ public class TableViewMatchersExtension {
     }
 
     @Factory
-    public static Matcher<TableView> hasTableCell(Object value) {
+    public static Matcher<TableView> hasTableCell(final Object value) {
         String descriptionText = "has table cell \"" + value + "\"";
         return GeneralMatchers.typeSafeMatcher(TableView.class, descriptionText,
                 (tableView) -> toText(tableView) + "\nwhich does not contain a cell with the given value",
                 (node) -> hasTableCell(node, value));
     }
 
-    private static boolean hasTableCell(TableView tableView, Object value) {
+    private static boolean hasTableCell(final TableView tableView, final Object value) {
         NodeFinder nodeFinder = FxAssert.assertContext().getNodeFinder();
         NodeQuery nodeQuery = nodeFinder.from(new Node[]{tableView});
         return nodeQuery.lookup(".table-cell").match((cell) -> hasCellValue((Cell) cell, value)).tryQuery().isPresent();
@@ -65,6 +58,7 @@ public class TableViewMatchersExtension {
         final String descriptionText = "has row: " + Arrays.toString(row);
         return GeneralMatchers.typeSafeMatcher(TableView.class, descriptionText, TableViewMatchersExtension::toText, (node) -> containsRow(node, row));
     }
+
     private static <T> boolean containsRow(final TableView<T> tableView, final Object... row) {
         if (tableView.getItems().isEmpty()) {
             return false;
@@ -73,15 +67,15 @@ public class TableViewMatchersExtension {
         final Map<Integer, List<ObservableValue<?>>> rowValuesMap = new HashMap<>(tableView.getColumns().size());
 
         List rowValues;
-        for(int j = 0; j < tableView.getItems().size(); ++j) {
+        for (int j = 0; j < tableView.getItems().size(); ++j) {
             rowValues = getRowValues(tableView, j);
             rowValuesMap.put(j, rowValues);
         }
 
         final List<List<Object>> testList = new ArrayList<>();
-        for(final Map.Entry<Integer, List<ObservableValue<?>>> value : rowValuesMap.entrySet()) {
+        for (final Map.Entry<Integer, List<ObservableValue<?>>> value : rowValuesMap.entrySet()) {
             final List<Object> entry = new ArrayList<>();
-            for(final ObservableValue<?> actualValue : value.getValue()) {
+            for (final ObservableValue<?> actualValue : value.getValue()) {
                 entry.add(actualValue.getValue());
             }
             testList.add(entry);
@@ -97,8 +91,8 @@ public class TableViewMatchersExtension {
     }
 
     private static <T> boolean hasColumnWithID(final TableView<T> tableView, final String columnId) {
-        for(final TableColumn<?,?> column : tableView.getColumns()) {
-            if(column.getId().equals(columnId)) return true;
+        for (final TableColumn<?, ?> column : tableView.getColumns()) {
+            if (column.getId().equals(columnId)) return true;
         }
         return false;
     }
@@ -110,8 +104,8 @@ public class TableViewMatchersExtension {
     }
 
     private static <T> boolean hasNoColumnWithID(final TableView<T> tableView, final String columnId) {
-        for(final TableColumn<?,?> column : tableView.getColumns()) {
-            if(column.getId().equals(columnId)) return false;
+        for (final TableColumn<?, ?> column : tableView.getColumns()) {
+            if (column.getId().equals(columnId)) return false;
         }
         return true;
     }
@@ -120,7 +114,7 @@ public class TableViewMatchersExtension {
         final Object rowObject = tableView.getItems().get(rowIndex);
         final List<ObservableValue<?>> rowValues = new ArrayList(tableView.getColumns().size());
 
-        for(int i = 0; i < tableView.getColumns().size(); ++i) {
+        for (int i = 0; i < tableView.getColumns().size(); ++i) {
             final TableColumn<?, ?> column = tableView.getColumns().get(i);
             final CellDataFeatures cellDataFeatures = new CellDataFeatures(tableView, column, rowObject);
             try {
@@ -149,16 +143,16 @@ public class TableViewMatchersExtension {
     }
 
 
-
     private static String toText(final TableView<?> tableView) {
         final StringJoiner joiner = new StringJoiner(", ", "[", "]");
 
-        for(int rowIndex = 0; rowIndex < tableView.getItems().size(); ++rowIndex) {
+        for (int rowIndex = 0; rowIndex < tableView.getItems().size(); ++rowIndex) {
             joiner.add(toText(tableView, rowIndex));
         }
 
         return joiner.toString();
     }
+
     private static String toText(final TableView<?> tableView, final int rowIndex) {
         return '[' + getRowValues(tableView, rowIndex).stream().map((observableValue) ->
                 observableValue.getValue() == null ? "null" : observableValue.getValue().toString()).collect(Collectors.joining(", ")) + ']';

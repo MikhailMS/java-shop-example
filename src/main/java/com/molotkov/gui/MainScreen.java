@@ -10,19 +10,18 @@ import javafx.application.Application;
 import javafx.geometry.Pos;
 import javafx.scene.Group;
 import javafx.scene.Scene;
+import javafx.scene.control.Tab;
+import javafx.scene.control.TabPane;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.paint.Color;
 import javafx.stage.Stage;
-import javafx.scene.control.*;
 
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
-import static com.molotkov.gui.GuiWindowConsts.HBOX_SPACING;
-import static com.molotkov.gui.GuiWindowConsts.WINDOW_HEIGHT;
-import static com.molotkov.gui.GuiWindowConsts.WINDOW_WIDTH;
+import static com.molotkov.gui.GuiWindowConsts.*;
 
 public class MainScreen extends Application {
     private static final String PRIMARY_STAGE_TITLE = "Java Super Shop";
@@ -79,8 +78,8 @@ public class MainScreen extends Application {
         // Handle basket save here only if it's not empty
         System.out.println("Caught application closure");
         if (clientBasket.getProducts().size() > 0) {
-            if (((Client)user).retrievedBasketId() < 0) {
-                ((Client)user).saveBasket(connector.getConnection(), clientBasket);
+            if (((Client) user).retrievedBasketId() < 0) {
+                ((Client) user).saveBasket(connector.getConnection(), clientBasket);
             }
         }
         try {

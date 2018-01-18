@@ -2,7 +2,9 @@ package com.molotkov.db;
 
 import com.molotkov.users.User;
 
-import java.sql.*;
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.SQLException;
 
 public class DBConnector {
     private String dbUrl;

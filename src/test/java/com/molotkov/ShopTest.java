@@ -23,19 +23,19 @@ public class ShopTest {
     @Test
     public void testAddOneProductToInventory() throws InventoryException {
         final Product test = new Product("Apple", 0.150, 0.8);
-        shop.addToInventory(test,1);
+        shop.addToInventory(test, 1);
 
-        assertTrue(shop.getInventory().getProducts().get(test)==1);
+        assertTrue(shop.getInventory().getProducts().get(test) == 1);
         assertTrue(shop.getInventory().getProducts().containsKey(test));
     }
 
     @Test
     public void testAddTwoSameProductsToInventory() throws InventoryException {
         final Product test = new Product("Apple", 0.150, 0.8);
-        shop.addToInventory(test,1);
-        shop.addToInventory(test,1);
+        shop.addToInventory(test, 1);
+        shop.addToInventory(test, 1);
 
-        assertTrue(shop.getInventory().getProducts().get(test)==2);
+        assertTrue(shop.getInventory().getProducts().get(test) == 2);
         assertTrue(shop.getInventory().getProducts().containsKey(test));
     }
 
@@ -44,37 +44,37 @@ public class ShopTest {
         final Product test = new Product("Apple", 0.150, 0.8);
         final Product test1 = new Product("Chicken", 1, 2.3);
         final Product test2 = new Product("Beef", 0.5, 3.25);
-        shop.addToInventory(test,2);
-        shop.addToInventory(test1,3);
-        shop.addToInventory(test2,4);
+        shop.addToInventory(test, 2);
+        shop.addToInventory(test1, 3);
+        shop.addToInventory(test2, 4);
 
         assertTrue(shop.getInventory().getProducts().containsKey(test));
         assertTrue(shop.getInventory().getProducts().containsKey(test1));
         assertTrue(shop.getInventory().getProducts().containsKey(test2));
-        assertTrue(shop.getInventory().getProducts().get(test)==2);
-        assertTrue(shop.getInventory().getProducts().get(test1)==3);
-        assertTrue(shop.getInventory().getProducts().get(test2)==4);
+        assertTrue(shop.getInventory().getProducts().get(test) == 2);
+        assertTrue(shop.getInventory().getProducts().get(test1) == 3);
+        assertTrue(shop.getInventory().getProducts().get(test2) == 4);
     }
 
     @Test(expected = InventoryException.class)
     public void testAddNullProductToInventory() throws InventoryException {
-        shop.addToInventory(null,1);
+        shop.addToInventory(null, 1);
     }
 
     @Test
     public void testRemoveOneInstanceOfProductFromInventory() throws InventoryException {
         final Product test = new Product("Apple", 0.150, 0.8);
         shop.addToInventory(test, 2);
-        shop.removeFromInventory(test,1);
+        shop.removeFromInventory(test, 1);
 
-        assertTrue(shop.getInventory().getProducts().get(test)==1);
+        assertTrue(shop.getInventory().getProducts().get(test) == 1);
     }
 
     @Test
     public void testRemoveProductCompletelyFromInventory() throws InventoryException {
         final Product test = new Product("Apple", 0.150, 0.8);
         shop.addToInventory(test, 2);
-        shop.removeFromInventory(test,2);
+        shop.removeFromInventory(test, 2);
 
         assertTrue(shop.getInventory().getProducts().get(test) == 0);
     }
@@ -83,7 +83,7 @@ public class ShopTest {
     public void testRemoveMoreInstancesOfProductFromInventoryThanExists() throws InventoryException {
         final Product test = new Product("Apple", 0.150, 0.8);
         shop.addToInventory(test, 2);
-        shop.removeFromInventory(test,3);
+        shop.removeFromInventory(test, 3);
     }
 
     @Test
@@ -96,7 +96,7 @@ public class ShopTest {
     @Test
     public void testToStringOneProduct() throws InventoryException {
         final Product test = new Product("Apple", 0.150, 0.8);
-        shop.addToInventory(test,2);
+        shop.addToInventory(test, 2);
 
         assertTrue(shop.toString().equals("Shop has inventory with 1 product and total value of 1.6"));
     }
@@ -105,7 +105,7 @@ public class ShopTest {
     public void testToStringMultipleProducts() throws InventoryException {
         final Product test = new Product("Apple", 0.150, 0.8);
         final Product test1 = new Product("Chicken", 1, 2.3);
-        shop.addToInventory(test,2);
+        shop.addToInventory(test, 2);
         shop.addToInventory(test1, 2);
 
         assertTrue(shop.toString().equals("Shop has inventory with 2 products and total value of 6.2"));

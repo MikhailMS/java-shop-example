@@ -6,7 +6,10 @@ import com.molotkov.exceptions.BasketException;
 import com.molotkov.products.Product;
 import com.zaxxer.hikari.HikariConfig;
 import com.zaxxer.hikari.HikariDataSource;
-import org.junit.*;
+import org.junit.After;
+import org.junit.Before;
+import org.junit.ClassRule;
+import org.junit.Test;
 import org.testcontainers.containers.PostgreSQLContainer;
 
 import java.sql.SQLException;
@@ -52,7 +55,7 @@ public class BasketDBTest {
     public void testBasketToFromDB() throws SQLException {
         final Basket savedBasket = new Basket();
         try {
-            savedBasket.addProducts(new Product("apple", 0.150, 0.8),2);
+            savedBasket.addProducts(new Product("apple", 0.150, 0.8), 2);
         } catch (BasketException ex) {
             ex.printStackTrace();
         }
@@ -62,20 +65,20 @@ public class BasketDBTest {
         final String amounts = basketDetails.get(1);
 
         valuesList.add("'testUser'");
-        valuesList.add(String.format("'%s'",names));
+        valuesList.add(String.format("'%s'", names));
         valuesList.add(String.format("%s", amounts));
 
-        DBUtils.insertSpecificIntoTable(dataSource.getConnection(),"baskets",
-                new String[] {"basket_owner", "products_name", "products_amount"}, valuesList.toArray(new String[0]));
+        DBUtils.insertSpecificIntoTable(dataSource.getConnection(), "baskets",
+                new String[]{"basket_owner", "products_name", "products_amount"}, valuesList.toArray(new String[0]));
 
-        DBCursorHolder cursor = DBUtils.selectFromTable(dataSource.getConnection(), "baskets", new String[] {"products_name"});
+        DBCursorHolder cursor = DBUtils.selectFromTable(dataSource.getConnection(), "baskets", new String[]{"products_name"});
         cursor.getResults().next();
         final String productName = cursor.getResults().getString(1);
-        assertEquals("SaveBasketToDB succeeded", "apple",productName);
+        assertEquals("SaveBasketToDB succeeded", "apple", productName);
         cursor.closeCursor();
 
-        cursor = DBUtils.filterFromTable(dataSource.getConnection(),"baskets", new String[] {"products_name", "products_amount"},
-                new String[] {"basket_owner = 'testUser'"});
+        cursor = DBUtils.filterFromTable(dataSource.getConnection(), "baskets", new String[]{"products_name", "products_amount"},
+                new String[]{"basket_owner = 'testUser'"});
 
         cursor.getResults().next();
         final String productsName = cursor.getResults().getString(1);
@@ -83,7 +86,7 @@ public class BasketDBTest {
 
         final Basket restoredBasket = new Basket();
         restoredBasket.restoreFromDB(productsName, productsAmount);
-        assertEquals("RetrieveBasketFromDB succeeded", "Basket has 1 product.",restoredBasket.toString());
+        assertEquals("RetrieveBasketFromDB succeeded", "Basket has 1 product.", restoredBasket.toString());
         cursor.closeCursor();
     }
 }

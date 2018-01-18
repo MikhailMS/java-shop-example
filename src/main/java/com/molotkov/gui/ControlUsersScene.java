@@ -64,7 +64,7 @@ public class ControlUsersScene {
     }
 
     private static Button createDeleteButton(final String buttonText, final String notificationTextSuccess, final String notificationTextError,
-                                             final List<User> users, final ObservableList<User> observableUsers, final HBox editor ,
+                                             final List<User> users, final ObservableList<User> observableUsers, final HBox editor,
                                              final TableRowExpanderColumn.TableRowDataFeatures<User> param, final Administrator admin,
                                              final Connection connection) {
         final Button deleteFromBasket = new Button();
@@ -134,7 +134,7 @@ public class ControlUsersScene {
                         // Next 4 lines of code is huuuge hack - but can't think of another solution.
                         // It works, but may give poor performance on big ObservableList
                         items.removeAll(users);
-                        if(enablePrivilege.isSelected()) users.add(new Administrator(newUserName, newUserPassword));
+                        if (enablePrivilege.isSelected()) users.add(new Administrator(newUserName, newUserPassword));
                         else users.add(new Client(newUserName, newUserPassword));
                         items.addAll(users);
 
@@ -178,7 +178,7 @@ public class ControlUsersScene {
 
     private static void addAdminRowExpander(final TableView table, final List<User> users, final ObservableList<User> observableUsers,
                                             final Administrator admin, final Connection connection) {
-        final TableRowExpanderColumn<User> expander =  new TableRowExpanderColumn<>(param -> {
+        final TableRowExpanderColumn<User> expander = new TableRowExpanderColumn<>(param -> {
             final HBox editor = new HBox(10);
             editor.getChildren().addAll(createDeleteButton("Remove user", "User has been removed successfully",
                     "Something went wrong while removing user", users, observableUsers, editor, param, admin, connection));

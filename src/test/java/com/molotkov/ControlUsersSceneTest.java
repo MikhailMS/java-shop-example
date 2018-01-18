@@ -59,7 +59,7 @@ public class ControlUsersSceneTest extends ApplicationTest {
 
         dataSource = new HikariDataSource(hikariConfig);
 
-        if(!setupIsDone) {
+        if (!setupIsDone) {
             System.out.println("Hallo ee");
             final Statement statement = dataSource.getConnection().createStatement();
 
@@ -115,7 +115,7 @@ public class ControlUsersSceneTest extends ApplicationTest {
         verifyThat(".table-view", TableViewMatchers.containsRow("testClient2", "False"));
         verifyThat(".table-view", TableViewMatchers.containsRow("admin", "True"));
         clickOn("User name")
-                .clickOn((Node)from(lookup(".expander-button")).nth(0).query())
+                .clickOn((Node) from(lookup(".expander-button")).nth(0).query())
                 .clickOn("Remove user");
         verifyThat(".table-view", TableViewMatchersExtension.hasNoTableCell("admin"));
         verifyThat(".table-view", TableViewMatchersExtension.hasNoTableCell("True"));

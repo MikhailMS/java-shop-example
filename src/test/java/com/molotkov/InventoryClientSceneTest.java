@@ -25,7 +25,6 @@ import java.sql.Statement;
 
 import static com.molotkov.gui.GuiWindowConsts.WINDOW_HEIGHT;
 import static com.molotkov.gui.GuiWindowConsts.WINDOW_WIDTH;
-
 import static org.testfx.api.FxAssert.verifyThat;
 
 public class InventoryClientSceneTest extends ApplicationTest {
@@ -54,7 +53,7 @@ public class InventoryClientSceneTest extends ApplicationTest {
 
         dataSource = new HikariDataSource(hikariConfig);
 
-        if(!setupIsDone) {
+        if (!setupIsDone) {
             System.out.println("Hallo ee");
             final Statement statement = dataSource.getConnection().createStatement();
 
@@ -78,7 +77,7 @@ public class InventoryClientSceneTest extends ApplicationTest {
 
         final Inventory inventory = new Inventory();
         try {
-            inventory.addProducts(new Product("chicken", 1, 2.3),3);
+            inventory.addProducts(new Product("chicken", 1, 2.3), 3);
             inventory.addProducts(new Product("apple", 0.151, 0.8), 2);
         } catch (InventoryException e) {
             e.printStackTrace();
@@ -112,7 +111,7 @@ public class InventoryClientSceneTest extends ApplicationTest {
 
     @Test
     public void can_add_product_to_basket_if_user() {
-        clickOn((Node)from(lookup(".expander-button")).nth(0).query())
+        clickOn((Node) from(lookup(".expander-button")).nth(0).query())
                 .clickOn("Add to basket");
         sleep(1000);
         verifyThat(lookup("Product has been added to basket"), Node::isVisible);
@@ -120,7 +119,7 @@ public class InventoryClientSceneTest extends ApplicationTest {
 
     @Test
     public void can_remove_product_from_basket_if_user() {
-        clickOn((Node)from(lookup(".expander-button")).nth(0).query())
+        clickOn((Node) from(lookup(".expander-button")).nth(0).query())
                 .clickOn("Add to basket")
                 .clickOn("Remove from basket");
         sleep(1000);
@@ -141,7 +140,7 @@ public class InventoryClientSceneTest extends ApplicationTest {
     @Test
     public void can_see_updated_basket_total_add_product() throws SQLException {
         clickOn("Product Name")
-                .clickOn((Node)from(lookup(".expander-button")).nth(0).query())
+                .clickOn((Node) from(lookup(".expander-button")).nth(0).query())
                 .clickOn("Add to basket");
         verifyThat("#basket-table-view", TableViewMatchers.containsRow("0.80", false));
     }
@@ -149,7 +148,7 @@ public class InventoryClientSceneTest extends ApplicationTest {
     @Test
     public void can_see_updated_basket_total_remove_product() throws SQLException {
         clickOn("Product Name")
-                .clickOn((Node)from(lookup(".expander-button")).nth(0).query())
+                .clickOn((Node) from(lookup(".expander-button")).nth(0).query())
                 .clickOn("Add to basket");
         verifyThat("#basket-table-view", TableViewMatchers.containsRow("0.80", false));
         clickOn("Remove from basket");
@@ -159,9 +158,9 @@ public class InventoryClientSceneTest extends ApplicationTest {
     @Test
     public void can_complete_order() throws SQLException {
         clickOn("Product Name")
-                .clickOn((Node)from(lookup(".expander-button")).nth(0).query())
+                .clickOn((Node) from(lookup(".expander-button")).nth(0).query())
                 .clickOn("Add to basket")
-                .clickOn((Node)from(lookup(".expander-button")).nth(2).query());
+                .clickOn((Node) from(lookup(".expander-button")).nth(2).query());
         ((TextField) GuiTest.find("#delivery-address")).setText("London");
         clickOn("Complete order");
         verifyThat(lookup("Order has been made"), Node::isVisible);
@@ -169,7 +168,7 @@ public class InventoryClientSceneTest extends ApplicationTest {
 
     @Test
     public void cannot_complete_order_wo_products() throws SQLException {
-        clickOn((Node)from(lookup(".expander-button")).nth(2).query());
+        clickOn((Node) from(lookup(".expander-button")).nth(2).query());
         ((TextField) GuiTest.find("#delivery-address")).setText("London");
         clickOn("Complete order");
         verifyThat(lookup("Cannot process the order: Add products to basket to complete order"), Node::isVisible);
@@ -178,9 +177,9 @@ public class InventoryClientSceneTest extends ApplicationTest {
     @Test
     public void cannot_complete_order_wo_address() throws SQLException {
         clickOn("Product Name")
-                .clickOn((Node)from(lookup(".expander-button")).nth(0).query())
+                .clickOn((Node) from(lookup(".expander-button")).nth(0).query())
                 .clickOn("Add to basket")
-                .clickOn((Node)from(lookup(".expander-button")).nth(2).query())
+                .clickOn((Node) from(lookup(".expander-button")).nth(2).query())
                 .clickOn("Complete order");
         verifyThat(lookup("Cannot process the order: Enter the delivery address"), Node::isVisible);
     }

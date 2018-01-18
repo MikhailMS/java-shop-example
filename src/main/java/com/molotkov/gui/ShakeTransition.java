@@ -11,14 +11,14 @@ import javafx.util.Duration;
 
 /**
  * Animate a shake effect on the given node
- *
+ * <p>
  * Based on CachedTimelineTransition, a Transition that uses a Timeline internally
  * and turns SPEED caching on for the animated node during the animation.
- *
+ * <p>
  * https://github.com/fxexperience/code/blob/master/FXExperienceControls/src/com/fxexperience/javafx/animation/CachedTimelineTransition.java
- *
+ * <p>
  * and ShakeTransition
- *
+ * <p>
  * https://github.com/fxexperience/code/blob/master/FXExperienceControls/src/com/fxexperience/javafx/animation/ShakeTransition.java
  *
  * @author Jasper Potts
@@ -28,7 +28,7 @@ class ShakeTransition extends Transition {
     private final Interpolator WEB_EASE = Interpolator.SPLINE(0.25, 0.1, 0.25, 1);
     private final Timeline timeline;
     private final Node node;
-    private final boolean useCache=true;
+    private final boolean useCache = true;
     private final double xIni;
     private final DoubleProperty x = new SimpleDoubleProperty();
 
@@ -41,9 +41,9 @@ class ShakeTransition extends Transition {
      * @param node The node to affect
      */
     public ShakeTransition(final Node node, final EventHandler<ActionEvent> event) {
-        this.node=node;
+        this.node = node;
         statusProperty().addListener((ov, t, newStatus) -> {
-            switch(newStatus) {
+            switch (newStatus) {
                 case RUNNING:
                     starting();
                     break;
@@ -53,7 +53,7 @@ class ShakeTransition extends Transition {
             }
         });
 
-        this.timeline= new Timeline(
+        this.timeline = new Timeline(
                 new KeyFrame(Duration.millis(0), new KeyValue(x, 0, WEB_EASE)),
                 new KeyFrame(Duration.millis(100), new KeyValue(x, -10, WEB_EASE)),
                 new KeyFrame(Duration.millis(200), new KeyValue(x, 10, WEB_EASE)),
@@ -66,8 +66,8 @@ class ShakeTransition extends Transition {
                 new KeyFrame(Duration.millis(900), new KeyValue(x, -10, WEB_EASE)),
                 new KeyFrame(Duration.millis(1000), new KeyValue(x, 0, WEB_EASE))
         );
-        xIni=node.getScene().getWindow().getX();
-        x.addListener((ob,n,n1) -> node.getScene().getWindow().setX(xIni+n1.doubleValue()));
+        xIni = node.getScene().getWindow().getX();
+        x.addListener((ob, n, n1) -> node.getScene().getWindow().setX(xIni + n1.doubleValue()));
 
         setCycleDuration(Duration.seconds(1));
         setDelay(Duration.seconds(0.2));

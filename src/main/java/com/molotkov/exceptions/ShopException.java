@@ -1,6 +1,6 @@
 package com.molotkov.exceptions;
 
-public class ShopException  extends Exception {
+public class ShopException extends Exception {
     private static final long serialVersionUID = 5L;
 
     public ShopException(final String message) {

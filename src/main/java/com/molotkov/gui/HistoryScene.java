@@ -34,16 +34,16 @@ public class HistoryScene {
         final BorderPane pane = new BorderPane();
 
         // bind/sync tables
-        for( int i=0; i < orderTable.getColumns().size(); i++) {
+        for (int i = 0; i < orderTable.getColumns().size(); i++) {
 
-            final TableColumn<Order,?> mainColumn = (TableColumn) orderTable.getColumns().get(i);
-            final TableColumn<Double,?> sumColumn = (TableColumn) totalTable.getColumns().get(i);
+            final TableColumn<Order, ?> mainColumn = (TableColumn) orderTable.getColumns().get(i);
+            final TableColumn<Double, ?> sumColumn = (TableColumn) totalTable.getColumns().get(i);
 
             // sync column widths
-            sumColumn.prefWidthProperty().bind( mainColumn.widthProperty());
+            sumColumn.prefWidthProperty().bind(mainColumn.widthProperty());
 
             // sync visibility
-            sumColumn.visibleProperty().bind( mainColumn.visibleProperty());
+            sumColumn.visibleProperty().bind(mainColumn.visibleProperty());
 
         }
 
@@ -59,8 +59,8 @@ public class HistoryScene {
 
     public static void syncScrollbars(final TableView orderTable, final TableView totalTable) {
         // synchronize scrollbars (must happen after table was made visible)
-        final ScrollBar mainTableHorizontalScrollBar = findScrollBar( orderTable, Orientation.HORIZONTAL);
-        final ScrollBar sumTableHorizontalScrollBar = findScrollBar( totalTable, Orientation.HORIZONTAL);
+        final ScrollBar mainTableHorizontalScrollBar = findScrollBar(orderTable, Orientation.HORIZONTAL);
+        final ScrollBar sumTableHorizontalScrollBar = findScrollBar(totalTable, Orientation.HORIZONTAL);
         try {
             mainTableHorizontalScrollBar.valueProperty().bindBidirectional(sumTableHorizontalScrollBar.valueProperty());
         } catch (NullPointerException ex) {
@@ -146,9 +146,9 @@ public class HistoryScene {
         // => we have to search all scrollbars and return the one with the proper orientation
 
         final Set<Node> set = table.lookupAll(".scroll-bar");
-        for(final Node node: set) {
+        for (final Node node : set) {
             final ScrollBar bar = (ScrollBar) node;
-            if( bar.getOrientation() == orientation) {
+            if (bar.getOrientation() == orientation) {
                 return bar;
             }
         }

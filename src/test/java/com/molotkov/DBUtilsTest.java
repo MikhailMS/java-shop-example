@@ -4,8 +4,9 @@ import com.molotkov.db.DBCursorHolder;
 import com.molotkov.db.DBUtils;
 import com.zaxxer.hikari.HikariConfig;
 import com.zaxxer.hikari.HikariDataSource;
-import org.junit.*;
-
+import org.junit.Before;
+import org.junit.ClassRule;
+import org.junit.Test;
 import org.testcontainers.containers.PostgreSQLContainer;
 
 import java.sql.SQLException;
@@ -42,37 +43,37 @@ public class DBUtilsTest {
     @Test
     public void testDBUtilsInFullButDeleteTable() throws SQLException {
         final String[] selectColumns = {
-            "id"
+                "id"
         };
-    // CREATE TABLE
+        // CREATE TABLE
         DBUtils.createTable(dataSource.getConnection(), "test_table", new String[]{"id integer NOT NULL", "string text NOT NULL"});
 
-    // INSERT INTO TABLE / SELECT FROM TABLE
+        // INSERT INTO TABLE / SELECT FROM TABLE
         DBUtils.insertIntoTable(dataSource.getConnection(), "test_table", new String[]{"1", "'test text'"});
         DBCursorHolder cursor = DBUtils.selectFromTable(dataSource.getConnection(), "test_table", selectColumns);
         cursor.getResults().next();
         final String resultString1 = cursor.getResults().getString(1);
-        assertEquals("Create/Insert/Select queries succeed", "1",resultString1);
+        assertEquals("Create/Insert/Select queries succeed", "1", resultString1);
         cursor.closeCursor();
 
-    // SELECT SPECIFIC FIELDS UNDER CONDITION
+        // SELECT SPECIFIC FIELDS UNDER CONDITION
         DBUtils.insertIntoTable(dataSource.getConnection(), "test_table", new String[]{"2", "'new text'"});
         cursor = DBUtils.filterFromTable(dataSource.getConnection(), "test_table", selectColumns, new String[]{"string LIKE 'new%'"});
         cursor.getResults().next();
         final String resultString2 = cursor.getResults().getString(1);
-        assertEquals("Filter query succeeds", "2",resultString2);
+        assertEquals("Filter query succeeds", "2", resultString2);
         cursor.closeCursor();
 
-    // INSERT SPECIFIC FIELDS INTO TABLE
-        DBUtils.insertSpecificIntoTable(dataSource.getConnection(), "test_table", new String[] {"id", "string"},
+        // INSERT SPECIFIC FIELDS INTO TABLE
+        DBUtils.insertSpecificIntoTable(dataSource.getConnection(), "test_table", new String[]{"id", "string"},
                 new String[]{"3", "'once more'"});
         cursor = DBUtils.filterFromTable(dataSource.getConnection(), "test_table", selectColumns, new String[]{"string LIKE 'once%'"});
         cursor.getResults().next();
         final String resultString3 = cursor.getResults().getString(1);
-        assertEquals("Insert into specific columns query succeeds", "3",resultString3);
+        assertEquals("Insert into specific columns query succeeds", "3", resultString3);
         cursor.closeCursor();
 
-    // UPDATE TABLE
+        // UPDATE TABLE
         DBUtils.updateTable(dataSource.getConnection(), "test_table", new String[]{"id"}, new String[]{"4"},
                 new String[]{"string LIKE 'once%'"});
         cursor = DBUtils.filterFromTable(dataSource.getConnection(), "test_table", selectColumns, new String[]{"string LIKE 'once%'"});
@@ -80,39 +81,39 @@ public class DBUtilsTest {
         final String resultString4 = cursor.getResults().getString(1);
         assertEquals("Update query succeeds", "4", resultString4);
 
-    // NATURAL JOIN TEST
-        DBUtils.insertSpecificIntoTable(dataSource.getConnection(),"products",
+        // NATURAL JOIN TEST
+        DBUtils.insertSpecificIntoTable(dataSource.getConnection(), "products",
                 new String[]{"product_name", "product_weight", "product_price"}, new String[]{"'apple'", "0.150", "0.8"});
-        DBUtils.insertSpecificIntoTable(dataSource.getConnection(),"products",
+        DBUtils.insertSpecificIntoTable(dataSource.getConnection(), "products",
                 new String[]{"product_name", "product_weight", "product_price"}, new String[]{"'chicken'", "1", "2.3"});
-        DBUtils.insertSpecificIntoTable(dataSource.getConnection(),"inventory",
+        DBUtils.insertSpecificIntoTable(dataSource.getConnection(), "inventory",
                 new String[]{"product_id", "product_amount"}, new String[]{"1", "3"});
-        DBUtils.insertSpecificIntoTable(dataSource.getConnection(),"inventory",
+        DBUtils.insertSpecificIntoTable(dataSource.getConnection(), "inventory",
                 new String[]{"product_id", "product_amount"}, new String[]{"2", "4"});
 
         cursor = DBUtils.innerJoinTables(dataSource.getConnection(), "products", "inventory",
-                "product_id" ,new String[] {"product_id", "product_name", "product_weight", "product_price", "product_amount"},
+                "product_id", new String[]{"product_id", "product_name", "product_weight", "product_price", "product_amount"},
                 new String[]{});
         String resultString5 = "";
         while (cursor.getResults().next()) {
-            resultString5 += String.format("%s ",cursor.getResults().getString(2));
-            resultString5 += String.format("%s ",cursor.getResults().getString(3));
-            resultString5 += String.format("%s ",cursor.getResults().getString(4));
-            resultString5 += String.format("%s ",cursor.getResults().getString(5));
+            resultString5 += String.format("%s ", cursor.getResults().getString(2));
+            resultString5 += String.format("%s ", cursor.getResults().getString(3));
+            resultString5 += String.format("%s ", cursor.getResults().getString(4));
+            resultString5 += String.format("%s ", cursor.getResults().getString(5));
         }
 
         assertEquals("Inner join query succeeds", "apple 0.150 0.80 3 chicken 1.000 2.30 4 ", resultString5);
         cursor.closeCursor();
 
-    // DELETE FROM TABLE
+        // DELETE FROM TABLE
         DBUtils.deleteFromTable(dataSource.getConnection(), "inventory", new String[]{"product_id = 1"});
-        cursor = DBUtils.filterFromTable(dataSource.getConnection(), "inventory", new String[]{"entry_id","product_id","product_amount"},
+        cursor = DBUtils.filterFromTable(dataSource.getConnection(), "inventory", new String[]{"entry_id", "product_id", "product_amount"},
                 new String[]{});
         String resultString6 = "";
         while (cursor.getResults().next()) {
-            resultString6 += String.format("%s ",cursor.getResults().getString(1));
-            resultString6 += String.format("%s ",cursor.getResults().getString(2));
-            resultString6 += String.format("%s ",cursor.getResults().getString(3));
+            resultString6 += String.format("%s ", cursor.getResults().getString(1));
+            resultString6 += String.format("%s ", cursor.getResults().getString(2));
+            resultString6 += String.format("%s ", cursor.getResults().getString(3));
         }
 
         assertEquals("Delete from table query succeeds", "2 2 4 ", resultString6);

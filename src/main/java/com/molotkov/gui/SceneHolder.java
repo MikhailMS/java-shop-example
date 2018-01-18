@@ -17,9 +17,7 @@ import javafx.scene.layout.Pane;
 import java.sql.Connection;
 import java.util.List;
 
-import static com.molotkov.gui.GuiWindowConsts.HBOX_SPACING;
-import static com.molotkov.gui.GuiWindowConsts.WINDOW_HEIGHT;
-import static com.molotkov.gui.GuiWindowConsts.WINDOW_WIDTH;
+import static com.molotkov.gui.GuiWindowConsts.*;
 
 public class SceneHolder {
 
@@ -30,7 +28,7 @@ public class SceneHolder {
         // Need to load userOrders
         GuiDbUtils.loadDataToOrders(user, connection, userOrders);
         // Need to load client basket, if it's been saved
-        GuiDbUtils.loadSavedBasket((Client)user, connection, clientBasket);
+        GuiDbUtils.loadSavedBasket((Client) user, connection, clientBasket);
 
         // Create Client scene
         user.setBasket(clientBasket);
@@ -65,7 +63,7 @@ public class SceneHolder {
     }
 
     public static Pane createAdminPaneScene(final Connection connection, final Inventory shopInventory, final List<Order> userOrders,
-                                             final List<User> userList, final User user) {
+                                            final List<User> userList, final User user) {
         // Need to load shopInventory
         GuiDbUtils.loadDataToInventory(connection, shopInventory, user);
         // Need to load userOrders
@@ -96,7 +94,7 @@ public class SceneHolder {
         controlUsersTab.setText("System users");
         final HBox controlUsersBox = new HBox(HBOX_SPACING);
         controlUsersBox.setAlignment(Pos.CENTER);
-        controlUsersBox.getChildren().add(ControlUsersScene.createControlTable(userList, (Administrator)user, connection));
+        controlUsersBox.getChildren().add(ControlUsersScene.createControlTable(userList, (Administrator) user, connection));
         controlUsersTab.setContent(controlUsersBox);
 
         tabPane.getTabs().addAll(inventoryTab, orderHistoryTab, controlUsersTab);

@@ -4,7 +4,9 @@ import com.molotkov.db.DBCursorHolder;
 import com.molotkov.users.User;
 import com.zaxxer.hikari.HikariConfig;
 import com.zaxxer.hikari.HikariDataSource;
-import org.junit.*;
+import org.junit.Before;
+import org.junit.ClassRule;
+import org.junit.Test;
 import org.testcontainers.containers.PostgreSQLContainer;
 
 import java.sql.SQLException;
@@ -65,7 +67,7 @@ public class UserTest {
 
     @Test
     public void testUserClassMethods() throws SQLException {
-    //-------------- User test cases -------------------------------
+        //-------------- User test cases -------------------------------
         final User testUser = new User("testUser", "testUser");
         assertEquals("Constructor succeeds", true, testUser instanceof User);
 
@@ -112,7 +114,7 @@ public class UserTest {
 
         // Ensure user can filter orders by date
         String date = LocalDateTime.now().plusDays(2).format(DateTimeFormatter.ofPattern("yyyy-MM-dd"));
-        date = String.format("orders.created_at < '%s'::date",date);
+        date = String.format("orders.created_at < '%s'::date", date);
         cursor = testUser1.fetchOrders(dataSource.getConnection(), new String[]{date});
 
         final StringBuilder ordersBuilder2 = new StringBuilder();
@@ -186,7 +188,7 @@ public class UserTest {
         assertEquals("testUser can sort inventory by price", "apple 0.150 0.80 3 ", inventory);
         cursor.closeCursor();
 
-    //-------------- Admin test cases ------------------------------
+        //-------------- Admin test cases ------------------------------
         // Ensure admin gets all orders
         cursor = admin.fetchOrders(dataSource.getConnection(), new String[]{});
 
@@ -203,7 +205,7 @@ public class UserTest {
 
         // Ensure admin can sort all orders by date
         date = LocalDateTime.now().plusDays(2).format(DateTimeFormatter.ofPattern("yyyy-MM-dd"));
-        date = String.format("orders.created_at < '%s'::date",date);
+        date = String.format("orders.created_at < '%s'::date", date);
         cursor = admin.fetchOrders(dataSource.getConnection(), new String[]{date});
 
         final StringBuilder ordersBuilder4 = new StringBuilder();

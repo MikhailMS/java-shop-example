@@ -25,15 +25,12 @@ import org.testcontainers.containers.PostgreSQLContainer;
 import org.testfx.framework.junit.ApplicationTest;
 import org.testfx.matcher.control.TableViewMatchers;
 
-import javax.xml.soap.Text;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
 
-import static com.molotkov.gui.GuiWindowConsts.HBOX_SPACING;
-import static com.molotkov.gui.GuiWindowConsts.WINDOW_HEIGHT;
-import static com.molotkov.gui.GuiWindowConsts.WINDOW_WIDTH;
+import static com.molotkov.gui.GuiWindowConsts.*;
 import static org.testfx.api.FxAssert.verifyThat;
 
 public class MainScreenClientTest extends ApplicationTest {
@@ -70,7 +67,7 @@ public class MainScreenClientTest extends ApplicationTest {
 
         dataSource = new HikariDataSource(hikariConfig);
 
-        if(!setupIsDone) {
+        if (!setupIsDone) {
             final Statement statement = dataSource.getConnection().createStatement();
 
             statement.addBatch("CREATE TABLE IF NOT EXISTS users ( user_name text PRIMARY KEY, user_password text NOT NULL," +
@@ -175,7 +172,7 @@ public class MainScreenClientTest extends ApplicationTest {
         login();
 
         clickOn("Product Name")
-                .clickOn((Node)from(lookup("#inventory-table-view .expander-button")).nth(0).query())
+                .clickOn((Node) from(lookup("#inventory-table-view .expander-button")).nth(0).query())
                 .clickOn("Add to basket");
         verifyThat("#basket-table-view", TableViewMatchers.containsRow("0.80", false));
         verifyThat(lookup("Product has been added to basket"), Node::isVisible);
@@ -187,7 +184,7 @@ public class MainScreenClientTest extends ApplicationTest {
         login();
 
         clickOn("Product Name")
-                .clickOn((Node)from(lookup("#inventory-table-view .expander-button")).nth(0).query())
+                .clickOn((Node) from(lookup("#inventory-table-view .expander-button")).nth(0).query())
                 .clickOn("Add to basket");
         verifyThat("#basket-table-view", TableViewMatchers.containsRow("0.80", false));
         clickOn("Remove from basket");
@@ -201,11 +198,11 @@ public class MainScreenClientTest extends ApplicationTest {
         login();
 
         clickOn("Product Name")
-                .clickOn((Node)from(lookup("#inventory-table-view .expander-button")).nth(0).query())
+                .clickOn((Node) from(lookup("#inventory-table-view .expander-button")).nth(0).query())
                 .clickOn("Add to basket");
         verifyThat("#basket-table-view", TableViewMatchers.containsRow("0.80", false));
-        clickOn((Node)from(lookup("#basket-table-view .expander-button")).nth(0).query());
-        ((TextField)from(lookup("#delivery-address")).query()).setText("Ipswich");
+        clickOn((Node) from(lookup("#basket-table-view .expander-button")).nth(0).query());
+        ((TextField) from(lookup("#delivery-address")).query()).setText("Ipswich");
         clickOn("Complete order");
         verifyThat(lookup("Order has been made"), Node::isVisible);
 
@@ -217,7 +214,7 @@ public class MainScreenClientTest extends ApplicationTest {
     public void client_cannot_complete_order_wo_products() {
         login();
 
-        clickOn((Node)from(lookup("#basket-table-view .expander-button")).nth(0).query())
+        clickOn((Node) from(lookup("#basket-table-view .expander-button")).nth(0).query())
                 .clickOn("Complete order");
         verifyThat(lookup("Cannot process the order: Add products to basket to complete order"), Node::isVisible);
         sleep(2000);
@@ -228,9 +225,9 @@ public class MainScreenClientTest extends ApplicationTest {
         login();
 
         clickOn("Product Name")
-                .clickOn((Node)from(lookup("#inventory-table-view .expander-button")).nth(0).query())
+                .clickOn((Node) from(lookup("#inventory-table-view .expander-button")).nth(0).query())
                 .clickOn("Add to basket")
-                .clickOn((Node)from(lookup("#basket-table-view .expander-button")).nth(0 ).query())
+                .clickOn((Node) from(lookup("#basket-table-view .expander-button")).nth(0).query())
                 .clickOn("Complete order");
         verifyThat(lookup("Cannot process the order: Enter the delivery address"), Node::isVisible);
         sleep(2000);
@@ -251,7 +248,7 @@ public class MainScreenClientTest extends ApplicationTest {
         login();
         clickOn("Order History")
                 .clickOn("Delivery address")
-                .clickOn((Node)from(lookup("#order-table .expander-button")).nth(0).query());
+                .clickOn((Node) from(lookup("#order-table .expander-button")).nth(0).query());
         verifyThat(lookup("Basket has 2 products."), Node::isVisible);
     }
 
@@ -267,8 +264,8 @@ public class MainScreenClientTest extends ApplicationTest {
 
     private void login() {
         clickOn("Gain access to the Shop");
-        ((TextField)from(lookup("#user-name")).query()).setText("testUser");
-        ((PasswordField)from(lookup("#user-passwd")).query()).setText("testUser");
+        ((TextField) from(lookup("#user-name")).query()).setText("testUser");
+        ((PasswordField) from(lookup("#user-passwd")).query()).setText("testUser");
         clickOn("Login");
         sleep(2500);
     }

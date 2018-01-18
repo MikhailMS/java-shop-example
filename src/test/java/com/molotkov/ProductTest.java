@@ -9,7 +9,8 @@ import static org.junit.Assert.assertTrue;
 public class ProductTest {
     private Product product;
 
-    @Before public void setUp() {
+    @Before
+    public void setUp() {
         product = new Product("Apple", 150, 0.8);
     }
 
@@ -25,19 +26,19 @@ public class ProductTest {
 
     @Test
     public void testGetWeight() {
-        assertTrue(product.getWeight()==150);
+        assertTrue(product.getWeight() == 150);
     }
 
     @Test
     public void testGetPrice() {
-        assertTrue(product.getPrice()==0.8);
+        assertTrue(product.getPrice() == 0.8);
     }
 
     @Test
     public void testSetPrice() {
         product.setPrice(1.1);
 
-        assertTrue(product.getPrice()==1.1);
+        assertTrue(product.getPrice() == 1.1);
     }
 
     @Test

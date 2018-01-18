@@ -22,7 +22,6 @@ import java.util.stream.Collectors;
 import static com.molotkov.gui.GuiWindowConsts.WINDOW_HEIGHT;
 import static com.molotkov.gui.GuiWindowConsts.WINDOW_WIDTH;
 import static com.molotkov.gui.HistoryScene.*;
-
 import static org.testfx.api.FxAssert.verifyThat;
 
 public class HistorySceneTest extends ApplicationTest {
@@ -36,11 +35,11 @@ public class HistorySceneTest extends ApplicationTest {
 
         final Basket testBasket = new Basket();
         try {
-            testBasket.addProducts(new Product("apple", 0.150, 0.8),3);
+            testBasket.addProducts(new Product("apple", 0.150, 0.8), 3);
         } catch (BasketException e) {
             e.printStackTrace();
         }
-        testBasket.setStringFormatter(()-> {
+        testBasket.setStringFormatter(() -> {
             final int basketSize = testBasket.getProducts().size();
             final String allProductsString = testBasket.getProducts().entrySet().stream()
                     .map(product -> {
@@ -107,11 +106,11 @@ public class HistorySceneTest extends ApplicationTest {
 
     @Test
     public void should_contain_order_details_in_order_table() {
-        clickOn((Node)from(lookup(".expander-button")).nth(0).query());
+        clickOn((Node) from(lookup(".expander-button")).nth(0).query());
         verifyThat(lookup("Order contains 1 product: 3 apple @ 0.80£"), Node::isVisible);
-        clickOn((Node)from(lookup(".expander-button")).nth(0).query());
+        clickOn((Node) from(lookup(".expander-button")).nth(0).query());
 
-        clickOn((Node)from(lookup(".expander-button")).nth(1).query());
+        clickOn((Node) from(lookup(".expander-button")).nth(1).query());
         verifyThat(lookup("Order contains 1 product: 3 apple @ 0.80£"), Node::isVisible);
         try {
             FxToolkit.cleanupStages();

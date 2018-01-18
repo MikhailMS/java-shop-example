@@ -46,7 +46,7 @@ public class Client extends User {
                     new String[]{"basket_id"}, new String[]{String.format("basket_owner='%s'", super.getUserName()),
                             "AND", "processed='f'"});
 
-            while(cursor.getResults().next()) {
+            while (cursor.getResults().next()) {
                 id = cursor.getResults().getInt(1);
             }
 
@@ -64,14 +64,14 @@ public class Client extends User {
         final String names = basketDetails.get(0);
         final String amounts = basketDetails.get(1);
 
-        DBUtils.insertSpecificIntoTable(connection,"baskets",
-                new String[] {"basket_owner", "products_name", "products_amount"}, new String[]{String.format("'%s'", super.getUserName()),
-                        String.format("'%s'",names), String.format("%s", amounts)});
+        DBUtils.insertSpecificIntoTable(connection, "baskets",
+                new String[]{"basket_owner", "products_name", "products_amount"}, new String[]{String.format("'%s'", super.getUserName()),
+                        String.format("'%s'", names), String.format("%s", amounts)});
     }
 
     public Basket restoreBasket(final Connection connection) throws SQLException {
-        final DBCursorHolder cursor = DBUtils.filterFromTable(connection,"baskets", new String[] {"products_name", "products_amount"},
-                new String[] {String.format("basket_owner = '%s'", getUserName()), "AND" , "processed = FALSE"});
+        final DBCursorHolder cursor = DBUtils.filterFromTable(connection, "baskets", new String[]{"products_name", "products_amount"},
+                new String[]{String.format("basket_owner = '%s'", getUserName()), "AND", "processed = FALSE"});
 
         cursor.getResults().next();
         final String productsName = cursor.getResults().getString(1);
@@ -86,12 +86,12 @@ public class Client extends User {
 
     public void completeOrder(final Connection connection, final String address) {
         DBUtils.insertSpecificIntoTable(connection, "orders", new String[]{"basket_id", "order_owner",
-        "address"}, new String[]{String.valueOf(idRetrievedBasket), String.format("'%s'", super.getUserName()),
-        String.format("'%s'", address)});
+                "address"}, new String[]{String.valueOf(idRetrievedBasket), String.format("'%s'", super.getUserName()),
+                String.format("'%s'", address)});
 
         DBUtils.updateTable(connection, "baskets", new String[]{"processed"}, new String[]{"'t'"},
-            new String[]{"processed='f'", "AND", String.format("basket_owner='%s'", super.getUserName()), "AND",
-            String.format("basket_id=%d", idRetrievedBasket)});
+                new String[]{"processed='f'", "AND", String.format("basket_owner='%s'", super.getUserName()), "AND",
+                        String.format("basket_id=%d", idRetrievedBasket)});
 
     }
 }

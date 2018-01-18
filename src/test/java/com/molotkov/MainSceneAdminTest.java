@@ -26,16 +26,13 @@ import org.testcontainers.containers.PostgreSQLContainer;
 import org.testfx.framework.junit.ApplicationTest;
 import org.testfx.matcher.control.TableViewMatchers;
 
-import static org.testfx.api.FxAssert.verifyThat;
-
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
 
-import static com.molotkov.gui.GuiWindowConsts.HBOX_SPACING;
-import static com.molotkov.gui.GuiWindowConsts.WINDOW_HEIGHT;
-import static com.molotkov.gui.GuiWindowConsts.WINDOW_WIDTH;
+import static com.molotkov.gui.GuiWindowConsts.*;
+import static org.testfx.api.FxAssert.verifyThat;
 
 public class MainSceneAdminTest extends ApplicationTest {
     private HikariDataSource dataSource;
@@ -71,7 +68,7 @@ public class MainSceneAdminTest extends ApplicationTest {
 
         dataSource = new HikariDataSource(hikariConfig);
 
-        if(!setupIsDone) {
+        if (!setupIsDone) {
             final Statement statement = dataSource.getConnection().createStatement();
 
             statement.addBatch("CREATE TABLE IF NOT EXISTS users ( user_name text PRIMARY KEY, user_password text NOT NULL," +
@@ -185,12 +182,12 @@ public class MainSceneAdminTest extends ApplicationTest {
         verifyThat("#inventory-table-view", TableViewMatchers.containsRow("milk", 1.0, 1.0, 5, "5.00", false));
 
         clickOn("Product Name")
-                .clickOn((Node)from(lookup("#inventory-table-view .expander-button")).nth(2).query())
+                .clickOn((Node) from(lookup("#inventory-table-view .expander-button")).nth(2).query())
                 .clickOn("Add to inventory");
         verifyThat("#inventory-table-view", TableViewMatchers.containsRow("milk", 1.0, 1.0, 6, "6.00", false));
         sleep(2000);
 
-        clickOn((Node)from(lookup("#inventory-table-view .expander-button")).nth(2).query())
+        clickOn((Node) from(lookup("#inventory-table-view .expander-button")).nth(2).query())
                 .clickOn("Remove from inventory");
         sleep(2000);
 
@@ -207,11 +204,11 @@ public class MainSceneAdminTest extends ApplicationTest {
         login();
 
         clickOn("Product Name")
-                .clickOn((Node)from(lookup("#inventory-table-view .expander-button")).nth(0).query())
+                .clickOn((Node) from(lookup("#inventory-table-view .expander-button")).nth(0).query())
                 .clickOn("Add to inventory");
         verifyThat("#inventory-table-view", TableViewMatchers.containsRow("apple", 0.151, 0.8, 4, "3.20", false));
         sleep(500);
-        clickOn((Node)from(lookup("#inventory-table-view .expander-button")).nth(0).query())
+        clickOn((Node) from(lookup("#inventory-table-view .expander-button")).nth(0).query())
                 .clickOn("Remove from inventory");
         verifyThat("#inventory-table-view", TableViewMatchers.containsRow("apple", 0.151, 0.8, 3, "2.40"));
     }
@@ -242,7 +239,7 @@ public class MainSceneAdminTest extends ApplicationTest {
         login();
         clickOn("Order History")
                 .clickOn("Delivery address")
-                .clickOn((Node)from(lookup("#order-table .expander-button")).nth(1).query());
+                .clickOn((Node) from(lookup("#order-table .expander-button")).nth(1).query());
         verifyThat(lookup("Basket has 2 products."), Node::isVisible);
     }
 
@@ -272,8 +269,8 @@ public class MainSceneAdminTest extends ApplicationTest {
 
         clickOn("System users");
 
-        ((TextField)from(lookup("#user-name")).query()).setText("admin2");
-        ((TextField)from(lookup("#user-password")).query()).setText("admin2");
+        ((TextField) from(lookup("#user-name")).query()).setText("admin2");
+        ((TextField) from(lookup("#user-password")).query()).setText("admin2");
         clickOn("Administrator?").clickOn("Add new user");
 
         verifyThat("#users-table", TableViewMatchers.containsRow("admin2", "True"));
@@ -287,8 +284,8 @@ public class MainSceneAdminTest extends ApplicationTest {
 
         clickOn("System users");
 
-        ((TextField)from(lookup("#user-name")).query()).setText("testUser3");
-        ((TextField)from(lookup("#user-password")).query()).setText("testUser3");
+        ((TextField) from(lookup("#user-name")).query()).setText("testUser3");
+        ((TextField) from(lookup("#user-password")).query()).setText("testUser3");
         clickOn("Add new user");
 
         verifyThat("#users-table", TableViewMatchers.containsRow("testUser3", "False"));
@@ -301,14 +298,14 @@ public class MainSceneAdminTest extends ApplicationTest {
         login();
 
         clickOn("System users");
-        ((TextField)from(lookup("#user-name")).query()).setText("admin2");
-        ((TextField)from(lookup("#user-password")).query()).setText("admin2");
+        ((TextField) from(lookup("#user-name")).query()).setText("admin2");
+        ((TextField) from(lookup("#user-password")).query()).setText("admin2");
 
         clickOn("Administrator?").clickOn("Add new user");
         verifyThat("#users-table", TableViewMatchers.containsRow("admin2", "True"));
 
         clickOn("User name")
-                .clickOn((Node)from(lookup("#users-table .expander-button")).nth(1).query())
+                .clickOn((Node) from(lookup("#users-table .expander-button")).nth(1).query())
                 .clickOn("Remove user");
         verifyThat(lookup("User has been removed successfully"), Node::isVisible);
         sleep(2000);
@@ -320,7 +317,7 @@ public class MainSceneAdminTest extends ApplicationTest {
 
         clickOn("System users")
                 .clickOn("User name")
-                .clickOn((Node)from(lookup("#users-table .expander-button")).nth(1).query())
+                .clickOn((Node) from(lookup("#users-table .expander-button")).nth(1).query())
                 .clickOn("Remove user");
         verifyThat(lookup("User has been removed successfully"), Node::isVisible);
 
@@ -332,8 +329,8 @@ public class MainSceneAdminTest extends ApplicationTest {
 
     private void login() {
         clickOn("Gain access to the Shop");
-        ((TextField)from(lookup("#user-name")).query()).setText("admin");
-        ((PasswordField)from(lookup("#user-passwd")).query()).setText("admin");
+        ((TextField) from(lookup("#user-name")).query()).setText("admin");
+        ((PasswordField) from(lookup("#user-passwd")).query()).setText("admin");
         clickOn("Login");
         sleep(2500);
     }
