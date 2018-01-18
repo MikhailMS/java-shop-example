@@ -19,7 +19,6 @@ import java.util.stream.Collectors;
 
 
 public class TableViewMatchersExtension {
-    private static final String SELECTOR_TABLE_CELL = ".table-cell";
     public static final int REPLACEMENT_VALUE = -1; // replaces NULL in getRowValues method
 
     private TableViewMatchersExtension() {
