@@ -105,27 +105,30 @@ public class InventoryClientSceneTest extends ApplicationTest {
     }
 
     @Test
-    public void should_contain_data_in_rows_for_user() throws SQLException {
+    public void should_contain_data_in_rows_for_user() {
         verifyThat(".table-view", TableViewMatchers.containsRow("apple", 0.151, 0.8, 2, false));
         verifyThat(".table-view", TableViewMatchers.containsRow("chicken", 1.0, 2.3, 3, false));
     }
 
     @Test
-    public void can_add_product_to_basket_if_user() throws SQLException {
-        clickOn((Node)from(lookup(".expander-button")).nth(0).query()).clickOn("Add to basket");
+    public void can_add_product_to_basket_if_user() {
+        clickOn((Node)from(lookup(".expander-button")).nth(0).query())
+                .clickOn("Add to basket");
         sleep(1000);
         verifyThat(lookup("Product has been added to basket"), Node::isVisible);
     }
 
     @Test
-    public void can_remove_product_from_basket_if_user() throws SQLException {
-        clickOn((Node)from(lookup(".expander-button")).nth(0).query()).clickOn("Add to basket").clickOn("Remove from basket");
+    public void can_remove_product_from_basket_if_user() {
+        clickOn((Node)from(lookup(".expander-button")).nth(0).query())
+                .clickOn("Add to basket")
+                .clickOn("Remove from basket");
         sleep(1000);
         verifyThat(lookup("Product has been removed from basket"), Node::isVisible);
     }
 
     @Test
-    public void should_see_columns_basket_table_if_user() throws SQLException {
+    public void should_see_columns_basket_table_if_user() {
         verifyThat("#basket-table-view", TableViewMatchersExtension.hasColumnWithID("Basket Total"));
         verifyThat("#basket-table-view", TableViewMatchersExtension.hasColumnWithID("Order Details"));
     }

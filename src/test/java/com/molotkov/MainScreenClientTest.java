@@ -81,8 +81,8 @@ public class MainScreenClientTest extends ApplicationTest {
             statement.addBatch(" CREATE TABLE IF NOT EXISTS baskets ( basket_id serial PRIMARY KEY," +
                     " basket_owner text REFERENCES users(user_name) ON DELETE CASCADE, products_name text NOT NULL," +
                     " products_amount text NOT NULL, processed boolean DEFAULT FALSE, created_at timestamp DEFAULT CURRENT_TIMESTAMP )");
-            statement.addBatch("INSERT INTO baskets ( basket_owner, products_name, products_amount ) VALUES ( 'testUser', 'apple,chicken', '1,2' )");
-            statement.addBatch("INSERT INTO baskets ( basket_owner, products_name, products_amount ) VALUES ( 'testUser1', 'apple', '2' )");
+            statement.addBatch("INSERT INTO baskets ( basket_owner, products_name, products_amount, processed ) VALUES ( 'testUser', 'apple,chicken', '1,2', 't' )");
+            statement.addBatch("INSERT INTO baskets ( basket_owner, products_name, products_amount, processed ) VALUES ( 'testUser1', 'apple', '2', 't' )");
 
 
             statement.addBatch("CREATE TABLE IF NOT EXISTS orders ( order_id serial, basket_id int4 REFERENCES baskets(basket_id) ON DELETE CASCADE," +
@@ -151,8 +151,8 @@ public class MainScreenClientTest extends ApplicationTest {
     public void client_can_see_inventory_products() {
         login();
 
-        verifyThat("#inventory-table-view", TableViewMatchers.containsRow("apple", 0.151, 0.8, 3, "2.40", false));
-        verifyThat("#inventory-table-view", TableViewMatchers.containsRow("chicken", 1.0, 2.3, 4, "9.20", false));
+        verifyThat("#inventory-table-view", TableViewMatchers.containsRow("apple", 0.151, 0.8, 3, false));
+        verifyThat("#inventory-table-view", TableViewMatchers.containsRow("chicken", 1.0, 2.3, 4, false));
     }
 
     @Test
@@ -167,7 +167,7 @@ public class MainScreenClientTest extends ApplicationTest {
     public void client_can_see_empty_basket() {
         login();
 
-        verifyThat("#basket-table-view", TableViewMatchers.containsRow(0.00, false));
+        verifyThat("#basket-table-view", TableViewMatchers.containsRow("0.00", false));
     }
 
     @Test
@@ -177,7 +177,7 @@ public class MainScreenClientTest extends ApplicationTest {
         clickOn("Product Name")
                 .clickOn((Node)from(lookup("#inventory-table-view .expander-button")).nth(0).query())
                 .clickOn("Add to basket");
-        verifyThat("#basket-table-view", TableViewMatchers.containsRow(0.80, false));
+        verifyThat("#basket-table-view", TableViewMatchers.containsRow("0.80", false));
         verifyThat(lookup("Product has been added to basket"), Node::isVisible);
         sleep(2000);
     }
@@ -189,10 +189,9 @@ public class MainScreenClientTest extends ApplicationTest {
         clickOn("Product Name")
                 .clickOn((Node)from(lookup("#inventory-table-view .expander-button")).nth(0).query())
                 .clickOn("Add to basket");
-        verifyThat("#basket-table-view", TableViewMatchers.containsRow(0.80, false));
-        clickOn((Node)from(lookup("#inventory-table-view .expander-button")).nth(0 ).query())
-                .clickOn("Remove from basket");
-        verifyThat("#basket-table-view", TableViewMatchers.containsRow(0.00, false));
+        verifyThat("#basket-table-view", TableViewMatchers.containsRow("0.80", false));
+        clickOn("Remove from basket");
+        verifyThat("#basket-table-view", TableViewMatchers.containsRow("0.00", false));
         verifyThat(lookup("Product has been removed from basket"), Node::isVisible);
         sleep(2000);
     }
@@ -204,7 +203,7 @@ public class MainScreenClientTest extends ApplicationTest {
         clickOn("Product Name")
                 .clickOn((Node)from(lookup("#inventory-table-view .expander-button")).nth(0).query())
                 .clickOn("Add to basket");
-        verifyThat("#basket-table-view", TableViewMatchers.containsRow(0.80, false));
+        verifyThat("#basket-table-view", TableViewMatchers.containsRow("0.80", false));
         clickOn((Node)from(lookup("#basket-table-view .expander-button")).nth(0).query());
         ((TextField)from(lookup("#delivery-address")).query()).setText("Ipswich");
         clickOn("Complete order");
@@ -218,7 +217,7 @@ public class MainScreenClientTest extends ApplicationTest {
     public void client_cannot_complete_order_wo_products() {
         login();
 
-        clickOn((Node)from(lookup("#basket-table-view .expander-button")).nth(0 ).query())
+        clickOn((Node)from(lookup("#basket-table-view .expander-button")).nth(0).query())
                 .clickOn("Complete order");
         verifyThat(lookup("Cannot process the order: Add products to basket to complete order"), Node::isVisible);
         sleep(2000);
@@ -228,7 +227,10 @@ public class MainScreenClientTest extends ApplicationTest {
     public void client_cannot_complete_order_wo_address() {
         login();
 
-        clickOn((Node)from(lookup("#basket-table-view .expander-button")).nth(0 ).query())
+        clickOn("Product Name")
+                .clickOn((Node)from(lookup("#inventory-table-view .expander-button")).nth(0).query())
+                .clickOn("Add to basket")
+                .clickOn((Node)from(lookup("#basket-table-view .expander-button")).nth(0 ).query())
                 .clickOn("Complete order");
         verifyThat(lookup("Cannot process the order: Enter the delivery address"), Node::isVisible);
         sleep(2000);
@@ -247,7 +249,6 @@ public class MainScreenClientTest extends ApplicationTest {
     @Test
     public void client_can_see_order_details() {
         login();
-
         clickOn("Order History")
                 .clickOn("Delivery address")
                 .clickOn((Node)from(lookup("#order-table .expander-button")).nth(0).query());
@@ -261,7 +262,7 @@ public class MainScreenClientTest extends ApplicationTest {
         clickOn("Order History");
         verifyThat("#order-table", TableViewMatchers.containsRow("Manchester", 5.40));
 
-        verifyThat("#total-table", TableViewMatchersExtension.hasTableCell(5.40));
+        verifyThat("#total-table", TableViewMatchers.hasTableCell(5.40));
     }
 
     private void login() {
