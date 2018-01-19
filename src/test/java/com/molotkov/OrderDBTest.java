@@ -6,6 +6,7 @@ import com.molotkov.exceptions.BasketException;
 import com.molotkov.products.Product;
 import com.zaxxer.hikari.HikariConfig;
 import com.zaxxer.hikari.HikariDataSource;
+import org.junit.After;
 import org.junit.Before;
 import org.junit.ClassRule;
 import org.junit.Test;
@@ -14,6 +15,7 @@ import org.testcontainers.containers.PostgreSQLContainer;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
+import java.util.List;
 
 import static org.rnorth.visibleassertions.VisibleAssertions.assertEquals;
 
@@ -22,6 +24,11 @@ public class OrderDBTest {
 
     @ClassRule
     public static PostgreSQLContainer postgres = new PostgreSQLContainer();
+
+    @After
+    public void closeDataSource() {
+        dataSource.close();
+    }
 
     @Before
     public void setUp() throws SQLException {
@@ -49,7 +56,7 @@ public class OrderDBTest {
 
     @Test
     public void testOrderToFromDB() throws SQLException {
-    // -------------------
+        // -------------------
         final Basket testBasket = new Basket();
         try {
             testBasket.addProducts(new Product("apple", 0.150, 0.8), 2);
@@ -60,10 +67,16 @@ public class OrderDBTest {
 
         // Save basket
         final ArrayList<String> valuesList = new ArrayList<>();
+        final List<String> basketDetails = testBasket.toDBFormat();
+        final String names = basketDetails.get(0);
+        final String amounts = basketDetails.get(1);
+
         valuesList.add("'testUser'");
-        valuesList.addAll(testBasket.toDBFormat());
-        DBUtils.insertSpecificIntoTable(dataSource.getConnection(),"baskets",
-                new String[] {"basket_owner", "products_name", "products_amount"}, valuesList.toArray(new String[0]));
+        valuesList.add(String.format("'%s'", names));
+        valuesList.add(String.format("%s", amounts));
+
+        DBUtils.insertSpecificIntoTable(dataSource.getConnection(), "baskets",
+                new String[]{"basket_owner", "products_name", "products_amount"}, valuesList.toArray(new String[0]));
 
         // Get basket_id
         DBCursorHolder cursor = DBUtils.filterFromTable(dataSource.getConnection(), "baskets", new String[]{"basket_id"},
@@ -75,25 +88,25 @@ public class OrderDBTest {
         // Save order
         final ArrayList<String> orderValuesList = new ArrayList<>();
         orderValuesList.add(basketId);
-        orderValuesList.add(String.format("'%s'",savedOrder.getAddress()));
-        DBUtils.insertSpecificIntoTable(dataSource.getConnection(), "orders", new String[]{"basket_id","address"},
+        orderValuesList.add(String.format("'%s'", savedOrder.getAddress()));
+        DBUtils.insertSpecificIntoTable(dataSource.getConnection(), "orders", new String[]{"basket_id", "address"},
                 orderValuesList.toArray(new String[0]));
 
         // Update basket to be processed = TRUE
         DBUtils.updateTable(dataSource.getConnection(), "baskets", new String[]{"processed"}, new String[]{"TRUE"},
-                new String[]{"basket_owner = 'testUser'","basket_id = "+basketId});
+                new String[]{"basket_owner = 'testUser'", "basket_id = " + basketId});
 
         // Check if order been saved
-        cursor = DBUtils.filterFromTable(dataSource.getConnection(), "orders", new String[]{"order_id","address"},
-                new String[]{"basket_id = "+basketId});
+        cursor = DBUtils.filterFromTable(dataSource.getConnection(), "orders", new String[]{"order_id", "address"},
+                new String[]{"basket_id = " + basketId});
         cursor.getResults().next();
         final String orderId = cursor.getResults().getString(1);
         final String orderAddress = cursor.getResults().getString(2);
         assertEquals("Save order query succeeded", "Order ID 1 @ London", String.format("Order ID %s @ %s", orderId, orderAddress));
         cursor.closeCursor();
-    // -------------------
+        // -------------------
         // Retrieve order's information
-        cursor = DBUtils.selectFromTable(dataSource.getConnection(), "orders", new String[]{"basket_id","address"});
+        cursor = DBUtils.selectFromTable(dataSource.getConnection(), "orders", new String[]{"basket_id", "address"});
         cursor.getResults().next();
 
         final String orderRetrieveBasketId = cursor.getResults().getString(1);
@@ -101,8 +114,8 @@ public class OrderDBTest {
         cursor.closeCursor();
 
         // Restore related basket
-        cursor = DBUtils.filterFromTable(dataSource.getConnection(), "baskets", new String[]{"products_name","products_amount"},
-                new String[]{"basket_id = "+orderRetrieveBasketId, "AND", "basket_owner = 'testUser'"});
+        cursor = DBUtils.filterFromTable(dataSource.getConnection(), "baskets", new String[]{"products_name", "products_amount"},
+                new String[]{"basket_id = " + orderRetrieveBasketId, "AND", "basket_owner = 'testUser'"});
         cursor.getResults().next();
 
         final String basketRetrievedProductNames = cursor.getResults().getString(1);
@@ -117,7 +130,5 @@ public class OrderDBTest {
 
         // Check if orders match
         assertEquals("Retrieve order query succeeded", savedOrder.toString(), restoredOrder.toString());
-
-        dataSource.close();
     }
 }

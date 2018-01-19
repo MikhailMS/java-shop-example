@@ -3,16 +3,16 @@ package com.molotkov;
 import com.molotkov.db.DBConnector;
 import com.molotkov.users.User;
 import org.junit.Before;
-import org.junit.Test;
-
-import static org.junit.Assert.assertTrue;
-import java.sql.Connection;
-
 import org.junit.ClassRule;
+import org.junit.Test;
 import org.testcontainers.containers.PostgreSQLContainer;
 
+import java.sql.Connection;
+
+import static org.junit.Assert.assertTrue;
+
 public class DBConnectorTest {
-    private DBConnector connector;
+    private static DBConnector connector;
 
     @ClassRule
     public static PostgreSQLContainer postgres = new PostgreSQLContainer();

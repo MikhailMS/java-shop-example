@@ -5,10 +5,13 @@ import com.molotkov.interfaces.ProductStorage;
 import com.molotkov.interfaces.StringFormatter;
 import com.molotkov.products.Product;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.List;
 import java.util.stream.Collectors;
 
-import static com.molotkov.Utils.iterateSimultaneously;
+import static com.molotkov.extras.Utils.iterateSimultaneously;
 
 public class Basket implements ProductStorage {
     private HashMap<Product, Integer> products;
@@ -25,7 +28,7 @@ public class Basket implements ProductStorage {
 
     public void addProducts(final Product product, final int amount) throws BasketException {
         if (product != null) {
-            final int currentAmount = this.products.getOrDefault(product,0);
+            final int currentAmount = this.products.getOrDefault(product, 0);
             this.products.put(product, currentAmount + amount);
         } else {
             throw new BasketException("You cannot add Null objects to Basket!");
@@ -34,9 +37,9 @@ public class Basket implements ProductStorage {
 
     public void removeProducts(final Product product, final int amount) throws BasketException {
         if (this.products.get(product) > amount) {
-            this.products.replace(product,this.products.get(product)-amount);
+            this.products.replace(product, this.products.get(product) - amount);
         } else if (this.products.get(product) == amount) {
-            this.products.remove(product);
+            this.products.replace(product, 0);
         } else {
             throw new BasketException(String.format("Cannot remove %d instances of product as there are only %d instances!",
                     amount, this.products.get(product)));
@@ -50,7 +53,7 @@ public class Basket implements ProductStorage {
     public double calculateTotal() {
         return this.products.entrySet().
                 parallelStream().
-                mapToDouble(product -> product.getKey().getPrice()*product.getValue()).
+                mapToDouble(product -> product.getKey().getPrice() * product.getValue()).
                 sum();
     }
 
@@ -66,7 +69,7 @@ public class Basket implements ProductStorage {
         final ArrayList<String> result = new ArrayList<>();
         final String names = this.products.entrySet().
                 parallelStream().
-                map(p -> String.format("'%s'",p.getKey().getName())).
+                map(p -> p.getKey().getName()).
                 collect(Collectors.joining(","));
         final String amounts = this.products.entrySet().
                 parallelStream().
@@ -78,6 +81,7 @@ public class Basket implements ProductStorage {
         return result;
     }
 
+    @Deprecated
     public void restoreFromDB(final String productsName, final String productsAmount) {
         final List<String> names = Arrays.asList(productsName.split(","));
         final List<String> amounts = Arrays.asList(productsAmount.split(","));

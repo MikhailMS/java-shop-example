@@ -1,4 +1,4 @@
-package com.molotkov;
+package com.molotkov.extras;
 
 import java.util.Iterator;
 import java.util.function.BiConsumer;

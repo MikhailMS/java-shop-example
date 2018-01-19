@@ -7,7 +7,16 @@
   <version>1.0</version>
   <name>shop</name>
   <url>https://example.com</url>
+  <properties>
+    <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+  </properties>
   <dependencies>
+    <!-- https://mvnrepository.com/artifact/org.controlsfx/controlsfx -->
+    <dependency>
+      <groupId>org.controlsfx</groupId>
+      <artifactId>controlsfx</artifactId>
+      <version>8.40.14</version>
+    </dependency>
     <!-- https://mvnrepository.com/artifact/junit/junit -->
     <dependency>
       <groupId>junit</groupId>
@@ -20,17 +29,17 @@
       <artifactId>postgresql</artifactId>
       <version>42.1.4</version>
     </dependency>
-    <!-- For testing DB related stuff -->
+    <!-- DB testing libraries -->
     <dependency>
       <groupId>org.testcontainers</groupId>
       <artifactId>testcontainers</artifactId>
-      <version>1.4.3</version>
+      <version>1.5.0</version>
       <scope>test</scope>
     </dependency>
     <dependency>
       <groupId>org.testcontainers</groupId>
       <artifactId>postgresql</artifactId>
-      <version>1.4.3</version>
+      <version>1.5.0</version>
       <scope>test</scope>
     </dependency>
     <dependency>
@@ -45,6 +54,36 @@
       <version>2.0.0</version>
       <scope>test</scope>
     </dependency>
+    <!-- GUI testing libraries -->
+    <dependency>
+      <groupId>org.testfx</groupId>
+      <artifactId>testfx-core</artifactId>
+      <version>4.0.10-alpha</version>
+    </dependency>
+    <dependency>
+      <groupId>org.testfx</groupId>
+      <artifactId>testfx-junit</artifactId>
+      <version>4.0.10-alpha</version>
+      <scope>test</scope>
+    </dependency>
+    <dependency>
+        <groupId>org.loadui</groupId>
+        <artifactId>testFx</artifactId>
+        <version>3.1.2</version>
+        <scope>test</scope>
+    </dependency>
+    <dependency>
+        <groupId>org.testfx</groupId>
+        <artifactId>openjfx-monocle</artifactId>
+        <version>8u76-b04</version> <!-- To run tests in Travis CI -->
+        <scope>test</scope>
+    </dependency>
+<!--    <dependency>
+        <groupId>org.testfx</groupId>
+        <artifactId>testfx-core</artifactId>
+        <version>RELEASE</version>
+        <scope>test</scope>
+    </dependency>-->
   </dependencies>
   <build>
     <plugins>

@@ -4,6 +4,7 @@ import com.molotkov.exceptions.InventoryException;
 import com.molotkov.interfaces.ProductStorage;
 import com.molotkov.interfaces.StringFormatter;
 import com.molotkov.products.Product;
+
 import java.text.DecimalFormat;
 import java.util.HashMap;
 
@@ -11,7 +12,7 @@ public class Inventory implements ProductStorage {
     private HashMap<Product, Integer> products;
     private StringFormatter stringFormatter;
 
-    Inventory() {
+    public Inventory() {
         this.products = new HashMap<>();
         this.stringFormatter = () -> {
             final int productsSize = this.products.size();
@@ -23,7 +24,7 @@ public class Inventory implements ProductStorage {
 
     public void addProducts(final Product product, final int amount) throws InventoryException {
         if (product != null) {
-            final int currentAmount = this.products.getOrDefault(product,0);
+            final int currentAmount = this.products.getOrDefault(product, 0);
             this.products.put(product, currentAmount + amount);
         } else {
             throw new InventoryException("You cannot add Null objects to products!");
@@ -32,9 +33,9 @@ public class Inventory implements ProductStorage {
 
     public void removeProducts(final Product product, final int amount) throws InventoryException {
         if (this.products.get(product) > amount) {
-            this.products.replace(product,this.products.get(product)-amount);
+            this.products.replace(product, this.products.get(product) - amount);
         } else if (this.products.get(product) == amount) {
-            this.products.remove(product);
+            this.products.replace(product, 0);
         } else {
             throw new InventoryException(String.format("Cannot remove %d instances" +
                     " of product as there are only %d instances!", amount, this.products.get(product)));
@@ -48,7 +49,7 @@ public class Inventory implements ProductStorage {
     public double calculateTotal() {
         return this.products.entrySet().
                 parallelStream().
-                mapToDouble(product -> product.getKey().getPrice()*product.getValue()).
+                mapToDouble(product -> product.getKey().getPrice() * product.getValue()).
                 sum();
     }
 

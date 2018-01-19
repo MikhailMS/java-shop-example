@@ -17,7 +17,7 @@ import java.time.format.DateTimeFormatter;
 import static org.rnorth.visibleassertions.VisibleAssertions.assertEquals;
 
 public class UserTest {
-    private HikariDataSource dataSource;
+    private static HikariDataSource dataSource;
 
     @ClassRule
     public static PostgreSQLContainer postgres = new PostgreSQLContainer();
@@ -25,7 +25,7 @@ public class UserTest {
     @Before
     public void setUp() throws SQLException {
         final HikariConfig hikariConfig = new HikariConfig();
-        hikariConfig.setMaximumPoolSize(20);
+        hikariConfig.setMaximumPoolSize(40);
         hikariConfig.setJdbcUrl(postgres.getJdbcUrl());
         hikariConfig.setUsername(postgres.getUsername());
         hikariConfig.setPassword(postgres.getPassword());
@@ -66,13 +66,18 @@ public class UserTest {
     }
 
     @Test
-    public void testUserClassMethods() throws SQLException, InterruptedException {
-    //-------------- User test cases -------------------------------
+    public void testUserClassMethods() throws SQLException {
+        //-------------- User test cases -------------------------------
         final User testUser = new User("testUser", "testUser");
         assertEquals("Constructor succeeds", true, testUser instanceof User);
 
         assertEquals("getUserName succeeds", "testUser", testUser.getUserName());
         assertEquals("getUserPasswd succeeds", "testUser", testUser.getUserPasswd());
+
+        final Basket testBasket = new Basket();
+        testUser.setBasket(testBasket);
+
+        assertEquals("set/get User Basket succeeds", testBasket, testUser.getBasket());
 
         final User testUser1 = new User("testUser1", "testUser1");
         final User testUser2 = new User("testUser2", "testUser2");
@@ -109,7 +114,7 @@ public class UserTest {
 
         // Ensure user can filter orders by date
         String date = LocalDateTime.now().plusDays(2).format(DateTimeFormatter.ofPattern("yyyy-MM-dd"));
-        date = String.format("orders.created_at < '%s'::date",date);
+        date = String.format("orders.created_at < '%s'::date", date);
         cursor = testUser1.fetchOrders(dataSource.getConnection(), new String[]{date});
 
         final StringBuilder ordersBuilder2 = new StringBuilder();
@@ -183,7 +188,7 @@ public class UserTest {
         assertEquals("testUser can sort inventory by price", "apple 0.150 0.80 3 ", inventory);
         cursor.closeCursor();
 
-    //-------------- Admin test cases ------------------------------
+        //-------------- Admin test cases ------------------------------
         // Ensure admin gets all orders
         cursor = admin.fetchOrders(dataSource.getConnection(), new String[]{});
 
@@ -200,7 +205,7 @@ public class UserTest {
 
         // Ensure admin can sort all orders by date
         date = LocalDateTime.now().plusDays(2).format(DateTimeFormatter.ofPattern("yyyy-MM-dd"));
-        date = String.format("orders.created_at < '%s'::date",date);
+        date = String.format("orders.created_at < '%s'::date", date);
         cursor = admin.fetchOrders(dataSource.getConnection(), new String[]{date});
 
         final StringBuilder ordersBuilder4 = new StringBuilder();

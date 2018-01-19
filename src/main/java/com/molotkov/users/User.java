@@ -1,5 +1,6 @@
 package com.molotkov.users;
 
+import com.molotkov.Basket;
 import com.molotkov.db.DBCursorHolder;
 import com.molotkov.db.DBUtils;
 import com.molotkov.interfaces.UserInterface;
@@ -13,6 +14,7 @@ import java.util.List;
 public class User implements UserInterface {
     private String userName;
     private String userPasswd;
+    private Basket bakset;
 
     public User(final String name, final String passwd) {
         this.userName = name;
@@ -23,7 +25,7 @@ public class User implements UserInterface {
     public DBCursorHolder fetchOrders(final Connection connection, final String[] filterArguments) throws SQLException {
         // Does user have privilege?
         DBCursorHolder cursor = DBUtils.filterFromTable(connection, "users", new String[]{"privileges"},
-                new String[]{String.format("user_name = '%s'",userName)});
+                new String[]{String.format("user_name = '%s'", userName)});
         cursor.getResults().next();
 
         final boolean userPrivilege = cursor.getResults().getBoolean(1);
@@ -35,8 +37,8 @@ public class User implements UserInterface {
             return cursor;
         } else {
             final List<String> nameAndFilterArguments = new ArrayList<>();
-            nameAndFilterArguments.add(String.format("order_owner = '%s'",userName));
-            if (filterArguments.length!=0) {
+            nameAndFilterArguments.add(String.format("order_owner = '%s'", userName));
+            if (filterArguments.length != 0) {
                 nameAndFilterArguments.add("AND");
             }
             nameAndFilterArguments.addAll(Arrays.asList(filterArguments));
@@ -47,8 +49,8 @@ public class User implements UserInterface {
     }
 
     @Override
-    public DBCursorHolder fetchInventory(final Connection connection, final  String[] filterArguments) throws SQLException {
-        return DBUtils.innerJoinTables(connection, "products", "inventory", "product_id" ,new String[] {"product_id", "product_name", "product_weight", "product_price", "product_amount"},
+    public DBCursorHolder fetchInventory(final Connection connection, final String[] filterArguments) throws SQLException {
+        return DBUtils.innerJoinTables(connection, "products", "inventory", "product_id", new String[]{"product_id", "product_name", "product_weight", "product_price", "product_amount"},
                 filterArguments);
     }
 
@@ -58,5 +60,13 @@ public class User implements UserInterface {
 
     public String getUserPasswd() {
         return userPasswd;
+    }
+
+    public void setBasket(final Basket basket) {
+        this.bakset = basket;
+    }
+
+    public Basket getBasket() {
+        return bakset;
     }
 }

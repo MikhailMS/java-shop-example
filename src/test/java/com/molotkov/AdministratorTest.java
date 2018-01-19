@@ -26,7 +26,7 @@ public class AdministratorTest {
     @Before
     public void setUp() throws SQLException {
         final HikariConfig hikariConfig = new HikariConfig();
-        hikariConfig.setMaximumPoolSize(30);
+        hikariConfig.setMaximumPoolSize(15);
         hikariConfig.setJdbcUrl(postgres.getJdbcUrl());
         hikariConfig.setUsername(postgres.getUsername());
         hikariConfig.setPassword(postgres.getPassword());
@@ -34,7 +34,7 @@ public class AdministratorTest {
         dataSource = new HikariDataSource(hikariConfig);
         final Statement statement = dataSource.getConnection().createStatement();
 
-        statement.addBatch("CREATE TABLE IF NOT EXISTS users ( user_name text PRIMARY KEY, user_passwd text NOT NULL," +
+        statement.addBatch("CREATE TABLE IF NOT EXISTS users ( user_name text PRIMARY KEY, user_password text NOT NULL," +
                 " privileges boolean DEFAULT FALSE )");
         statement.addBatch("INSERT INTO users VALUES ( 'admin', 'admin', TRUE )");
         statement.addBatch("INSERT INTO users VALUES ( 'testUser1', 'testUser1', FALSE )");
@@ -68,60 +68,60 @@ public class AdministratorTest {
 
     @Test
     public void testAdministratorMethods() throws SQLException, InventoryException {
-    // TESTING getTotalPriceOfInventory
+        // TESTING getTotalPriceOfInventory
         final Administrator admin = new Administrator("admin", "admin");
         final double totalOfInventory = admin.getTotalPriceOfInventory(dataSource.getConnection());
         assertEquals("getTotalPriceOfInventory succeeds", 11.6, totalOfInventory);
 
-    // TESTING getTotalPriceOfAllOrders
+        // TESTING getTotalPriceOfAllOrders
         final double totalOfOrders = admin.getTotalPriceOfAllOrders(dataSource.getConnection());
         assertEquals("getTotalPriceOfAllOrders succeeds", 4.95, totalOfOrders);
 
-    // TESTING addProductToInventory
+        // TESTING addProductToInventory
         final Product newProduct = new Product("turkey", 1.5, 3);
         final int amount = 1;
-        admin.addProductToInventory(dataSource.getConnection(),newProduct, amount);
+        admin.addNewProductToInventory(dataSource.getConnection(), newProduct, amount);
 
         DBCursorHolder cursor = DBUtils.innerJoinTables(dataSource.getConnection(), "products", "inventory", "product_id",
-                new String[]{"product_name", "product_price", "product_amount"}, new String[]{String.format("product_name = '%s'",newProduct.getName())});
+                new String[]{"product_name", "product_price", "product_amount"}, new String[]{String.format("product_name = '%s'", newProduct.getName())});
         String newProductString = "";
 
         while (cursor.getResults().next()) {
-            newProductString += String.format("%s ",cursor.getResults().getString(1));
-            newProductString += String.format("%s ",cursor.getResults().getString(2));
-            newProductString += String.format("%s ",cursor.getResults().getString(3));
+            newProductString += String.format("%s ", cursor.getResults().getString(1));
+            newProductString += String.format("%s ", cursor.getResults().getString(2));
+            newProductString += String.format("%s ", cursor.getResults().getString(3));
         }
 
         assertEquals("addProductToInventory succeeds", "turkey 3.00 1 ", newProductString);
         cursor.closeCursor();
 
-    // TESTING removeProductFromInventory
-        admin.removeProductFromInventory(dataSource.getConnection(), newProduct, 1);
+        // TESTING removeProductFromInventory
+        admin.decreaseProductAmountInInventory(dataSource.getConnection(), newProduct, 1);
 
         cursor = DBUtils.innerJoinTables(dataSource.getConnection(), "products", "inventory", "product_id",
-                new String[]{"product_name", "product_price", "product_amount"}, new String[]{String.format("product_name = '%s'",newProduct.getName())});
+                new String[]{"product_name", "product_price", "product_amount"}, new String[]{String.format("product_name = '%s'", newProduct.getName())});
         newProductString = "";
 
         while (cursor.getResults().next()) {
-            newProductString += String.format("%s ",cursor.getResults().getString(1));
-            newProductString += String.format("%s ",cursor.getResults().getString(2));
-            newProductString += String.format("%s ",cursor.getResults().getString(3));
+            newProductString += String.format("%s ", cursor.getResults().getString(1));
+            newProductString += String.format("%s ", cursor.getResults().getString(2));
+            newProductString += String.format("%s ", cursor.getResults().getString(3));
         }
 
         assertEquals("removeProductToInventory succeeds", "turkey 3.00 0 ", newProductString);
         cursor.closeCursor();
 
-    // TESTING createUser
-        admin.createUser(dataSource.getConnection(), "testUser3", "testUser3");
-        cursor = DBUtils.filterFromTable(dataSource.getConnection(), "users", new String[]{"user_name"}, new String[]{"user_passwd = 'testUser3'"});
+        // TESTING createUser
+        admin.createUser(dataSource.getConnection(), "testUser3", "testUser3", false);
+        cursor = DBUtils.filterFromTable(dataSource.getConnection(), "users", new String[]{"user_name"}, new String[]{"user_password = 'testUser3'"});
         cursor.getResults().next();
 
         assertEquals("createUser succeeds", "testUser3", cursor.getResults().getString(1));
         cursor.closeCursor();
 
-    // TESTING deleteUser
+        // TESTING deleteUser
         admin.deleteUser(dataSource.getConnection(), "testUser3");
-        cursor = DBUtils.filterFromTable(dataSource.getConnection(), "users", new String[]{"user_name"}, new String[]{"user_passwd = 'testUser3'"});
+        cursor = DBUtils.filterFromTable(dataSource.getConnection(), "users", new String[]{"user_name"}, new String[]{"user_password = 'testUser3'"});
         String empty = "";
         while (cursor.getResults().next()) {
             empty += cursor.getResults().getString(1);
@@ -129,5 +129,7 @@ public class AdministratorTest {
 
         assertEquals("deleteUser succeeds", "", empty);
         cursor.closeCursor();
+
+        dataSource.close();
     }
 }
